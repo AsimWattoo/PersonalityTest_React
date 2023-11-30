@@ -30,7 +30,7 @@ const PageLayout: React.FC<PageLayoutProps> = () => {
         </div>
         <div className='rightColumn'>
           <TextCustomization />
-          <BackgroundCustomization />
+          <TextCustomization />
         </div>
       </div>
     </div>

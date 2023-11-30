@@ -9,7 +9,11 @@
   
   .rightColumn {
     flex-shrink: 0; /* Do not shrink */
-    width: 20%; /* Fixed width of 30% */
-    background-color: green; /* Changed color for visualization */
-      }
+    width: 22%; /* Fixed width of 30% */
+    background-color: white; /* Changed color for visualization */
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    height: 93.5vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
   

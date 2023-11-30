@@ -1,30 +1,45 @@
 /* TextCustomization.css */
 
+.text-customization {
+}
+
+
 .text-customization-header {
-    background-color: #99FFFF;
+    background-color: white;
     color: black;
+    font-weight: 500;
+    padding: 1em !important;
     cursor: pointer;
-    padding: 9px;
-    width: 100%;
-    height:40px;
-    border: 1px solid grey; /* Removed the incorrect border property */
+    border-bottom: #dedede; /* Removed the incorrect border property */
     text-align: left;
     outline: none;
-    font-size: 15px;
+    font-size: 18px;
     border-radius: 0px; /* Adjust the value for desired rounded corner radius */
     user-select: none;
     display: flex;
-    font-family: 'Segoe UI';
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease-in-out;
+    border-bottom: 1px solid #dedede;
   }
-  
-  /* Hover effect to demonstrate expanding animation */
-  .text-customization-header:hover {
-    width: 100%; /* Adjust width as per your requirement */
+
+  .text-customization-header svg {
+    height: 20px;
+    width: 20px;
+    transition: all 0.2s ease-in-out;
   }
-  
-  
+
+  .text-customization.expanded .text-customization-header {
+    border-bottom: 1px solid #dedede;
+    background-color: #f2f2f2;
+  }
+
+  .text-customization.expanded .text-customization-header svg {
+    transform: rotate(-90deg);
+  }
+
   .active, .text-customization-header:hover {
-    background-color: #00BFFF;
+    background-color: #f8f8fa;
   }
 
   .symbol {
@@ -34,86 +49,454 @@
     color: darkturquoise;
 
   }
-.text-customization-options{
-  background-color: #CC0000;
-  border-radius: 30px;
-  padding:10px;
+
+.text-customization .text-customization-options{
+  transition: all 0.2s ease-in-out;
+  max-height: 0px;
+  overflow: hidden;
 }
 
-
-#text-heading{
-  margin:5px;
+.text-customization .text-customization-options > div{
+  padding: 1em;
 }
-#font-family{
+
+.text-customization.expanded .text-customization-options{
+  max-height: 5000px;
+  border-bottom: 1px solid #dedede;
+  overflow: hidden;
+}
+
+.text-customization-options .panel-heading {
+  font-size: 18px;
+  color: #989898;
+  font-weight: 300;
+  margin-top: 0.5em;;
+}
+
+.panel-items {
+  margin-bottom: 1em;
+}
+
+.item {
+  margin: 0.8em 0;
+}
+
+.item .item-title {
+  color: #989898;
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.item.item-combined {
+  display: flex;
+}
+
+.item.item-combined .select {
+  width: 50%;
+}
+
+.item.item-combined input {
+  width: 50%;
+}
+
+input {
+  padding: 8px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  outline: none;
+}
+
+.input-combined {
+  padding: 0 8px;
+  display: flex;
+  border-radius: 5px;
+  overflow: hidden;
+  background-color: #f5f5f5;
+}
+
+.input-combined .label {
+  width: 20%;
+  display: flex;
   justify-content: center;
+  background-color: #f5f5f5;
   align-items: center;
-  margin: 10px 0px;
-  
+  font-size: 24px;
+  color: #989898;
 }
 
-#size-formatting{
-  margin: 5px;
-  display: inline-block;
-  border-radius: 10px;
-  
+.input-combined .label.small {
+  font-size: 14px;
+}
+
+.item.item-combined .input-combined .label.left{
+  margin-left: 10px;
+}
+
+.item.item-combined .input-combined .label.right{
+  margin-right: 10px;
+}
+ 
+.item.item-combined .input-combined input {
+  width: 80%;
+  border: 0px;
+}
+
+.item.item-combined .select {
+  width: 50%;
+}
+
+.item.item-combined .select .value {
+  border-radius: 5px 0px 0px 5px;
 }
 
 
-/* TextCustomization.css */
-
-  button:hover {
-    background-color: #007FFF;
-  }
-  button:active {
-    background-color: #CC0000;
-    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
-    transform: translateY(4px);
-  }
-  
-  #bold {
-    font-weight: bold;
-  }
-  
-  #italic {
-    font-style: italic;
-  }
-  
-  #underline {
-    text-decoration: underline;
-  }
-  
-  #superscript {
-    font-size: 0.83em;
-    vertical-align: super;
-    line-height: 0;
-  }
-  
-  #subscript {
-    font-size: 0.83em;
-    vertical-align: sub;
-    line-height: 0;
-  }
-  
- /* YourComponent.css */
+.item.item-combined .input-combined {
+  width: 50%;
+  border-radius: 0 5px 5px 0px;
+}
 
 
-  
-  .color-options {
-    display: flex;
-    flex-wrap: wrap;
-    
-  }
-  .color-options span:hover {
-    transform: scale(1.2);
-  }
-  
-  .color-options span {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    border: 1px solid #000;
-    margin: 5px;
-    cursor: pointer;
-  }
-  
-  
+.item.item.item-combined .child:nth-child(n){
+  border-right: 1px solid #dedede;
+}
+
+.item.item.item-combined .child:last-child{
+  border-right: 0px;
+}
+
+.item.item-combined.w-70-30 .child:first-child {
+  width: 70%;
+}
+
+.item.item-combined.w-70-30 .child:last-child {
+  width: 30%;
+}
+
+.item .color-box {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #f5f5f5;
+  padding: 0 10px;
+  border-radius: 5px;
+}
+
+.item .color-box input[type='color'] {
+  height: 25px;
+  width: 25px;
+  background-color: white;
+  padding: 0px;
+  outline: none;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.item .color-box input[type='text'] {
+  width: 90%;
+  border: 0px;
+}
+
+.item.item-combined .btn {
+  width: 100%;
+  padding: 4px;
+  border-radius: 0px;
+  border: 0px;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn > div {
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover > div {
+  background-color: #cce1f9;
+}
+
+
+.btn > div svg {
+  font-size: 23px;
+  color: #989898;
+  transition: all 0.2s ease-in-out;
+}
+
+.btn:hover > div svg {
+  color: black;
+}
+
+.btn.active > div {
+  background-color: white !important;
+}
+
+.btn.active > div svg {
+  color: #2b81f2;
+}
+
+.item.item-combined .btn:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.item.item-combined .btn:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.item.item-combined .btn:nth-child(n){
+  border-right: 0px solid #dedede !important;
+}
+
+.margin-container {
+  width: 100%;
+  height: 250px;
+  position: relative;
+}
+
+.margin-container .b1 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 125px;
+  width: 125px;
+  background-color: white;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+}
+
+.margin-container .b2 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 75px;
+  width: 75px;
+  border: 1px solid #989898;
+  border-radius: 5px;
+  background-color: #cce1f9;
+}
+
+.margin-container .b3 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #3e8ddb;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.margin-container .icons-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 0.23em;
+}
+
+.margin-container .icons-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+}
+
+.margin-container .b1 .icon {
+  position: relative;
+}
+
+.margin-container .b1 .icon svg {
+  color: #989898;
+  font-size: 14px;
+}
+
+.margin-container .b2 .icon svg {
+  color: #3e8ddb;
+  font-size: 14px;
+}
+
+.margin-container .input-combined{
+  position: absolute;
+  border: 0px;
+  outline: none;
+  width: 60%;
+  text-align: center;
+  padding: 10px;
+}
+
+.margin-container .input-combined input {
+  padding: 0px;
+  border: 0px;
+  width: 80%;
+  outline: none;
+  font-size: 14px;
+  text-align: center;
+}
+
+.margin-container .input-combined .label {
+  font-size: 14px;
+}
+
+.margin-container .input-combined.top {
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -130%);
+}
+
+.margin-container .input-combined.right {
+  top: 50%;
+  right: 0;
+  transform: translate(120%, -50%);
+}
+
+.margin-container .input-combined.bottom {
+  bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, 130%);
+}
+
+.margin-container .input-combined.left {
+  top: 50%;
+  left: 0;
+  transform: translate(-120%, -50%);
+}
+
+.padding-container {
+  width: 100%;
+  height: 250px;
+  position: relative;
+}
+
+.padding-container .b1 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 125px;
+  width: 125px;
+  background-color: white;
+  border: 1px solid #989898;
+  border-radius: 5px;
+  background-color: #cce1f9;
+}
+
+.padding-container .b2 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 75px;
+  width: 75px;
+  border: 1px solid #3e8ddb;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.padding-container .b3 {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  background-color: white;
+}
+
+.padding-container .icons-horizontal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 0.23em;
+}
+
+.padding-container .icons-vertical {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 100%;
+}
+
+.padding-container .b1 .icon {
+  position: relative;
+}
+
+.padding-container .b1 .icon svg {
+  color: #3e8ddb;
+  font-size: 14px;
+}
+
+.padding-container .b2 .icon svg {
+  color: #989898;
+  font-size: 14px;
+}
+
+
+.padding-container .input-combined{
+  position: absolute;
+  border: 0px;
+  outline: none;
+  width: 60%;
+  text-align: center;
+  padding: 10px;
+}
+
+.padding-container .input-combined input {
+  padding: 0px;
+  border: 0px;
+  width: 80%;
+  outline: none;
+  font-size: 14px;
+  text-align: center;
+}
+
+.padding-container .input-combined .label {
+  font-size: 14px;
+}
+
+.padding-container .input-combined.top {
+  top: 0%;
+  left: 50%;
+  transform: translate(-50%, -130%);
+}
+
+.padding-container .input-combined.right {
+  top: 50%;
+  right: 0;
+  transform: translate(120%, -50%);
+}
+
+.padding-container .input-combined.bottom {
+  bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, 130%);
+}
+
+.padding-container .input-combined.left {
+  top: 50%;
+  left: 0;
+  transform: translate(-120%, -50%);
+}

@@ -1,6 +1,18 @@
 import React from "react";
 import { useState } from "react";
 import "./TextCustomization.css";
+import {
+  MdChevronRight, 
+  MdHorizontalDistribute, 
+  MdVerticalDistribute, 
+  MdTextFields, 
+  MdFormatAlignCenter, 
+  MdFormatAlignRight,
+  MdFormatAlignLeft, 
+  MdFormatAlignJustify, 
+  MdSpaceBar} from 'react-icons/md';
+import Select from "./components/Select";
+
 
 const TextCustomization = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -28,20 +40,7 @@ const TextCustomization = () => {
     // Apply text formatting (bold, italic, underline, subscript, superscript)
     document.execCommand(style);
   };
-
-  const optionStyle = {
-    display: "flex",
-    alignItems: "center",
-    cursor: "pointer",
-    padding: "5px 10px",
-    borderBottom: "1px solid #ccc",
-  };
-
-  const expandedOptionsStyle = {
-    display: "block",
-    padding: "10px",
-  };
-
+  
   const colorPalette = [
     "#ff1493",
     "#00ffff",
@@ -55,115 +54,260 @@ const TextCustomization = () => {
     // Add more colors as needed
   ];
 
+  React.useEffect(() => {
+  }, []);
+
   return (
     <>
-      <div className="text-customization">
+      <div className={`text-customization ${isExpanded ? "expanded" : ""}`}>
         <div
           className="text-customization-header"
           onClick={toggleExpand}
-          style={optionStyle}
         >
-          Text Customization
-          <label className="symbol">{isExpanded ? "^" : ">"}</label>
+          Question Header
+          <MdChevronRight/>
         </div>
-        {isExpanded && (
-          <div
-            className="text-customization-options"
-            style={expandedOptionsStyle}
-          >
-            <div className="panel-text" id="text-heading">
-              <label>
-                Text:
-                <div className="text-box" id="font-family">
-                  <select
-                    value={fontFamily}
-                    onChange={(e) => {
-                      setFontFamily(e.target.value);
-                      applySettings();
-                    }}
-                  >
-                    <option value="Arial">Arial</option>
-                    <option value="Verdana">Verdana</option>
-                    <option value="Times New Roman">Times New Roman</option>
-                    {/* Add more font options as needed */}
-                  </select>
-                </div>
-              </label>
-            </div>
-            <div className="text-box" id="size-formatting">
-              <div id='formatting'>
-              <select
-                onChange={(e) => {
-                  applyFormatting(e.target.value);
-                  applySettings();
-                }}
-              >
-                <option
-                  value="Bold"
-                  className="Formating-Buttons"
-                  id="bold"
-                  onClick={() => applyFormatting("bold")}
-                >
-                  Bold
-                </option>
-                <option
-                  value="Italic"
-                  className="Formating-Buttons"
-                  id="italic"
-                  onClick={() => applyFormatting("italic")}
-                >
-                  Italic
-                </option>
-                <option
-                  value="underline"
-                  className="Formating-Buttons"
-                  id="underline"
-                  onClick={() => applyFormatting("underline")}
-                >
-                  Underline
-                </option>
-                {/* Add more font options as needed */}
-              </select>
-              
-              <input id="size"
-                type="number"
-                value={fontSize}
-                onChange={(e) => {
-                  setFontSize(e.target.value);
-                  applySettings();
-                }}
-              />
+        <div
+          className="text-customization-options">
+          <div>
+            <div className="panel-items">
+              <div className="panel-heading">
+                  Text
               </div>
-            </div>
-            
-            <div className="SelectPalette">
-              Select Palette:<br></br>
-              <div
-                className="color-options"
-                style={{ display: "flex", flexWrap: "wrap" }}
-              >
-                {colorPalette.map((color, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      backgroundColor: color,
-                      width: "30px",
-                      height: "30px",
-                      borderRadius: "50%",
-                      border: "1px solid #000",
-                      margin: "5px",
-                    }}
-                    onClick={() => {
-                      setSelectedColor(color === selectedColor ? "" : color);
-                      setTextColor(color);
-                      applySettings();
-                    }}
-                  ></span>
-                ))}
+              <div className="item">
+                <Select options={[
+                  {
+                    label: "Arial",
+                    value: "arial"
+                  },
+                  {
+                    label: "Times New Roman",
+                    value: "times"
+                  }
+                ]}/>
+              </div>
+              <div className="item item-combined w-70-30">
+                <Select options={[
+                  {
+                    label: "Bold",
+                    value: "bold"
+                  },
+                  {
+                    label: "Italic",
+                    value: "italic"
+                  },
+                  {
+                    label: "Underline",
+                    value: "underline"
+                  }
+                ]}/>
+                <div className="input-combined child">
+                  <div className="label left"><MdTextFields/></div>
+                  <input type="number"/>
+                </div>
+              </div>
+              <div className="item item-combined">
+                <div className="child btn">
+                  <div>
+                    <MdFormatAlignLeft />
+                  </div>
+                </div>
+                <div className="child btn active">
+                  <div>
+                    <MdFormatAlignCenter />
+                  </div>
+                </div>
+                <div className="child btn">
+                  <div>
+                    <MdFormatAlignRight />
+                  </div>
+                </div>
+                <div className="child btn">
+                  <div>
+                    <MdFormatAlignJustify />
+                  </div>
+                </div>
+              </div>
+              <div className="panel-heading">
+                Text Color
+              </div>
+              <div className="item">
+                <div className="color-box">
+                  <input type="color" />
+                  <input type="text"/>
+                </div>
+              </div>
+              <div className="panel-heading">
+                Background Color
+              </div>
+              <div className="item">
+                <div className="color-box">
+                  <input type="color" />
+                  <input type="text"/>
+                </div>
+              </div>
+              <div className="panel-heading">
+                Border
+              </div>
+              <div class="item item-combined w-70-30">
+                <Select options={[
+                  {
+                    label: "Solid",
+                    value: "solid"
+                  },
+                  {
+                    label: "Dotted",
+                    value: "dotted"
+                  },
+                  {
+                    label: "Dashed",
+                    value: "dashed"
+                  },
+                ]} />
+                <div className="input-combined child">
+                  <input type="number" />
+                  <div className="label small">px</div>
+                </div>
+              </div>
+              <div className="panel-heading">
+                Margins
+              </div>
+              <div className="item">
+                <div className="margin-container">
+                  <div className="b1">
+                    <div className="icons-horizontal">
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                    </div>
+                    <div className="icons-vertical">
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                    </div>
+                    <div className="input-combined top">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined right">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined bottom">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined left">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                  </div>
+                  <div className="b2">
+                    <div className="icons-horizontal">
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                    </div>
+                    <div className="icons-vertical">
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="b3"></div>
+                </div>
+              </div>
+              <div className="panel-heading">
+                Paddings
+              </div>
+              <div className="item">
+                <div className="padding-container">
+                  <div className="b1">
+                    <div className="icons-horizontal">
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                    </div>
+                    <div className="icons-vertical">
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                    </div>
+                    <div className="input-combined top">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined right">
+                      <input type="number" />
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined bottom">
+                      <input type="number" />
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                    <div className="input-combined left">
+                      <input type="number"/>
+                      <div className="label right">
+                        px
+                      </div>
+                    </div>
+                  </div>
+                  <div className="b2">
+                    <div className="icons-horizontal">
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdHorizontalDistribute />
+                      </div>
+                    </div>
+                    <div className="icons-vertical">
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                      <div className="icon">
+                        <MdVerticalDistribute />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="b3"></div>
+                </div>
               </div>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </>
   );
