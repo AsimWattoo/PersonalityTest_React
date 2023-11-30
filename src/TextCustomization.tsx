@@ -149,7 +149,7 @@ const TextCustomization = () => {
               <div className="panel-heading">
                 Border
               </div>
-              <div class="item item-combined w-70-30">
+              <div className="item item-combined w-70-30">
                 <Select options={[
                   {
                     label: "Solid",

@@ -17,3 +17,9 @@
     overflow-y: auto;
   }
   
+.card .options {
+  max-height: 1000px !important;
+  position: static;
+  color: white;
+  box-shadow: none;
+}
