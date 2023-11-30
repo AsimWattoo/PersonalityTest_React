@@ -1,0 +1,119 @@
+/* TextCustomization.css */
+
+.text-customization-header {
+    background-color: #99FFFF;
+    color: black;
+    cursor: pointer;
+    padding: 9px;
+    width: 100%;
+    height:40px;
+    border: 1px solid grey; /* Removed the incorrect border property */
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+    border-radius: 0px; /* Adjust the value for desired rounded corner radius */
+    user-select: none;
+    display: flex;
+    font-family: 'Segoe UI';
+  }
+  
+  /* Hover effect to demonstrate expanding animation */
+  .text-customization-header:hover {
+    width: 100%; /* Adjust width as per your requirement */
+  }
+  
+  
+  .active, .text-customization-header:hover {
+    background-color: #00BFFF;
+  }
+
+  .symbol {
+    justify-items: end;
+    align-items: end;
+    user-select: none;
+    color: darkturquoise;
+
+  }
+.text-customization-options{
+  background-color: #CC0000;
+  border-radius: 30px;
+  padding:10px;
+}
+
+
+#text-heading{
+  margin:5px;
+}
+#font-family{
+  justify-content: center;
+  align-items: center;
+  margin: 10px 0px;
+  
+}
+
+#size-formatting{
+  margin: 5px;
+  display: inline-block;
+  border-radius: 10px;
+  
+}
+
+
+/* TextCustomization.css */
+
+  button:hover {
+    background-color: #007FFF;
+  }
+  button:active {
+    background-color: #CC0000;
+    box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
+    transform: translateY(4px);
+  }
+  
+  #bold {
+    font-weight: bold;
+  }
+  
+  #italic {
+    font-style: italic;
+  }
+  
+  #underline {
+    text-decoration: underline;
+  }
+  
+  #superscript {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+  }
+  
+  #subscript {
+    font-size: 0.83em;
+    vertical-align: sub;
+    line-height: 0;
+  }
+  
+ /* YourComponent.css */
+
+
+  
+  .color-options {
+    display: flex;
+    flex-wrap: wrap;
+    
+  }
+  .color-options span:hover {
+    transform: scale(1.2);
+  }
+  
+  .color-options span {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid #000;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  

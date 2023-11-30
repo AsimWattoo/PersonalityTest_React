@@ -1,0 +1,15 @@
+  .contentContainer {
+    display: flex;
+  }
+  
+  .leftColumn {
+    flex-grow: 1; /* Take up remaining space */
+    background-color: white;
+  }
+  
+  .rightColumn {
+    flex-shrink: 0; /* Do not shrink */
+    width: 20%; /* Fixed width of 30% */
+    background-color: green; /* Changed color for visualization */
+      }
+  
