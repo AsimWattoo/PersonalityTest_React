@@ -1,18 +1,12 @@
-import React, {useState, useEffect} from 'react';
-import NavigationBar from './NavigationBar';
-import QuestionCard from './QuestionCard';
-import TextCustomization from './TextCustomization';
-import BackgroundCustomization from './BackgroundCustomization';
-import './PageLayout.css';
-
-interface PageLayoutProps {}
-
-interface Styles {
-  container: React.CSSProperties;
-  contentContainer: React.CSSProperties;
-  leftColumn: React.CSSProperties;
-  rightColumn: React.CSSProperties;
-}
+// pages/quiz.js
+"use client"; // pages/quiz.js
+import React, { useState, useEffect } from "react";
+import Question from "./QuestionCard.js";
+import NavigationBar from "./NavigationBar.js";
+import "./PageLayout.css";
+import TextCustomization from "./TextCustomization.js";
+import QuestionCard from "./QuestionCard.js";
+import { MdAdd } from "react-icons/md";
 
 function createDefaultStyle () {
   return {
@@ -38,33 +32,79 @@ function createDefaultStyle () {
   }
 }
 
-const PageLayout: React.FC<PageLayoutProps> = () => {
-  const leftColumnWidth = "80%";
-  const rightColumnWidth = "20%";
-  let [questionProperties, setQuestionProperties] = useState({
-    heading: createDefaultStyle(),
-    options: createDefaultStyle(),
-    background: {
-      "backgroundColor": "#FFFFFF"
-    }
-  });
+
+export default function QuizPage() {
+  const [questions, setQuestions] = useState([]);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  let getTransform = (slide) => {
+    return slide * -100 + 20;
+  }
+
+  let addQuestion = () => {
+    let newQuestions = [...questions, {
+      properties: {
+        heading: createDefaultStyle(),
+        options: createDefaultStyle(),
+        background: {
+          "backgroundColor": "#FFFFFF"
+        }
+      }
+    }];
+    setQuestions(newQuestions);
+  }
+
+  let changeSlide = (slide) => {
+    setCurrentSlide(slide);
+  }
+
+  useEffect(() => {
+    console.log(questions)
+  }, [questions])
 
   return (
-    <div>
+    <div className="page">
       <NavigationBar hasSubmitBtn={true}/>
-      <div className='contentContainer'>
-        <div className='leftColumn' 
-         >
-          <QuestionCard properties={questionProperties}/>
+      <div className='content-container'>
+        <div className='left-column' >
+          <div className="slide-container">
+            {
+              questions.map((question, index) => {
+                return (
+                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide)}%)`, ...questions[index].properties.background}} key={index}>
+                    <QuestionCard properties={questions[index].properties}/>
+                  </div>
+                )
+              })
+            }
+          </div>
+          <div className="navigation-bar">
+            {
+              questions.map((question, index) => {
+                return (
+                  <div className={`item ${currentSlide == index ? 'active' : ''}`} onClick={() => changeSlide(index)}>
+                    {index + 1}
+                  </div>
+                )
+              })
+            }
+            <div className="item" onClick={addQuestion}>
+              <MdAdd />
+            </div>
+          </div>
         </div>
-        <div className='rightColumn'>
-          <TextCustomization title={'Question Background'} propertySection={'background'} properties={questionProperties} setProperties={setQuestionProperties}/>
-          <TextCustomization title={'Question Header'} propertySection={'heading'} properties={questionProperties} setProperties={setQuestionProperties}/>
-          <TextCustomization title={'Option'} propertySection={'options'} properties={questionProperties} setProperties={setQuestionProperties}/>
-        </div>
+        {
+          questions.length > 0 ? 
+          <div className='right-column'>
+            <TextCustomization title={'Question Background'} propertySection={'background'} questions={questions} questionId={currentSlide} setQuestions={setQuestions}/>
+            <TextCustomization title={'Question Header'} propertySection={'heading'} questions={questions} questionId={currentSlide} setQuestions={setQuestions}/>
+            <TextCustomization title={'Option'} propertySection={'options'} questions={questions} questionId={currentSlide} setQuestions={setQuestions}/>
+          </div>
+          : <></>
+        }
       </div>
     </div>
   );
-};
+}
 
-export default PageLayout;
+// Styles

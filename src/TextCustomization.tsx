@@ -342,7 +342,7 @@ const Padding = ({propertyName, value, updateProperty}) => {
   )
 }
 
-const TextCustomization = ({title, propertySection, properties, setProperties}) => {
+const TextCustomization = ({title, propertySection, questions, setQuestions, questionId}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
 
@@ -359,7 +359,6 @@ const TextCustomization = ({title, propertySection, properties, setProperties}) 
   };
   
   let [required_properties, setRequiredProperties] = useState([]);
-
 
   let fontWeights = [{
     label: "Lighter",
@@ -387,19 +386,29 @@ const TextCustomization = ({title, propertySection, properties, setProperties}) 
   },]
 
   useEffect(() => {
-    setRequiredProperties(Object.keys(properties[propertySection]));
-  }, [properties]);
+    setRequiredProperties(Object.keys(questions[questionId].properties[propertySection]));
+  }, [questionId, questions]);
 
   let updateProperty = (property, value) => {
-    console.log(property, value)
-    let newProperties = {
-      ...properties,
-    };
-    newProperties[propertySection] = {
-      ...newProperties[propertySection],
+    let newQuestions = [
+      ...questions
+    ];
+
+    newQuestions[questionId] = {
+      ...newQuestions[questionId],
     }
-    newProperties[propertySection][property] = value;
-    setProperties(newProperties)
+
+    newQuestions[questionId].properties = {
+      ...newQuestions[questionId].properties
+    }
+
+    newQuestions[questionId].properties[propertySection] = {
+      ...newQuestions[questionId].properties[propertySection]
+    }
+
+    newQuestions[questionId].properties[propertySection][property] = value;
+    
+    setQuestions(newQuestions)
   }
 
   let fontFamilies = [
@@ -612,38 +621,49 @@ const TextCustomization = ({title, propertySection, properties, setProperties}) 
       hasOptions: true,
       hasCustomValue: true,
       getValue: () => {
-        return properties[propertySection]["backgroundColor"] ? "backgroundColor" : (properties[propertySection]["backgroundImage"] ? "backgroundImage" : "noBackground");
+        console.log(questions[questionId].properties[propertySection])
+        return questions[questionId].properties[propertySection]["backgroundColor"] ? "backgroundColor" : (questions[questionId].properties[propertySection]["backgroundImage"] ? "backgroundImage" : "noBackground");
       },
       customAction: (propertyName, value) => {
-        let newProperties = {
-          ...properties,
-        };
-        newProperties[propertySection] = {
-          ...newProperties[propertySection],
+
+        let newQuestions = [
+          ...questions
+        ];
+    
+        newQuestions[questionId] = {
+          ...newQuestions[questionId],
+        }
+    
+        newQuestions[questionId].properties = {
+          ...newQuestions[questionId].properties
+        }
+    
+        newQuestions[questionId].properties[propertySection] = {
+          ...newQuestions[questionId].properties[propertySection]
         }
         
         if(value == "backgroundImage"){
-          delete newProperties[propertySection].backgroundColor;
-          newProperties[propertySection]["backgroundImage"] = "";
-          newProperties[propertySection]["backgroundPosition"] = "";
-          newProperties[propertySection]["backgroundRepeat"] = "";
-          newProperties[propertySection]["backgroundSize"] = "";
+          delete newQuestions[questionId].properties[propertySection].backgroundColor;
+          newQuestions[questionId].properties[propertySection]["backgroundImage"] = "";
+          newQuestions[questionId].properties[propertySection]["backgroundPosition"] = "";
+          newQuestions[questionId].properties[propertySection]["backgroundRepeat"] = "";
+          newQuestions[questionId].properties[propertySection]["backgroundSize"] = "";
         }
         else if(value == "backgroundColor") {
-          delete newProperties[propertySection].backgroundImage;
-          delete newProperties[propertySection].backgroundPosition;
-          delete newProperties[propertySection].backgroundRepeat;
-          delete newProperties[propertySection].backgroundSize;
-          newProperties[propertySection]["backgroundColor"] = "#FFFFFF";
+          delete newQuestions[questionId].properties[propertySection].backgroundImage;
+          delete newQuestions[questionId].properties[propertySection].backgroundPosition;
+          delete newQuestions[questionId].properties[propertySection].backgroundRepeat;
+          delete newQuestions[questionId].properties[propertySection].backgroundSize;
+          newQuestions[questionId].properties[propertySection]["backgroundColor"] = "#FFFFFF";
         }
         else {
-          delete newProperties[propertySection].backgroundImage;
-          delete newProperties[propertySection].backgroundPosition;
-          delete newProperties[propertySection].backgroundRepeat;
-          delete newProperties[propertySection].backgroundSize;
-          newProperties[propertySection].backgroundColor = "transparent";
+          delete newQuestions[questionId].properties[propertySection].backgroundImage;
+          delete newQuestions[questionId].properties[propertySection].backgroundPosition;
+          delete newQuestions[questionId].properties[propertySection].backgroundRepeat;
+          delete newQuestions[questionId].properties[propertySection].backgroundSize;
+          newQuestions[questionId].properties[propertySection].backgroundColor = "transparent";
         }
-        setProperties(newProperties)
+        setQuestions(newQuestions)
       }
     },
     "backgroundColor": {
@@ -714,7 +734,7 @@ const TextCustomization = ({title, propertySection, properties, setProperties}) 
       value = configuration.getValue();
     }
     else {
-      value = properties[propertySection][property];
+      value = questions[questionId].properties[propertySection][property];
     }
 
     let control_configuration = {value: value, updateProperty: configuration.customAction ? configuration.customAction : updateProperty};
@@ -724,7 +744,7 @@ const TextCustomization = ({title, propertySection, properties, setProperties}) 
       if(configuration.hasMultipleValues) {
         let value : number[] = [];
         for(let prop of configuration.valueProperties) {
-          value.push(properties[propertySection][prop]);
+          value.push(questions[questionId].properties[propertySection][prop]);
         }
         control_configuration.value = value;
       }
