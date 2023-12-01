@@ -1,11 +1,16 @@
 import React from 'react';
 import PageLayout from './PageLayout';
+import NewQuizPage from './pages/NewQuizPage';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 
 function App() {
   return (
-    <div >
-      <PageLayout />
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<NewQuizPage />} />
+        <Route path="/Quiz" element={<PageLayout />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 

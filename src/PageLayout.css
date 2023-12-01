@@ -1,5 +1,6 @@
   .contentContainer {
     display: flex;
+    height: 93.7vh;
   }
   
   .leftColumn {
@@ -12,14 +13,25 @@
     width: 22%; /* Fixed width of 30% */
     background-color: white; /* Changed color for visualization */
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-    height: 93.5vh;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
   }
   
+
+.card {
+  border: 0px !important;
+}
+
 .card .options {
   max-height: 1000px !important;
   position: static;
   color: white;
   box-shadow: none;
+  background-color: transparent;
+}
+
+.full {
+  height: 100%;
+  width: 100%;
 }
