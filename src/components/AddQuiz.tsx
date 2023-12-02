@@ -1,16 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from 'react';
+import {useAppDispatch} from '../redux/hooks';
+import {resetQuestions} from '../redux/question';
 
 function AddQuizCard({ onAddQuiz }) {
+
+  let navigate = useNavigate();
+  let dispatch = useAppDispatch();
+
+  let createNewQuiz = () => {
+    dispatch(resetQuestions())
+    navigate("/quiz");
+  }
+
   return (
-    <Link to="/quiz" style={styles.card}>
+    <div style={styles.card} onClick={createNewQuiz}>
       <div style={styles.addquizcard} onClick={onAddQuiz}>
         <span style={styles.addicon}>+</span>
       </div>
       <button style={styles.addBtn}>
         Create a new Quiz
       </button>
-    </Link>
+    </div>
   );
 }
 

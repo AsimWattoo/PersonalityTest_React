@@ -45,7 +45,7 @@
 
 .slide .question-container {
   width: 80%;
-  background-color: gray;
+  background-color: transparent;
   text-align: center;
 }
 
@@ -81,4 +81,117 @@
 .navigation-bar .item.active {
   background-color: #0d6dfa;
   color: white;
+}
+
+
+.slide .question-container .question-header input{
+  width: 100%;
+}
+
+.slide .question-container .options-container input {
+  width: 100%;
+}
+
+
+.option-container {
+  display: flex;
+  width: 100%;
+}
+
+.option-container > *:first-child {
+  width: 80% !important;
+}
+
+.option-container > *:last-child {
+  width: 20% !important;
+  margin-left: 0.5em;
+}
+
+.option-container .controls {
+  display: flex;
+  align-items: center;
+}
+
+.input-default {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dedede;
+  border-radius: 5px;
+  height: 100%;
+}
+
+.input-default label {
+  background-color: #dedede;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50% !important;
+  color: gray
+}
+
+.input-default input {
+  height: 100%;
+  width: 50% !important;
+  border: 0px;
+  border-radius: 0px;
+  background-color: white;
+  text-align: center;
+}
+
+.btn-container {
+  display: flex;
+  margin-top: 0.5em;
+}
+
+.btn.btn-primary > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0px;
+}
+
+.btn.btn-primary > div svg {
+  color: white;
+  font-size: 18px;
+}
+
+.btn.btn-primary:hover > div {
+  background-color: transparent;
+}
+
+.btn.btn-primary:hover > div svg {
+  color: white;
+}
+
+.page.preview-page .content-container .left-column {
+  width: 100%;
+}
+
+.page.preview-page .slide-container {
+  position: relative;
+}
+
+.page.preview-page .slide-container .slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}
+
+.page.preview-page .slide-container .slide.slide-active {
+  z-index: 5;
+}
+
+.page.preview-page .slide-container .slide .preview-question-container {
+  width: 60%;
+}
+
+.preview-question-container .options-container .option-container > p{
+  width: 100% !important;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }

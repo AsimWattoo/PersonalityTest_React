@@ -17,6 +17,9 @@ import {
   MdHorizontalRule,
   MdRoundedCorner,
   MdBlock} from 'react-icons/md';
+import type { PropertyUpdate, PropertyRemove } from "./redux/question";
+import { updateProperty, addProperty, removeProperty } from "./redux/question";
+import { useAppDispatch } from "./redux/hooks";
 import Select from "./components/Select";
 
 const SelectDropDown = ({propertyName, value, updateProperty, options, process=true}) => {
@@ -342,9 +345,10 @@ const Padding = ({propertyName, value, updateProperty}) => {
   )
 }
 
-const TextCustomization = ({title, propertySection, questions, setQuestions, questionId}) => {
+const TextCustomization = ({title, propertySection, questions, questionId}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
+  let dispatch = useAppDispatch();
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -358,7 +362,7 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
     }
   };
   
-  let [required_properties, setRequiredProperties] = useState([]);
+  let [required_properties, setRequiredProperties] = useState<string[]>([]);
 
   let fontWeights = [{
     label: "Lighter",
@@ -389,26 +393,16 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
     setRequiredProperties(Object.keys(questions[questionId].properties[propertySection]));
   }, [questionId, questions]);
 
-  let updateProperty = (property, value) => {
-    let newQuestions = [
-      ...questions
-    ];
-
-    newQuestions[questionId] = {
-      ...newQuestions[questionId],
-    }
-
-    newQuestions[questionId].properties = {
-      ...newQuestions[questionId].properties
-    }
-
-    newQuestions[questionId].properties[propertySection] = {
-      ...newQuestions[questionId].properties[propertySection]
-    }
-
-    newQuestions[questionId].properties[propertySection][property] = value;
+  let updateCSSProperty = (property, value) => {
     
-    setQuestions(newQuestions)
+    let propertyUpdate : PropertyUpdate = {
+      questionId: questionId,
+      propertySection: propertySection,
+      propertyName: property,
+      value: value
+    }
+
+    dispatch(updateProperty(propertyUpdate))
   }
 
   let fontFamilies = [
@@ -457,6 +451,25 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
   ]
 
   let alignBtns = [
+    {
+      icon: () => <MdFormatAlignLeft />,
+      value: "left"
+    },
+    {
+      icon: () => <MdFormatAlignCenter />,
+      value: "center"
+    },
+    {
+      icon: () => <MdFormatAlignRight />,
+      value: "right"
+    },
+    {
+      icon: () => <MdFormatAlignJustify />,
+      value: "justify"
+    }
+  ];
+
+  let justifyBtn = [
     {
       icon: () => <MdFormatAlignLeft />,
       value: "left"
@@ -560,7 +573,7 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
         },
         {
           heading: "Paddings",
-          dependencies: ["paddingTop", "paddingRight", "paddingBottom", "paddingRight"]
+          dependencies: ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]
         }
       ]
     },
@@ -591,11 +604,21 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
       requiresName: true,
       hasOptions: true
     },
+    "justifyContent": {
+      render: Buttons,
+      options: justifyBtn,
+      requiresName: true,
+      hasOptions: true
+    },
     "color": {
       render: ColorBox,
       requiresName: true,
     },
     "borderColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "hoverColor": {
       render: ColorBox,
       requiresName: true
     },
@@ -621,49 +644,84 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
       hasOptions: true,
       hasCustomValue: true,
       getValue: () => {
-        console.log(questions[questionId].properties[propertySection])
-        return questions[questionId].properties[propertySection]["backgroundColor"] ? "backgroundColor" : (questions[questionId].properties[propertySection]["backgroundImage"] ? "backgroundImage" : "noBackground");
+        return questions[questionId].properties[propertySection]["backgroundColor"] ? "backgroundColor" : (questions[questionId].properties[propertySection]["backgroundImage"] !== undefined ? "backgroundImage" : "noBackground");
       },
       customAction: (propertyName, value) => {
 
-        let newQuestions = [
-          ...questions
-        ];
-    
-        newQuestions[questionId] = {
-          ...newQuestions[questionId],
-        }
-    
-        newQuestions[questionId].properties = {
-          ...newQuestions[questionId].properties
-        }
-    
-        newQuestions[questionId].properties[propertySection] = {
-          ...newQuestions[questionId].properties[propertySection]
-        }
-        
         if(value == "backgroundImage"){
-          delete newQuestions[questionId].properties[propertySection].backgroundColor;
-          newQuestions[questionId].properties[propertySection]["backgroundImage"] = "";
-          newQuestions[questionId].properties[propertySection]["backgroundPosition"] = "";
-          newQuestions[questionId].properties[propertySection]["backgroundRepeat"] = "";
-          newQuestions[questionId].properties[propertySection]["backgroundSize"] = "";
+
+          let propertyRemove : PropertyRemove = {
+            questionId: questionId,
+            propertySection: propertySection,
+            propertyNames: ["backgroundColor"]
+          }
+
+          let propertiesToAdd : PropertyUpdate[] = [
+            {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyName: "backgroundImage",
+              value: ""
+            },
+            {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyName: "backgroundPosition",
+              value: "Center"
+            },
+            {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyName: "backgroundRepeat",
+              value: "no-repeat"
+            },
+            {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyName: "backgroundSize",
+              value: "Cover"
+            },
+          ]
+          dispatch(removeProperty(propertyRemove))
+          for(let propertyAdd of propertiesToAdd) {
+            dispatch(addProperty(propertyAdd))
+          }
         }
         else if(value == "backgroundColor") {
-          delete newQuestions[questionId].properties[propertySection].backgroundImage;
-          delete newQuestions[questionId].properties[propertySection].backgroundPosition;
-          delete newQuestions[questionId].properties[propertySection].backgroundRepeat;
-          delete newQuestions[questionId].properties[propertySection].backgroundSize;
-          newQuestions[questionId].properties[propertySection]["backgroundColor"] = "#FFFFFF";
+
+          let propertyRemove : PropertyRemove = {
+            questionId: questionId,
+            propertySection: propertySection,
+            propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+          }
+
+          let propertyAdd : PropertyUpdate = {
+            questionId: questionId,
+            propertySection: propertySection,
+            propertyName: "backgroundColor",
+            value: "#FFFFFF",
+          }
+
+          dispatch(removeProperty(propertyRemove))
+          dispatch(addProperty(propertyAdd))
         }
         else {
-          delete newQuestions[questionId].properties[propertySection].backgroundImage;
-          delete newQuestions[questionId].properties[propertySection].backgroundPosition;
-          delete newQuestions[questionId].properties[propertySection].backgroundRepeat;
-          delete newQuestions[questionId].properties[propertySection].backgroundSize;
-          newQuestions[questionId].properties[propertySection].backgroundColor = "transparent";
+          let propertyRemove : PropertyRemove = {
+            questionId: questionId,
+            propertySection: propertySection,
+            propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
+          }
+
+          let propertyAdd : PropertyUpdate = {
+            questionId: questionId,
+            propertySection: propertySection,
+            propertyName: "backgroundColor",
+            value: "transparent",
+          }
+
+          dispatch(removeProperty(propertyRemove))
+          dispatch(addProperty(propertyAdd))
         }
-        setQuestions(newQuestions)
       }
     },
     "backgroundColor": {
@@ -707,7 +765,7 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
       render: Padding,
       requiresName: false,
       hasMultipleValues: true,
-      valueProperties: ["paddingTop", "paddingRight", "paddingBottom", "paddingRight"]
+      valueProperties: ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]
     }
   }
 
@@ -737,7 +795,7 @@ const TextCustomization = ({title, propertySection, questions, setQuestions, que
       value = questions[questionId].properties[propertySection][property];
     }
 
-    let control_configuration = {value: value, updateProperty: configuration.customAction ? configuration.customAction : updateProperty};
+    let control_configuration = {value: value, updateProperty: configuration.customAction ? configuration.customAction : updateCSSProperty};
       if(configuration.requiresName)
         control_configuration["propertyName"] = property;
 
