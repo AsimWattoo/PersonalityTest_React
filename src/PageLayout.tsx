@@ -8,76 +8,31 @@ import NavigationBar from "./NavigationBar.js";
 import "./PageLayout.css";
 import TextCustomization from "./TextCustomization.js";
 import QuestionCard from "./components/QuestionCard.js";
-import { MdAdd } from "react-icons/md";
-function createDefaultStyle (fontSize) {
-  return {
-    "fontFamily": "Arial",
-    "fontStyle": "normal",
-    "fontSize": fontSize,
-    "fontWeight": 400,
-    "textAlign": "left",
-    "color": '#000000',
-    "borderColor": '#dedede',
-    "borderWidth": 1,
-    "borderStyle": "Solid",
-    "borderRadius": 5,
-    "marginTop": 0,
-    "marginRight": 0,
-    "marginBottom": 0,
-    "marginLeft": 0,
-    "paddingTop": 8,
-    "paddingRight": 8,
-    "paddingBottom": 8,
-    "paddingLeft": 8,
-    "backgroundColor": "#FFFFFF",
-  }
-}
-
-function createButtonStyle (fontSize) {
-  return {
-    "fontFamily": "Arial",
-    "fontStyle": "normal",
-    "fontSize": fontSize,
-    "fontWeight": 400,
-    "justifyContent": "left",
-    "color": '#000000',
-    "borderColor": '#dedede',
-    "borderWidth": 1,
-    "borderStyle": "Solid",
-    "borderRadius": 5,
-    "marginTop": 0,
-    "marginRight": 0,
-    "marginBottom": 0,
-    "marginLeft": 0,
-    "paddingTop": 8,
-    "paddingRight": 8,
-    "paddingBottom": 8,
-    "paddingLeft": 8,
-    "backgroundColor": "#FFFFFF",
-  }
-}
+import { MdAdd, MdWarning } from "react-icons/md";
 
 export default function QuizPage() {
   
   const questions = useAppSelector(state => state.question.questions);
+  const sharedProperties = useAppSelector(state => state.shared.properties);
   const dispatch = useAppDispatch();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-
+  console.log(questions);
+  console.log(currentSlide)
   let getTransform = (slide) => {
-    return slide * -100 + 15;
+    return (slide - currentSlide) * 100;
   }
 
   let createQuestion = () => {
     let question : Question = {
       properties: {
-        heading: createDefaultStyle(24),
-        options: createDefaultStyle(18),
         background: {
           "backgroundColor": "#FFFFFF"
         },
-        submitBtn: createButtonStyle(18),
-        prevBtn: createButtonStyle(18),
+        configuration: {
+          NextButton: true,
+          PreviousButton: true,
+        },
       },
       options: [],
       heading: ""
@@ -93,13 +48,26 @@ export default function QuizPage() {
     <div className="page">
       <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false}/>
       <div className='content-container'>
-        <div className='left-column' >
-          <div className="slide-container">
+        <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >
+          <div className={`slide-container ${questions.length == 0 ? "d-flex" : ""}`}>
             {
+              questions.length == 0 ? 
+              <div className={`slide w-100`}>
+                <div className="no-question">
+                  <MdWarning />
+                  <div>
+                    No Question has been added
+                  </div>
+                  <div>
+                    Use the <strong>add button</strong> below to add your first question
+                  </div>
+                </div>
+              </div> : 
               questions.map((question, index) => {
                 return (
-                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide)}%)`, ...questions[index].properties.background}} key={index}>
-                    <QuestionCard changePage={changeSlide} properties={questions[index].properties} questions={questions} questionId={index}/>
+                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} 
+                  style={{transform: `translateX(${getTransform(index)}%)`, ...questions[index].properties.background}} key={index}>
+                    <QuestionCard changePage={changeSlide} sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index}/>
                   </div>
                 )
               })
@@ -124,10 +92,14 @@ export default function QuizPage() {
           questions.length > 0 ? 
           <div className='right-column'>
             <TextCustomization title={'Question Background'} propertySection={'background'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Header'} propertySection={'heading'} questions={questions} questionId={currentSlide} />
-            <TextCustomization title={'Option'} propertySection={'options'} questions={questions} questionId={currentSlide} />
-            <TextCustomization title={'Next Button'} propertySection={'submitBtn'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Prev Button'} propertySection={'prevBtn'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Question Header'} propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} />
+            <TextCustomization title={'Option'} propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} />
+            <TextCustomization title={'Next Button'} propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Prev Button'} propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Button Hover Styles'} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Configuration'} propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Option Hover Style'} propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Selected Option Style'} propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
           </div>
           : <></>
         }

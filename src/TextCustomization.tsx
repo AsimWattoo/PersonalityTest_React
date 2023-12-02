@@ -19,8 +19,12 @@ import {
   MdBlock} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
 import { updateProperty, addProperty, removeProperty } from "./redux/question";
+import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "./redux/shared";
+import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
 import { useAppDispatch } from "./redux/hooks";
+import type { Question } from "./redux/question";
 import Select from "./components/Select";
+import ToggleBtn from "./components/ToggleBtn";
 
 const SelectDropDown = ({propertyName, value, updateProperty, options, process=true}) => {
   let processedOptions = options;
@@ -127,7 +131,7 @@ const BorderStyleWidth = ({value, updateProperty, options, process}) => {
   )
 }
 
-const InputField = ({propertyName, value, updateProperty, icon, unit, format}) => {
+const InputField = ({propertyName, value, type, updateProperty, icon, unit, format}) => {
   return (
     <div className="item">
       <div className="input-combined">
@@ -138,7 +142,7 @@ const InputField = ({propertyName, value, updateProperty, icon, unit, format}) =
           </div> :
           <></>
         }
-        <input type="number" value={value} onChange={e => updateProperty(propertyName, format ? format(e.target.value) : e.target.value)}/>
+        <input type={type} value={value} onChange={e => updateProperty(propertyName, format ? format(e.target.value) : e.target.value)}/>
         {
           unit ? 
           <div className="label small right">{unit}</div> :
@@ -150,7 +154,6 @@ const InputField = ({propertyName, value, updateProperty, icon, unit, format}) =
 }
 
 const Margin = ({propertyName, value, updateProperty, formatter}) => {
-
   let changeMargin = (propName, value) => {
     let val = parseFloat(value);
     updateProperty(propName, val);
@@ -345,7 +348,16 @@ const Padding = ({propertyName, value, updateProperty}) => {
   )
 }
 
-const TextCustomization = ({title, propertySection, questions, questionId}) => {
+const CheckBox = ({propertyName, value, updateProperty}) => {
+  return (
+    <div className="item item-check">
+        <label>{propertyName}</label>
+      <ToggleBtn value={value} onChange={v => updateProperty(propertyName, v)} />
+    </div>
+  )
+}
+
+const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
@@ -390,19 +402,33 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
   },]
 
   useEffect(() => {
-    setRequiredProperties(Object.keys(questions[questionId].properties[propertySection]));
-  }, [questionId, questions]);
+    if(isShared) {
+      setRequiredProperties(Object.keys(sharedProperties[propertySection]));
+    } else {
+      setRequiredProperties(Object.keys(questions[questionId].properties[propertySection]));
+    }
+  }, isShared ? [sharedProperties] : [questions, questionId]);
 
   let updateCSSProperty = (property, value) => {
-    
-    let propertyUpdate : PropertyUpdate = {
-      questionId: questionId,
-      propertySection: propertySection,
-      propertyName: property,
-      value: value
+    if(isShared) {
+      let propertyUpdate : SharedPropertyUpdate = {
+        propertySection: propertySection,
+        propertyName: property,
+        value: value
+      }
+  
+      dispatch(updateSharedProperty(propertyUpdate))
     }
-
-    dispatch(updateProperty(propertyUpdate))
+    else {
+      let propertyUpdate : PropertyUpdate = {
+        questionId: questionId,
+        propertySection: propertySection,
+        propertyName: property,
+        value: value
+      }
+  
+      dispatch(updateProperty(propertyUpdate))
+    }
   }
 
   let fontFamilies = [
@@ -574,7 +600,35 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
         {
           heading: "Paddings",
           dependencies: ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]
-        }
+        },
+        {
+          heading: "Next Button Text",
+          dependencies: ["NextButtonText"]
+        },
+        {
+          heading: "Submit Button Text",
+          dependencies: ["SubmitButtonText"]
+        },
+        {
+          heading: "Previous Button Text",
+          dependencies: ["PreviousButtonText"]
+        }, 
+        {
+          heading: "Next Button Hover Color",
+          dependencies: ["NextButtonHoverColor"]
+        }, 
+        {
+          heading: "Next Button Hover Text Color",
+          dependencies: ["NextButtonHoverTextColor"]
+        }, 
+        {
+          heading: "Previous Button Hover Color",
+          dependencies: ["PreviousButtonHoverColor"]
+        }, 
+        {
+          heading: "Previous Button Hover Text Color",
+          dependencies: ["PreviousButtonHoverTextColor"]
+        }, 
       ]
     },
     "fontFamily": {
@@ -634,6 +688,7 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
     "borderRadius": {
       render: InputField,
       requiresName: true,
+      type: "number",
       icon: () => <MdRoundedCorner/>,
       unit: 'px',
       format: (v) => parseInt(v)
@@ -644,83 +699,152 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
       hasOptions: true,
       hasCustomValue: true,
       getValue: () => {
-        return questions[questionId].properties[propertySection]["backgroundColor"] ? "backgroundColor" : (questions[questionId].properties[propertySection]["backgroundImage"] !== undefined ? "backgroundImage" : "noBackground");
+        let backgroundColor = isShared ? sharedProperties[propertySection].backgroundColor : questions[questionId].properties[propertySection]["backgroundColor"];
+        let backgroundImage = isShared ? sharedProperties[propertySection].backgroundImage : questions[questionId].properties[propertySection]["backgroundImage"];
+        return  backgroundColor ? "backgroundColor" : (backgroundImage !== undefined ? "backgroundImage" : "noBackground");
       },
       customAction: (propertyName, value) => {
-
-        if(value == "backgroundImage"){
-
-          let propertyRemove : PropertyRemove = {
-            questionId: questionId,
-            propertySection: propertySection,
-            propertyNames: ["backgroundColor"]
+        if(isShared) {
+          if(value == "backgroundImage"){
+            let propertyRemove : SharedPropertyRemove = {
+              propertySection: propertySection,
+              propertyNames: ["backgroundColor"]
+            }
+  
+            let propertiesToAdd : SharedPropertyUpdate[] = [
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundImage",
+                value: ""
+              },
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundPosition",
+                value: "Center"
+              },
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundRepeat",
+                value: "no-repeat"
+              },
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundSize",
+                value: "Cover"
+              },
+            ]
+            dispatch(removeSharedProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addSharedProperty(propertyAdd))
+            }
+          }
+          else if(value == "backgroundColor") {
+  
+            let propertyRemove : SharedPropertyRemove = {
+              propertySection: propertySection,
+              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+            }
+  
+            let propertyAdd : SharedPropertyUpdate = {
+              propertySection: propertySection,
+              propertyName: "backgroundColor",
+              value: "#FFFFFF",
+            }
+  
+            dispatch(removeSharedProperty(propertyRemove))
+            dispatch(addSharedProperty(propertyAdd))
+          }
+          else {
+            let propertyRemove : SharedPropertyRemove = {
+              propertySection: propertySection,
+              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
+            }
+  
+            let propertyAdd : SharedPropertyUpdate = {
+              propertySection: propertySection,
+              propertyName: "backgroundColor",
+              value: "transparent",
+            }
+  
+            dispatch(removeSharedProperty(propertyRemove))
+            dispatch(addSharedProperty(propertyAdd))
           }
 
-          let propertiesToAdd : PropertyUpdate[] = [
-            {
+        }else {
+          if(value == "backgroundImage"){
+
+            let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyName: "backgroundImage",
-              value: ""
-            },
-            {
+              propertyNames: ["backgroundColor"]
+            }
+  
+            let propertiesToAdd : PropertyUpdate[] = [
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundImage",
+                value: ""
+              },
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundPosition",
+                value: "Center"
+              },
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundRepeat",
+                value: "no-repeat"
+              },
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundSize",
+                value: "Cover"
+              },
+            ]
+            dispatch(removeProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addProperty(propertyAdd))
+            }
+          }
+          else if(value == "backgroundColor") {
+  
+            let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyName: "backgroundPosition",
-              value: "Center"
-            },
-            {
+              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+            }
+  
+            let propertyAdd : PropertyUpdate = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyName: "backgroundRepeat",
-              value: "no-repeat"
-            },
-            {
-              questionId: questionId,
-              propertySection: propertySection,
-              propertyName: "backgroundSize",
-              value: "Cover"
-            },
-          ]
-          dispatch(removeProperty(propertyRemove))
-          for(let propertyAdd of propertiesToAdd) {
+              propertyName: "backgroundColor",
+              value: "#FFFFFF",
+            }
+  
+            dispatch(removeProperty(propertyRemove))
             dispatch(addProperty(propertyAdd))
           }
-        }
-        else if(value == "backgroundColor") {
-
-          let propertyRemove : PropertyRemove = {
-            questionId: questionId,
-            propertySection: propertySection,
-            propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+          else {
+            let propertyRemove : PropertyRemove = {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
+            }
+  
+            let propertyAdd : PropertyUpdate = {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyName: "backgroundColor",
+              value: "transparent",
+            }
+  
+            dispatch(removeProperty(propertyRemove))
+            dispatch(addProperty(propertyAdd))
           }
-
-          let propertyAdd : PropertyUpdate = {
-            questionId: questionId,
-            propertySection: propertySection,
-            propertyName: "backgroundColor",
-            value: "#FFFFFF",
-          }
-
-          dispatch(removeProperty(propertyRemove))
-          dispatch(addProperty(propertyAdd))
-        }
-        else {
-          let propertyRemove : PropertyRemove = {
-            questionId: questionId,
-            propertySection: propertySection,
-            propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
-          }
-
-          let propertyAdd : PropertyUpdate = {
-            questionId: questionId,
-            propertySection: propertySection,
-            propertyName: "backgroundColor",
-            value: "transparent",
-          }
-
-          dispatch(removeProperty(propertyRemove))
-          dispatch(addProperty(propertyAdd))
         }
       }
     },
@@ -766,6 +890,45 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
       requiresName: false,
       hasMultipleValues: true,
       valueProperties: ["paddingTop", "paddingRight", "paddingBottom", "paddingLeft"]
+    },
+    "NextButton": {
+      render: CheckBox,
+      requiresName: true
+    },
+    "NextButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "SubmitButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "PreviousButton": {
+      render: CheckBox,
+      requiresName: true
+    },
+    "PreviousButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "NextButtonHoverColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "PreviousButtonHoverColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "NextButtonHoverTextColor" : {
+      render: ColorBox,
+      requiresName: true
+    },
+    "PreviousButtonHoverTextColor" : {
+      render: ColorBox,
+      requiresName: true
     }
   }
 
@@ -792,7 +955,7 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
       value = configuration.getValue();
     }
     else {
-      value = questions[questionId].properties[propertySection][property];
+      value = isShared ? sharedProperties[propertySection][property] : questions[questionId].properties[propertySection][property];
     }
 
     let control_configuration = {value: value, updateProperty: configuration.customAction ? configuration.customAction : updateCSSProperty};
@@ -802,7 +965,8 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
       if(configuration.hasMultipleValues) {
         let value : number[] = [];
         for(let prop of configuration.valueProperties) {
-          value.push(questions[questionId].properties[propertySection][prop]);
+          let val = isShared ? sharedProperties[propertySection][prop] : questions[questionId].properties[propertySection][prop]
+          value.push(val);
         }
         control_configuration.value = value;
       }
@@ -827,6 +991,10 @@ const TextCustomization = ({title, propertySection, questions, questionId}) => {
 
       if(configuration.accept) {
         control_configuration["accept"] = configuration.accept;
+      }
+
+      if(configuration.type) {
+        control_configuration["type"] = configuration.type;
       }
 
       let control = configuration.render(control_configuration);

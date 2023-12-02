@@ -103,6 +103,18 @@
   width: 50%;
 }
 
+.item.item-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item.item-check label {
+  font-size: 18px;
+  color: #989898;
+  font-weight: 300;
+}
+
 input {
   padding: 8px;
   background-color: #f5f5f5;

@@ -11,6 +11,7 @@ import { MdAdd } from "react-icons/md";
 export default function PreviewPage() {
   
   const questions = useAppSelector(state => state.question.questions);
+  const sharedProperties = useAppSelector(state => state.shared.properties);
   const [currentSlide, setCurrentSlide] = useState(0);
 
   let getTransform = (currentSlide, slide) => {
@@ -31,7 +32,7 @@ export default function PreviewPage() {
               questions.map((question, index) => {
                 return (
                   <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...questions[index].properties.background}} key={index}>
-                    <QuestionPreview properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
+                    <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
                   </div>
                 )
               })

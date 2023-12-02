@@ -6,21 +6,22 @@ import { useAppDispatch } from '../redux/hooks';
 import {MdAdd, MdClose, MdDelete} from 'react-icons/md';
 
 // QuestionCard component
-function QuestionCard({properties, questions, questionId, changePage}) {
+function QuestionCard({properties, sharedProperties, questions, questionId, changePage}) {
 
   let [style, setStyle] = useState({});
   let dispatch = useAppDispatch()
 
   useEffect(() => {
-    let newStyle = {"marginTop": properties.options["marginTop"], 
-    "marginBottom": properties.options["marginBottom"]};
+    let newStyle = {"marginTop": sharedProperties.options["marginTop"], 
+    "marginBottom": sharedProperties.options["marginBottom"]};
     setStyle(newStyle)
-  }, [properties.options])
+  }, [sharedProperties.options])
 
   let newOption = () => {
     let newOption: Option = {
       text: "",
-      value: 0
+      value: 0,
+      selected: false,
     }
 
     let optionAdd : OptionAdd = {
@@ -37,7 +38,8 @@ function QuestionCard({properties, questions, questionId, changePage}) {
 
     let updatedOption : Option = {
       text: value,
-      value: option.value
+      value: option.value,
+      selected: false,
     }
 
     let optionUpdateProperties : OptionUpdate = {
@@ -74,7 +76,7 @@ function QuestionCard({properties, questions, questionId, changePage}) {
 
   let deleteQuestion = (id) => {
     //If this is the last question to be deleted
-    if(id == questions.length - 1) {
+    if(id == questions.length - 1 && id != 0) {
       changePage(questionId - 1);
     }
     dispatch(removeQuestion(id))
@@ -91,14 +93,14 @@ function QuestionCard({properties, questions, questionId, changePage}) {
   return (
     <div className="question-container">
       <div className="question-header">
-        <input type="text" style={properties.heading} placeholder="Enter Question" value={questions[questionId].heading} onChange={e => headingChanged(e.target.value)}/>
+        <input type="text" style={sharedProperties.heading} placeholder="Enter Question" value={questions[questionId].heading} onChange={e => headingChanged(e.target.value)}/>
       </div>
       <div className="options-container d-flex flex-column align-items-center mt-3">
         {
           questions[questionId].options.map((option, index) => {
             return (
               <div className="option-container">
-                <input type="text" value={option.text} style={properties.options} onChange={e => updateOptionText(index, e.target.value)}/>
+                <input type="text" value={option.text} style={{...sharedProperties.options}} onChange={e => updateOptionText(index, e.target.value)}/>
                 <div className="controls" style={style}>
                   <div className="input-default">
                     <label>Value</label>
@@ -114,15 +116,29 @@ function QuestionCard({properties, questions, questionId, changePage}) {
         }
       </div>
       <div className='d-flex align-items-center w-100'>
-        <div className="btn-container w-50" style={{"justifyContent": properties.prevBtn["justifyContent"]}}>
-          <div className="btn" style={properties.prevBtn}>
-            Prev
-          </div>
+        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.prevBtn["justifyContent"]}}>
+          {
+            properties.configuration.PreviousButton ? 
+            <div className="btn" style={sharedProperties.prevBtn}>
+              {sharedProperties.ButtonHoverStyle.PreviousButtonText}
+            </div> :
+            <></>
+          }
         </div>
-        <div className="btn-container w-50" style={{"justifyContent": properties.submitBtn["justifyContent"]}}>
-          <div className="btn" style={properties.submitBtn}>
-            Next
-          </div>
+        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}}>
+          {
+            properties.configuration.NextButton ? 
+            (
+              questionId == questions.length - 1 ? 
+              <div className="btn" style={sharedProperties.submitBtn}>
+                {sharedProperties.ButtonHoverStyle.SubmitButtonText}
+              </div>:
+              <div className="btn" style={sharedProperties.submitBtn}>
+                {sharedProperties.ButtonHoverStyle.NextButtonText}
+              </div>
+            ) :
+            <></>
+          }
         </div>
       </div>
       <div className="edit-btns mt-2">

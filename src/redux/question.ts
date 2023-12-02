@@ -3,7 +3,8 @@ import type {PayloadAction} from "@reduxjs/toolkit";
 
 type Option = {
     text: string,
-    value: number
+    value: number,
+    selected: boolean
 }
 
 type Question = {
@@ -41,6 +42,11 @@ type PropertyRemove = {
     propertyNames: string[]
 }
 
+type OptionSelection = {
+    questionId: number,
+    optionId: number
+}
+
 interface QuestionState {
     questions: Question[]
 }
@@ -54,12 +60,27 @@ export const questionSlice = createSlice({
         resetQuestions: (state, action) => {
             state.questions = [];
         },
+        selectOption: (state, action: PayloadAction<OptionSelection>) => {
+            let payload = action.payload
+            state.questions[payload.questionId].options.forEach((option, index) => {
+                if(index == payload.optionId)
+                    option.selected = true;
+                else 
+                    option.selected = false;
+            });
+        },
+        resetSelection: (state, action) => {
+            for(let question of state.questions) {
+                question.options.forEach((option, index) => {
+                    option.selected = false;
+                });
+            }
+        },
         addQuestion: (state, action: PayloadAction<Question>) => {
             state.questions.push(action.payload)
         },
         removeQuestion: (state, action: PayloadAction<number>) => {
             state.questions = state.questions.filter((question, index) => index != action.payload)
-            console.log(state.questions)
         },
         updateHeading: (state, action: PayloadAction<HeadingUpdate>) => {
             state.questions[action.payload.index].heading = action.payload.heading;
@@ -90,8 +111,20 @@ export const questionSlice = createSlice({
     }
 });
 
-export type {Question, Option, HeadingUpdate, OptionAdd, OptionUpdate, PropertyUpdate, PropertyRemove}
+export type {Question, Option, HeadingUpdate, OptionAdd, OptionUpdate, PropertyUpdate, PropertyRemove, OptionSelection}
 
-export const {addQuestion, removeQuestion, updateHeading, addOption, removeOption, updateOption, updateProperty, addProperty, removeProperty, resetQuestions} = questionSlice.actions;
+export const {
+    addQuestion, 
+    removeQuestion, 
+    updateHeading, 
+    addOption, 
+    removeOption, 
+    updateOption, 
+    updateProperty, 
+    addProperty, 
+    removeProperty, 
+    resetQuestions,
+    resetSelection,
+    selectOption} = questionSlice.actions;
 
 export default questionSlice.reducer
