@@ -99,7 +99,7 @@ export default function QuizPage() {
               questions.map((question, index) => {
                 return (
                   <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide)}%)`, ...questions[index].properties.background}} key={index}>
-                    <QuestionCard properties={questions[index].properties} questions={questions} questionId={index}/>
+                    <QuestionCard changePage={changeSlide} properties={questions[index].properties} questions={questions} questionId={index}/>
                   </div>
                 )
               })

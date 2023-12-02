@@ -6,7 +6,7 @@ import { useAppDispatch } from '../redux/hooks';
 import {MdAdd, MdClose, MdDelete} from 'react-icons/md';
 
 // QuestionCard component
-function QuestionCard({properties, questions, questionId}) {
+function QuestionCard({properties, questions, questionId, changePage}) {
 
   let [style, setStyle] = useState({});
   let dispatch = useAppDispatch()
@@ -73,6 +73,10 @@ function QuestionCard({properties, questions, questionId}) {
   }
 
   let deleteQuestion = (id) => {
+    //If this is the last question to be deleted
+    if(id == questions.length - 1) {
+      changePage(questionId - 1);
+    }
     dispatch(removeQuestion(id))
   }
 

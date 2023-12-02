@@ -59,6 +59,7 @@ export const questionSlice = createSlice({
         },
         removeQuestion: (state, action: PayloadAction<number>) => {
             state.questions = state.questions.filter((question, index) => index != action.payload)
+            console.log(state.questions)
         },
         updateHeading: (state, action: PayloadAction<HeadingUpdate>) => {
             state.questions[action.payload.index].heading = action.payload.heading;
