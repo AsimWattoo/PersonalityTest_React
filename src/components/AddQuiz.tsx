@@ -1,25 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
 import React from 'react';
-import {useAppDispatch} from '../redux/hooks';
-import {resetQuestions, resetSelection} from '../redux/question';
-import { initializeProperties, resetProperties } from "../redux/shared";
-import { createDefaultStyle, createButtonStyle, createOptionStyle } from "../redux/shared";
 
-function AddQuizCard({ onAddQuiz }) {
+type AddQuizType = {
+  onAddQuiz(): void
+}
 
-  let navigate = useNavigate();
-  let dispatch = useAppDispatch();
-
-  let createNewQuiz = () => {
-    dispatch(resetQuestions({}))
-    dispatch(resetSelection({}))
-    dispatch(resetProperties({}));
-    navigate("/quiz");
-  }
-
+function AddQuizCard(props: AddQuizType) {
   return (
-    <div style={styles.card} onClick={createNewQuiz}>
-      <div style={styles.addquizcard} onClick={onAddQuiz}>
+    <div style={styles.card} onClick={props.onAddQuiz}>
+      <div style={styles.addquizcard}>
         <span style={styles.addicon}>+</span>
       </div>
       <button style={styles.addBtn}>

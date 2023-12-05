@@ -1,10 +1,50 @@
 import React from 'react';
 import { MdEdit, MdVisibility } from 'react-icons/md';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { updateQuestions, updateProperties } from './redux/quiz';
+import type { QuestionUpdate, PropertiesUpdate } from './redux/quiz';
 
-function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}) {
+type NavigateProps = {
+  hasSubmitBtn: boolean,
+  hasPreview: boolean,
+  hasEditBtn: boolean
+}
+
+function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
 
   let navigate = useNavigate();
+  let params = useParams();
+
+  let questions = useAppSelector(state => state.question.questions);
+  let sharedProperties = useAppSelector(state => state.shared);
+  let dispatch = useAppDispatch();
+
+  let onSave = () => {
+    if(params.id) {
+      let id = parseInt(params.id);
+      let questionUpdate: QuestionUpdate = {
+        quizId: id,
+        questions: questions
+      }
+
+      dispatch(updateQuestions(questionUpdate));
+
+      let propertiesUpdate: PropertiesUpdate = {
+        quizId: id,
+        properties: sharedProperties.properties
+      }
+      dispatch(updateProperties(propertiesUpdate))
+    }
+  }
+
+  let previewQuiz = () => {
+    navigate(`/quiz/preview/${params.id}`);
+  }
+
+  let editQuiz = () => {
+    navigate(`/quiz/questions/${params.id}`);
+  }
 
   return (
     <nav className="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between" style={{width: "100%"}}>
@@ -16,24 +56,24 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}) {
           <div className="d-flex align-items-center">
             {
               hasEditBtn ? 
-              <Link to={"/quiz"} className="btn btn-primary mx-2 d-flex align-items-center" type="submit">
+              <button className="btn btn-primary mx-2 d-flex align-items-center" type="submit" onClick={editQuiz }>
                 <div className="me-2"><MdEdit /></div>
                 Edit
-              </Link> :
+              </button> :
               <></>
             }
             {
               hasPreview ? 
-              <Link to={"/preview"} className="btn btn-primary mx-2 d-flex align-items-center" type="submit">
+              <button className="btn btn-primary mx-2 d-flex align-items-center" type="submit" onClick={previewQuiz}>
                 <div className="me-2"><MdVisibility /></div>
                 Preview
-              </Link> :
+              </button> :
               <></>
             }
             {
               hasSubmitBtn ? 
-              <button className="btn btn-primary mx-2" type="submit">
-                Submit
+              <button className="btn btn-primary mx-2" type="submit" onClick={onSave}>
+                Save
               </button> :
               <></>
             }

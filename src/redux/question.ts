@@ -57,8 +57,8 @@ export const questionSlice = createSlice({
     name: "questions",
     initialState: initialState,
     reducers: {
-        resetQuestions: (state, action) => {
-            state.questions = [];
+        resetQuestions: (state, action: PayloadAction<Question[]>) => {
+            state.questions = action.payload;
         },
         selectOption: (state, action: PayloadAction<OptionSelection>) => {
             let payload = action.payload

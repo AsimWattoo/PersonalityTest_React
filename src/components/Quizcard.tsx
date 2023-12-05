@@ -1,19 +1,25 @@
 import React from 'react';
 
-function AddQuizCard({ onAddQuiz= () => {} }) {
+type QuizInfo = {
+  id: number,
+  name: string,
+  onQuizClick(id: number): void
+}
+
+function QuizCard(props: QuizInfo) {
   return (
     <div style={styles.card}>
-      <div style={styles.addquizcard} onClick={onAddQuiz}>
+      <div style={styles.addquizcard} onClick={() => props.onQuizClick(props.id)}>
         <img src="../"/>
       </div>
       <h3  style={styles.addicon}>
-        Quiz 1
+        {props.name}
       </h3>
     </div>
   );
 }
 
-export default AddQuizCard;
+export default QuizCard;
 
 const styles = {
   card: {

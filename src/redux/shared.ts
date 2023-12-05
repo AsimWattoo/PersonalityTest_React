@@ -11,7 +11,7 @@ type SharedPropertyRemove = {
   propertyNames: string[]
 }
 
-function createDefaultStyle (fontSize) {
+function createDefaultStyle (fontSize: number) {
     return {
       "fontFamily": "Arial",
       "fontStyle": "normal",
@@ -60,7 +60,7 @@ function createDefaultStyle (fontSize) {
     }
   }
   
-  function createButtonStyle (fontSize) {
+  function createButtonStyle (fontSize: number) {
     return {
       "fontFamily": "Arial",
       "fontStyle": "normal",
@@ -126,23 +126,7 @@ export const sharedSlice = createSlice({
             }
         },
         resetProperties: (state, action) => {
-          state.properties = {
-            heading: createDefaultStyle(24),
-            options: createOptionStyle(),
-            submitBtn: createButtonStyle(18),
-            prevBtn: createButtonStyle(18),
-            OptionHoverStyle: createOptionStyle(),
-            SelectedOptionStyle: createOptionStyle(),
-            ButtonHoverStyle: {
-              NextButtonText: "Next",
-              NextButtonHoverColor: "#dedede",
-              NextButtonHoverTextColor: "#000000",
-              SubmitButtonText: "Submit",
-              PreviousButtonText: "Prev",
-              PreviousButtonHoverColor: "#dedede",
-              PreviousButtonHoverTextColor: "#000000",
-            }
-          }
+          state.properties = action.payload;
         }
     }
 });

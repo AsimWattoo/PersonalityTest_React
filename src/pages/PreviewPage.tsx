@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAppSelector } from "../redux/hooks.js";
 import NavigationBar from "../NavigationBar.js";
-import "../PageLayout.css";
+import "./QuizPage.css";
 import TextCustomization from "../TextCustomization.js";
 import QuestionPreview from "../components/QuestionPreview.js";
 import { MdAdd } from "react-icons/md";

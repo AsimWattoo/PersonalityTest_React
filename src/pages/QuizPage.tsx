@@ -1,24 +1,24 @@
 // pages/quiz.js
 "use client"; // pages/quiz.js
 import React, { useState, useEffect } from "react";
-import { addQuestion } from "./redux/question";
-import { Question, Option } from "./redux/question";
-import { useAppDispatch, useAppSelector } from "./redux/hooks.js";
-import NavigationBar from "./NavigationBar.js";
-import "./PageLayout.css";
-import TextCustomization from "./TextCustomization.js";
-import QuestionCard from "./components/QuestionCard.js";
+import { addQuestion } from "../redux/question";
+import { Question, Option } from "../redux/question";
+import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
+import NavigationBar from "../NavigationBar.js";
+import "./QuizPage.css";
+import TextCustomization from "../TextCustomization.js";
+import QuestionCard from "../components/QuestionCard.js";
 import { MdAdd, MdWarning } from "react-icons/md";
-
+import PagesBar from "../components/PagesBar";
+import { useParams } from "react-router";
 export default function QuizPage() {
   
+  const params = useParams();
+  const dispatch = useAppDispatch();
   const questions = useAppSelector(state => state.question.questions);
   const sharedProperties = useAppSelector(state => state.shared.properties);
-  const dispatch = useAppDispatch();
 
   const [currentSlide, setCurrentSlide] = useState(0);
-  console.log(questions);
-  console.log(currentSlide)
   let getTransform = (slide) => {
     return (slide - currentSlide) * 100;
   }
@@ -48,6 +48,7 @@ export default function QuizPage() {
     <div className="page">
       <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false}/>
       <div className='content-container'>
+        <PagesBar currentPage={'questions'} quizId={params.id}/>
         <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >
           <div className={`slide-container ${questions.length == 0 ? "d-flex" : ""}`}>
             {

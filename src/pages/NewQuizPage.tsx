@@ -3,36 +3,45 @@ import React, { useState } from 'react';
 import NavigationBar from "../NavigationBar.js";
 import QuizCard from "../components/Quizcard.js";
 import AddQuizCard from '../components/AddQuiz.js';
+import { resetProperties } from '../redux/shared.js';
+import { resetQuestions } from '../redux/question.js';
+import { resetSelection } from '../redux/question.js';
+import { createNewQuiz, deleteQuiz } from '../redux/quiz.js';
+import { useAppDispatch, useAppSelector } from '../redux/hooks.js';
+import { useNavigate } from 'react-router';
 
 
 function NewQuizPage() {
-  const [quizzes, setQuizzes] = useState([
-    // Populate this array with your existing quiz data or leave it empty initially
-  ]);
+  
+  let quizState = useAppSelector(state => state.quiz);
+  let dispatch = useAppDispatch();
+  let navigate = useNavigate();
 
   // Function to handle adding a new quiz
   const handleAddQuiz = () => {
-    // Add logic to handle creating a new quiz here
-    // For example, adding a new quiz object to the quizzes state array
-    const newQuiz = {
-      id: quizzes.length + 1,
-      title: 'New Quiz',
-      backgroundColor: '#E8F5E9', // Default color or generated dynamically
-    };
-    setQuizzes([...quizzes, newQuiz]);
+    dispatch(createNewQuiz({}));
   };
+
+  const quizClicked = (id: number) => {
+    let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
+    dispatch(resetProperties(quiz.sharedProperties.properties));
+    dispatch(resetQuestions(quiz.questions));
+    dispatch(resetSelection({}));
+    navigate(`/quiz/presentation/${id}`)
+  }
 
   return (
     <div style={styles.page}>
-      <NavigationBar />
+      <NavigationBar hasEditBtn={false} hasPreview={false} hasSubmitBtn={false}/>
       <div style={styles.gridContainer}>
       <AddQuizCard onAddQuiz={handleAddQuiz} />
-        <QuizCard />
-        <QuizCard />
-        <QuizCard />
-        <QuizCard />
-        <QuizCard />
-        <QuizCard />
+      {
+        quizState.quizes.map((quiz, index) => {
+          return (
+            <QuizCard key={index} id={quiz.id} name={quiz.title} onQuizClick={quizClicked}/>
+          )
+        })
+      }
       </div>
     </div>
   );
