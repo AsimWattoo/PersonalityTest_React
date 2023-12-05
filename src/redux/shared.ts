@@ -132,7 +132,16 @@ export const sharedSlice = createSlice({
             submitBtn: createButtonStyle(18),
             prevBtn: createButtonStyle(18),
             OptionHoverStyle: createOptionStyle(),
-            SelectedOptionStyle: createOptionStyle()
+            SelectedOptionStyle: createOptionStyle(),
+            ButtonHoverStyle: {
+              NextButtonText: "Next",
+              NextButtonHoverColor: "#dedede",
+              NextButtonHoverTextColor: "#000000",
+              SubmitButtonText: "Submit",
+              PreviousButtonText: "Prev",
+              PreviousButtonHoverColor: "#dedede",
+              PreviousButtonHoverTextColor: "#000000",
+            }
           }
         }
     }
