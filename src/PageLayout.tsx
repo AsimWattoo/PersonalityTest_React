@@ -77,7 +77,7 @@ export default function QuizPage() {
             {
               questions.map((question, index) => {
                 return (
-                  <div className={`item ${currentSlide == index ? 'active' : ''}`} onClick={() => changeSlide(index)}>
+                  <div key={index} className={`item ${currentSlide == index ? 'active' : ''}`} onClick={() => changeSlide(index)}>
                     {index + 1}
                   </div>
                 )

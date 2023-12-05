@@ -763,7 +763,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
             let propertyAdd : SharedPropertyUpdate = {
               propertySection: propertySection,
               propertyName: "backgroundColor",
-              value: "transparent",
+              value: "#00000000",
             }
   
             dispatch(removeSharedProperty(propertyRemove))
@@ -839,7 +839,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
               questionId: questionId,
               propertySection: propertySection,
               propertyName: "backgroundColor",
-              value: "transparent",
+              value: "#00000000",
             }
   
             dispatch(removeProperty(propertyRemove))
@@ -1048,7 +1048,13 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
           <div>
             <div className="panel-items">
               {
-                controls.map(t => t)
+                controls.map((t, index) => {
+                  return (
+                    <div key={index}>
+                      {t}
+                    </div>
+                  )
+                })
               }
             </div>
           </div>
