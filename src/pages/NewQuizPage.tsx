@@ -7,7 +7,7 @@ import { resetProperties } from '../redux/shared.js';
 import { resetProperties as resetPresentationProperties } from '../redux/presentationProperties.js';
 import { resetQuestions } from '../redux/question.js';
 import { resetSelection } from '../redux/question.js';
-import { createNewQuiz, deleteQuiz } from '../redux/quiz.js';
+import { createNewQuiz, deleteQuiz, resetQuiz } from '../redux/quiz.js';
 import { useAppDispatch, useAppSelector } from '../redux/hooks.js';
 import { useNavigate } from 'react-router';
 
@@ -23,27 +23,32 @@ function NewQuizPage() {
     dispatch(createNewQuiz({}));
   };
 
-  const quizClicked = (id: number) => {
+  const quizEdit = (id: number) => {
     let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
     dispatch(resetProperties(quiz.sharedProperties.properties));
     dispatch(resetQuestions(quiz.questions));
     dispatch(resetSelection({}));
     dispatch(resetPresentationProperties(quiz.presentationProperties.properties));
+    dispatch(resetQuiz(id));
     navigate(`/quiz/presentation/${id}`)
+  }
+
+  const quizDelete = (id: number) => {
+    dispatch(deleteQuiz(id));
   }
 
   return (
     <div style={styles.page}>
-      <NavigationBar hasEditBtn={false} hasPreview={false} hasSubmitBtn={false}/>
+      <NavigationBar hasEditBtn={false} hasPreview={false} hasSubmitBtn={false} hasCancelBtn={false}/>
       <div style={styles.gridContainer}>
-      <AddQuizCard onAddQuiz={handleAddQuiz} />
-      {
-        quizState.quizes.map((quiz, index) => {
-          return (
-            <QuizCard key={index} id={quiz.id} name={quiz.title} onQuizClick={quizClicked}/>
-          )
-        })
-      }
+        <AddQuizCard onAddQuiz={handleAddQuiz} />
+        {
+          quizState.quizes.map((quiz, index) => {
+            return (
+              <QuizCard key={index} id={quiz.id} name={quiz.title} onQuizEdit={quizEdit} onQuizDelete={quizDelete}/>
+            )
+          })
+        }
       </div>
     </div>
   );
@@ -64,10 +69,13 @@ const styles = {
   },
   gridContainer: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+    gridTemplateColumns: 'repeat(4, 1fr)',
     gap: '5rem',
     padding: '100px',
     width: '100%',
+    "height": "100%",
+    "overflowX": "hidden",
+    "overflowY": "auto",
   },
   addNewCard: {
     display: 'flex',

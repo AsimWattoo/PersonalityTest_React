@@ -6,6 +6,8 @@ type Quiz = {
     questions: Question[],
     id: number,
     title: string,
+    newTitle: string,
+    newDescription: string,
     description: string,
     sharedProperties: {},
     presentationProperties: {},
@@ -44,6 +46,8 @@ export const quizSlice = createSlice({
                 questions: [], 
                 title: "Enter Quiz Name", 
                 description: "", 
+                newTitle: "Enter Quiz Name",
+                newDescription: "",
                 sharedProperties: {
                     properties: {
                         heading: createDefaultStyle(24),
@@ -102,18 +106,32 @@ export const quizSlice = createSlice({
         updateQuiz(state, action: PayloadAction<QuizUpdate>) {
             let quizes = state.quizes.filter(quiz => quiz.id == action.payload.quizId);
             if(quizes.length > 0) {
-                quizes[0].title = action.payload.title;
-                quizes[0].description = action.payload.description;
+                quizes[0].newTitle = action.payload.title;
+                quizes[0].newDescription = action.payload.description;
+            }
+        },
+        saveQuiz(state, action: PayloadAction<number>) {
+            let quizes = state.quizes.filter(quiz => quiz.id == action.payload);
+            if(quizes.length > 0) {
+                quizes[0].title = quizes[0].newTitle;
+                quizes[0].description = quizes[0].newDescription;
             }
         },
         deleteQuiz(state, action: PayloadAction<number>) {
             state.quizes = state.quizes.filter(quiz => quiz.id != action.payload);
+        },
+        resetQuiz(state, action:PayloadAction<number>) {
+            let quizes = state.quizes.filter(quiz => quiz.id == action.payload);
+            if(quizes.length > 0) {
+                quizes[0].newTitle = quizes[0].title;
+                quizes[0].newDescription = quizes[0].description;
+            }
         }
     }
 });
 
 export type {Quiz, QuestionUpdate, PropertiesUpdate, QuizUpdate}
 
-export const {createNewQuiz, updateQuestions, updateProperties, updateQuiz, deleteQuiz, updatePresentationProperties} = quizSlice.actions;
+export const {createNewQuiz, updateQuestions, updateProperties, updateQuiz, deleteQuiz, updatePresentationProperties, saveQuiz, resetQuiz} = quizSlice.actions;
 
 export default quizSlice.reducer;

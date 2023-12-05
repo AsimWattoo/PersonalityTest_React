@@ -14,20 +14,21 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, questionReducer)
 const persistedSharedReducer = persistReducer(persistConfig, sharedReducer)
 const persistedQuizReducer = persistReducer(persistConfig, quizReducer)
+const persistedPresentationReducer = persistReducer(persistConfig, presentationReducer)
 
 const store = configureStore({
     reducer: {
-        question: questionReducer,
-        shared: sharedReducer,
-        quiz: quizReducer,
-        presentation: presentationReducer
+        question: persistedReducer,
+        shared: persistedSharedReducer,
+        quiz: persistedQuizReducer,
+        presentation: persistedPresentationReducer
     }
 })
 
-// let persistor = persistStore(store)
+let persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export default store
-// export {persistor}
+export {persistor}

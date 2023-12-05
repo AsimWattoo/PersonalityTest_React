@@ -28,7 +28,7 @@ export default function QuestionsPreviewPage() {
 
   return (
     <div className="page preview-page">
-      <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true}/>
+      <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true} hasCancelBtn={true}/>
       <div className='content-container'>
         <div className='left-column' >
           <div className="slide-container">

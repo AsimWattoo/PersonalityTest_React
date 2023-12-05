@@ -48,7 +48,7 @@ export default function QuizPage() {
 
   return (
     <div className="page">
-      <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false}/>
+      <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false} hasCancelBtn={true}/>
       <div className='content-container'>
         <PagesBar currentPage={'questions'} quizId={params.id}/>
         <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >

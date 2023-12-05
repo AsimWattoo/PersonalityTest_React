@@ -2,16 +2,17 @@ import React from 'react';
 import { MdEdit, MdVisibility } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { updateQuestions, updateProperties, updatePresentationProperties } from './redux/quiz';
+import { updateQuestions, updateProperties, updatePresentationProperties, saveQuiz } from './redux/quiz';
 import type { QuestionUpdate, PropertiesUpdate } from './redux/quiz';
 
 type NavigateProps = {
   hasSubmitBtn: boolean,
   hasPreview: boolean,
-  hasEditBtn: boolean
+  hasEditBtn: boolean,
+  hasCancelBtn: boolean
 }
 
-function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
+function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: NavigateProps) {
 
   let navigate = useNavigate();
   let params = useParams();
@@ -42,6 +43,8 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
         properties: presentationProperties.properties
       }
       dispatch(updatePresentationProperties(presentationPropertiesUpdate))
+
+      dispatch(saveQuiz(id));
     }
   }
 
@@ -51,6 +54,10 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
 
   let editQuiz = () => {
     navigate(`/quiz/presentation/${params.id}`);
+  }
+
+  let onCancel = () => {
+    navigate("/");
   }
 
   return (
@@ -81,6 +88,13 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
               hasSubmitBtn ? 
               <button className="btn btn-primary mx-2" type="submit" onClick={onSave}>
                 Save
+              </button> :
+              <></>
+            }
+            {
+              hasCancelBtn ? 
+              <button className="btn btn-secondary mx-2" type="submit" onClick={onCancel}>
+                Cancel
               </button> :
               <></>
             }

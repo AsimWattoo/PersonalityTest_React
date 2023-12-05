@@ -38,13 +38,13 @@ let PresentationPage = () => {
 
     return (
     <div className="page">
-      <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false}/>
+      <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false} hasCancelBtn={true}/>
       <div className='content-container'>
         <PagesBar currentPage={'presentation'} quizId={params.id}/>
         <div className='left-column'>
           <div className='page-content' style={quizProperties.background}>
-            <input type="text" style={quizProperties.heading} value={quiz.title} onChange={e => headingUpdated(e.target.value)}/>
-            <input type="description" style={quizProperties.description} value={quiz.description} onChange={e => descriptionUpdated(e.target.value)}/>
+            <input type="text" style={quizProperties.heading} value={quiz.newTitle} onChange={e => headingUpdated(e.target.value)}/>
+            <input type="description" style={quizProperties.description} value={quiz.newDescription} onChange={e => descriptionUpdated(e.target.value)}/>
             <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
               <a className='btn btn-primary' style={quizProperties.startBtn}>
                 {quizProperties.ButtonHoverStyle.StartButtonText}

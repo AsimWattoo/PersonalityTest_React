@@ -24,7 +24,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
     textDecoration: "none"
   },
   addquizcard: {
