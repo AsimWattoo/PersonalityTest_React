@@ -3,7 +3,7 @@ import type {OptionSelection} from "../redux/question";
 import { useAppDispatch } from '../redux/hooks';
 import { selectOption } from '../redux/question';
 
-function Option({option, properties, questionId, optionId}) {
+function Option({option, properties, questionId, optionId, onClick}) {
     let [style, setStyle] = useState(properties.options)
     let dispatch = useAppDispatch();
     useEffect(() => {
@@ -34,6 +34,7 @@ function Option({option, properties, questionId, optionId}) {
             questionId: questionId
         };
         dispatch(selectOption(optionSelection))
+        onClick();
     }
 
     return (

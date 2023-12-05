@@ -2,7 +2,7 @@ import React from 'react';
 import { MdEdit, MdVisibility } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { updateQuestions, updateProperties } from './redux/quiz';
+import { updateQuestions, updateProperties, updatePresentationProperties } from './redux/quiz';
 import type { QuestionUpdate, PropertiesUpdate } from './redux/quiz';
 
 type NavigateProps = {
@@ -18,6 +18,7 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
 
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared);
+  let presentationProperties = useAppSelector(state => state.presentation);
   let dispatch = useAppDispatch();
 
   let onSave = () => {
@@ -35,15 +36,21 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn}: NavigateProps) {
         properties: sharedProperties.properties
       }
       dispatch(updateProperties(propertiesUpdate))
+
+      let presentationPropertiesUpdate: PropertiesUpdate = {
+        quizId: id,
+        properties: presentationProperties.properties
+      }
+      dispatch(updatePresentationProperties(presentationPropertiesUpdate))
     }
   }
 
   let previewQuiz = () => {
-    navigate(`/quiz/preview/${params.id}`);
+    navigate(`/quiz/preview/presentation/${params.id}`);
   }
 
   let editQuiz = () => {
-    navigate(`/quiz/questions/${params.id}`);
+    navigate(`/quiz/presentation/${params.id}`);
   }
 
   return (

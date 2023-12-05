@@ -19,7 +19,6 @@ import {
   MdBlock} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
 import { updateProperty, addProperty, removeProperty } from "./redux/question";
-import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "./redux/shared";
 import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
 import { useAppDispatch } from "./redux/hooks";
 import type { Question } from "./redux/question";
@@ -357,7 +356,7 @@ const CheckBox = ({propertyName, value, updateProperty}) => {
   )
 }
 
-const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId}) => {
+const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
@@ -628,6 +627,18 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
         {
           heading: "Previous Button Hover Text Color",
           dependencies: ["PreviousButtonHoverTextColor"]
+        },
+        {
+          heading: "Start Button Text",
+          dependencies: ["StartButtonText"]
+        },
+        {
+          heading: "Start Button Hover Color",
+          dependencies: ["StartButtonHoverColor"]
+        }, 
+        {
+          heading: "Start Button Hover Text Color",
+          dependencies: ["StartButtonHoverTextColor"]
         }, 
       ]
     },
@@ -927,6 +938,19 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
       requiresName: true
     },
     "PreviousButtonHoverTextColor" : {
+      render: ColorBox,
+      requiresName: true
+    },
+    "StartButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "StartButtonHoverColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "StartButtonHoverTextColor" : {
       render: ColorBox,
       requiresName: true
     }

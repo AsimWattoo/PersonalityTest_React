@@ -7,11 +7,15 @@ import "./QuizPage.css";
 import TextCustomization from "../TextCustomization.js";
 import QuestionPreview from "../components/QuestionPreview.js";
 import { MdAdd } from "react-icons/md";
+import { useParams } from "react-router";
 
-export default function PreviewPage() {
+export default function QuestionsPreviewPage() {
   
-  const questions = useAppSelector(state => state.question.questions);
-  const sharedProperties = useAppSelector(state => state.shared.properties);
+  let params = useParams();
+  let id = parseInt(params.id);
+  let questions = useAppSelector(state => state.question.questions);
+  let sharedProperties = useAppSelector(state => state.shared.properties);
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   let getTransform = (currentSlide, slide) => {

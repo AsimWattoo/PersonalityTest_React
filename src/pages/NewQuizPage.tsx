@@ -4,6 +4,7 @@ import NavigationBar from "../NavigationBar.js";
 import QuizCard from "../components/Quizcard.js";
 import AddQuizCard from '../components/AddQuiz.js';
 import { resetProperties } from '../redux/shared.js';
+import { resetProperties as resetPresentationProperties } from '../redux/presentationProperties.js';
 import { resetQuestions } from '../redux/question.js';
 import { resetSelection } from '../redux/question.js';
 import { createNewQuiz, deleteQuiz } from '../redux/quiz.js';
@@ -27,6 +28,7 @@ function NewQuizPage() {
     dispatch(resetProperties(quiz.sharedProperties.properties));
     dispatch(resetQuestions(quiz.questions));
     dispatch(resetSelection({}));
+    dispatch(resetPresentationProperties(quiz.presentationProperties.properties));
     navigate(`/quiz/presentation/${id}`)
   }
 

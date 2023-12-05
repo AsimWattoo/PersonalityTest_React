@@ -3,7 +3,7 @@ import PageLayout from './pages/QuizPage';
 import NewQuizPage from './pages/NewQuizPage';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
-import PreviewPage from './pages/PreviewPage';
+import PreviewPage from './pages/QuestionsPreviewPage';
 
 import store, {persistor} from './store';
 import { PersistGate } from 'redux-persist/integration/react';

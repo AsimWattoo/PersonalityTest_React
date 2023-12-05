@@ -5,7 +5,8 @@ import PageLayout from './pages/QuizPage';
 import NewQuizPage from './pages/NewQuizPage';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';
-import PreviewPage from './pages/PreviewPage';
+import QuestionPreviewPage from './pages/QuestionsPreviewPage';
+import PresentationPreviewPage from './pages/PresentationPreviewPage';
 
 import store from './store';
 import { PersistGate } from 'redux-persist/integration/react';
@@ -18,7 +19,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route path="/" element={<NewQuizPage />} />
             <Route path="/quiz/questions/:id" element={<PageLayout />} />
-            <Route path="/quiz/preview/:id" element={<PreviewPage />} />
+            <Route path="/quiz/preview/questions/:id" element={<QuestionPreviewPage />} />
+            <Route path="/quiz/preview/presentation/:id" element={<PresentationPreviewPage />} />
             <Route path="/quiz/presentation/:id" element={<PresentationPage />} />
           </Routes>
         </BrowserRouter>

@@ -11,6 +11,8 @@ import QuestionCard from "../components/QuestionCard.js";
 import { MdAdd, MdWarning } from "react-icons/md";
 import PagesBar from "../components/PagesBar";
 import { useParams } from "react-router";
+import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "../redux/shared";
+
 export default function QuizPage() {
   
   const params = useParams();
@@ -93,14 +95,14 @@ export default function QuizPage() {
           questions.length > 0 ? 
           <div className='right-column'>
             <TextCustomization title={'Question Background'} propertySection={'background'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Header'} propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} />
-            <TextCustomization title={'Option'} propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} />
-            <TextCustomization title={'Next Button'} propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
-            <TextCustomization title={'Prev Button'} propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
-            <TextCustomization title={'Button Hover Styles'} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Question Header'} propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
+            <TextCustomization title={'Option'} propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Next Button'} propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Prev Button'} propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Button Hover Styles'} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
             <TextCustomization title={'Configuration'} propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Option Hover Style'} propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
-            <TextCustomization title={'Selected Option Style'} propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide}/>
+            <TextCustomization title={'Option Hover Style'} propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Selected Option Style'} propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
           </div>
           : <></>
         }

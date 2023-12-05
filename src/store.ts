@@ -4,6 +4,7 @@ import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import sharedReducer from './redux/shared';
 import quizReducer from "./redux/quiz";
+import presentationReducer from "./redux/presentationProperties";
 
 const persistConfig = {
     key: 'root',
@@ -18,7 +19,8 @@ const store = configureStore({
     reducer: {
         question: questionReducer,
         shared: sharedReducer,
-        quiz: quizReducer
+        quiz: quizReducer,
+        presentation: presentationReducer
     }
 })
 

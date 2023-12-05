@@ -60,6 +60,12 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
       changeQuestion(questionId - 1)
   }
 
+  let optionClicked = () => {
+    if(!properties.configuration.NextButton) {
+      nextQuestion();
+    }
+  }
+
   return (
     <div className="preview-question-container">
       <div className="question-header">
@@ -67,7 +73,7 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
       </div>
       <div className="options-container d-flex flex-column align-items-center mt-3">
         {
-          questions[questionId].options.map((option, index) => <Option option={option} optionId={index} properties={sharedProperties} questionId={questionId} key={index}/>)
+          questions[questionId].options.map((option, index) => <Option option={option} optionId={index} properties={sharedProperties} questionId={questionId} key={index} onClick={optionClicked}/>)
         }
       </div>
       <div className='d-flex align-items-center'>
