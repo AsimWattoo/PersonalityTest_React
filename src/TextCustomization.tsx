@@ -24,8 +24,17 @@ import { useAppDispatch } from "./redux/hooks";
 import type { Question } from "./redux/question";
 import Select from "./components/Select";
 import ToggleBtn from "./components/ToggleBtn";
+import { PayloadAction } from "@reduxjs/toolkit";
 
-const SelectDropDown = ({propertyName, value, updateProperty, options, process=true}) => {
+type SelectDropDownProps = {
+  propertyName: string,
+  value: string,
+  updateProperty(property: string, value: string): void,
+  options: string[],
+  process: boolean
+}
+
+const SelectDropDown = ({propertyName, value, updateProperty, options, process=true}: SelectDropDownProps) => {
   let processedOptions = options;
   if(process) {
     processedOptions = options.map(option => {
@@ -130,7 +139,18 @@ const BorderStyleWidth = ({value, updateProperty, options, process}) => {
   )
 }
 
-const InputField = ({propertyName, value, type, updateProperty, icon, unit, format}) => {
+type InputFieldProps = {
+  propertyName: string,
+  value: string | number,
+  type: string,
+  updateProperty(property: string, value: string | number):void,
+  icon():React.ReactNode,
+  unit: string | null,
+  formatter(value: string):string | number,
+  parser(value: string | number): string | number
+}
+
+const InputField = ({propertyName, value, type, updateProperty, icon, unit, formatter, parser} : InputFieldProps) => {
   return (
     <div className="item">
       <div className="input-combined">
@@ -141,7 +161,7 @@ const InputField = ({propertyName, value, type, updateProperty, icon, unit, form
           </div> :
           <></>
         }
-        <input type={type} value={value} onChange={e => updateProperty(propertyName, format ? format(e.target.value) : e.target.value)}/>
+        <input type={type} value={parser ? parser(value) : value} onChange={e => updateProperty(propertyName, formatter ? formatter(e.target.value) : e.target.value)}/>
         {
           unit ? 
           <div className="label small right">{unit}</div> :
@@ -227,10 +247,9 @@ const Margin = ({propertyName, value, updateProperty, formatter}) => {
   )
 }
 
-const FileUpload = ({propertyName, value, updateProperty, accept}) => {
-
+const FileUpload = ({propertySection, propertyName, value, updateProperty, accept}) => {
   let selectFile = () => {
-    document.getElementById("fileInput")?.click();
+    document.getElementById(`fileInput-${propertySection}`)?.click();
   }
 
   let readFile = (e) => {
@@ -259,7 +278,7 @@ const FileUpload = ({propertyName, value, updateProperty, accept}) => {
           </div> : 
           <></>
         }
-        <input type="file" hidden id="fileInput" onChange={e => readFile(e)} accept={accept}/>
+        <input type="file" hidden id={`fileInput-${propertySection}`} onChange={e => readFile(e)} accept={accept}/>
         <div className="upload-btn"  onClick={selectFile}>
           <div className="d-flex justify-content-center align-items-center flex-column">
             <MdOutlineUploadFile /> 
@@ -356,7 +375,19 @@ const CheckBox = ({propertyName, value, updateProperty}) => {
   )
 }
 
-const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}) => {
+type TextCustomizationProps = {
+  title: string,
+  propertySection: string,
+  isShared: boolean,
+  sharedProperties: {},
+  questions: Question[],
+  questionId: number,
+  updateSharedProperty(action: PayloadAction<SharedPropertyUpdate>): void,
+  addSharedProperty(action: PayloadAction<SharedPropertyUpdate>): void,
+  removeSharedProperty(action: PayloadAction<SharedPropertyRemove>): void,
+}
+
+const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}: TextCustomizationProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
@@ -402,21 +433,24 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
 
   useEffect(() => {
     if(isShared) {
-      setRequiredProperties(Object.keys(sharedProperties[propertySection]));
+      let keys = Object.keys(sharedProperties[propertySection]);
+      keys.sort();
+      setRequiredProperties(keys);
     } else {
-      setRequiredProperties(Object.keys(questions[questionId].properties[propertySection]));
+      let keys = Object.keys(questions[questionId].properties[propertySection]);
+      keys.sort();
+      setRequiredProperties(keys);
     }
   }, isShared ? [sharedProperties] : [questions, questionId]);
 
-  let updateCSSProperty = (property, value) => {
+  let updateCSSProperty = (property: string, value: string) => {
     if(isShared) {
       let propertyUpdate : SharedPropertyUpdate = {
         propertySection: propertySection,
         propertyName: property,
         value: value
       }
-  
-      dispatch(updateSharedProperty(propertyUpdate))
+      dispatch(updateSharedProperty(propertyUpdate))      
     }
     else {
       let propertyUpdate : PropertyUpdate = {
@@ -425,7 +459,6 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
         propertyName: property,
         value: value
       }
-  
       dispatch(updateProperty(propertyUpdate))
     }
   }
@@ -639,7 +672,15 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
         {
           heading: "Start Button Hover Text Color",
           dependencies: ["StartButtonHoverTextColor"]
-        }, 
+        },
+        {
+          heading: "Width",
+          dependencies: ["width"]
+        },
+        {
+          heading: "Height",
+          dependencies: ["height"]
+        }
       ]
     },
     "fontFamily": {
@@ -702,7 +743,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
       type: "number",
       icon: () => <MdRoundedCorner/>,
       unit: 'px',
-      format: (v) => parseInt(v)
+      formatter: (v: string) => parseInt(v)
     },
     "backgroundBtns": {
       render: Buttons,
@@ -866,7 +907,8 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
     "backgroundImage": {
       render: FileUpload,
       requiresName: true,
-      accept: ".png,.jpeg,.jpg,.gif"
+      accept: ".png,.jpeg,.jpg,.gif",
+      requiresPropertySection: true
     },
     "backgroundPosition": {
       render: SelectDropDown,
@@ -953,6 +995,22 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
     "StartButtonHoverTextColor" : {
       render: ColorBox,
       requiresName: true
+    },
+    "width": {
+      render: InputField,
+      type: "number",
+      requiresName: true,
+      unit: "%",
+      formatter: (number: string | number) => `${number}%`,
+      parser: (number: string | number) => parseFloat(number.toString().replace("%", ''))
+    },
+    "height": {
+      render: InputField,
+      type: "number",
+      requiresName: true,
+      unit: "%",
+      formatter: (number: string | number) => `${number}%`,
+      parser: (number: string | number) => parseFloat(number.toString().replace("%", ''))
     }
   }
 
@@ -971,7 +1029,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
     return "";
   }
 
-  let createControl = (configuration, property) => {
+  let createControl = (configuration: {}, property: string) => {
     
     let value;
 
@@ -1009,8 +1067,12 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
         control_configuration["unit"] = configuration.unit
       }
 
-      if(configuration.format) {
-        control_configuration['format'] = configuration.format;
+      if(configuration.formatter) {
+        control_configuration['formatter'] = configuration.formatter;
+      }
+
+      if(configuration.parser) {
+        control_configuration["parser"] = configuration.parser;
       }
 
       if(configuration.accept) {
@@ -1019,6 +1081,10 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
 
       if(configuration.type) {
         control_configuration["type"] = configuration.type;
+      }
+
+      if(configuration.requiresPropertySection) {
+        control_configuration["propertySection"] = propertySection;
       }
 
       let control = configuration.render(control_configuration);

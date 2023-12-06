@@ -4,16 +4,17 @@ import { MdDelete, MdEdit } from 'react-icons/md';
 type QuizInfo = {
   id: number,
   name: string,
+  imageProperties: {}
   onQuizEdit(id: number): void,
   onQuizDelete(id: number): void,
+  onQuizPlay(id: number): void
 }
 
 function QuizCard(props: QuizInfo) {
 
   return (
     <div style={styles.card}>
-      <div style={styles.addquizcard}>
-        <img src="../"/>
+      <div style={{...props.imageProperties, ...styles.addquizcard}} onClick={() => props.onQuizPlay(props.id)}>
       </div>
       <div className='d-flex justify-content-between align-items-center w-100 mt-2'>
         <h3  style={styles.addicon}>
@@ -45,8 +46,7 @@ const styles = {
     flexDirection: "column",
     textAlign: "center",
     borderRadius: "10px",
-    padding: "1rem",
-    backgroundColor: "#f9f9f9",
+    padding: "0rem",
     color: "#000",
     cursor: "pointer",
     display: "flex",
@@ -54,6 +54,7 @@ const styles = {
     alignItems: "center",
     height: "250px",
     width: "250px",
+    margin: 0,
   },
   addicon: {
     fontSize: " 1.2rem",

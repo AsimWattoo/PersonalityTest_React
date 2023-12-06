@@ -1,5 +1,5 @@
 import React from 'react';
-import PageLayout from './pages/QuizPage';
+import PageLayout from './pages/QuestionsPage';
 import NewQuizPage from './pages/NewQuizPage';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { Provider } from 'react-redux';

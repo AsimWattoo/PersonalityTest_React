@@ -72,6 +72,19 @@ export const quizSlice = createSlice({
                         background: {
                             "backgroundColor": "#FFFFFF"
                         },
+                        mobileBackground: {
+                            "backgroundColor": "#FFFFFF",
+                        },
+                        presentationImage: {
+                            "backgroundColor": "#FFFFFF",
+                            "width": "50%",
+                            "height": "50%",
+                            "marginTop": 0,
+                            "marginRight": 0,
+                            "marginBottom": 0,
+                            "marginLeft": 0,
+                            "borderRadius": 0
+                        },
                         heading: createDefaultStyle(24),
                         description: createOptionStyle(),
                         startBtn: createButtonStyle(18),

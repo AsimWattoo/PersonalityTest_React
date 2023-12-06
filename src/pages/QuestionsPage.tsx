@@ -13,7 +13,7 @@ import PagesBar from "../components/PagesBar";
 import { useParams } from "react-router";
 import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "../redux/shared";
 
-export default function QuizPage() {
+export default function QuestionsPage() {
   
   const params = useParams();
   const dispatch = useAppDispatch();
@@ -29,6 +29,9 @@ export default function QuizPage() {
     let question : Question = {
       properties: {
         background: {
+          "backgroundColor": "#FFFFFF"
+        },
+        mobileBackground: {
           "backgroundColor": "#FFFFFF"
         },
         configuration: {
@@ -95,6 +98,7 @@ export default function QuizPage() {
           questions.length > 0 ? 
           <div className='right-column'>
             <TextCustomization title={'Question Background'} propertySection={'background'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Question Mobile Background'} propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
             <TextCustomization title={'Question Header'} propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
             <TextCustomization title={'Option'} propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
             <TextCustomization title={'Next Button'} propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>

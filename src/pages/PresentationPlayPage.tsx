@@ -6,11 +6,10 @@ import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
 import { useNavigate, useParams } from "react-router";
 
-export default function PresentationPreviewPage() {
+export default function PresentationPlayPage() {
   
     let params = useParams();
     let id = parseInt(params.id);
-    let [windowWidth, setWindowWidth] = useState(600);
     let quizProperties = useAppSelector(state => state.presentation.properties);
     const quiz = useAppSelector(state => state.quiz.quizes.filter(quiz => quiz.id == id)[0]);
     let navigate = useNavigate();
@@ -20,7 +19,7 @@ export default function PresentationPreviewPage() {
       });
 
     let startQuiz = () => {
-        navigate(`/quiz/preview/questions/${id}`);
+        navigate(`/quiz/play/questions/${id}`);
     }
 
     let onStartMouseEnter = () => {
@@ -32,10 +31,6 @@ export default function PresentationPreviewPage() {
         }
       }
     
-      useEffect(() => {
-        setWindowWidth(window.innerWidth)
-      })
-
       let onStartMouseLeave = () => {
         if(quizProperties.startBtn.backgroundColor) {
             setStartBtnHoverState({
@@ -44,17 +39,13 @@ export default function PresentationPreviewPage() {
           })
         }
       }
-
-    window.onresize = () => {
-        setWindowWidth(window.innerWidth)
-    }
     
     return (
         <div className="page preview-page">
-            <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true} hasCancelBtn={true}/>
+            <NavigationBar hasSubmitBtn={false} hasPreview={false} hasEditBtn={false} hasCancelBtn={false}/>
             <div className='content-container'>
                 <div className='left-column'>
-                    <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
+                    <div className="page-content" style={quizProperties.background}>
                         <div style={quizProperties.presentationImage}></div>
                         <div style={quizProperties.heading}>{quiz.newTitle}</div>
                         <div style={quizProperties.description}>{quiz.newDescription}</div>

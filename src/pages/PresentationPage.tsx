@@ -43,6 +43,7 @@ let PresentationPage = () => {
         <PagesBar currentPage={'presentation'} quizId={params.id}/>
         <div className='left-column'>
           <div className='page-content' style={quizProperties.background}>
+            <div style={quizProperties.presentationImage}></div>
             <input type="text" style={quizProperties.heading} value={quiz.newTitle} onChange={e => headingUpdated(e.target.value)}/>
             <input type="description" style={quizProperties.description} value={quiz.newDescription} onChange={e => descriptionUpdated(e.target.value)}/>
             <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
@@ -54,6 +55,8 @@ let PresentationPage = () => {
         </div>
         <div className='right-column'>
           <TextCustomization title={'Presentation Background'} propertySection={'background'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+          <TextCustomization title={'Presentation Mobile Background'} propertySection={'mobileBackground'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+          <TextCustomization title={'Presentation Image'} propertySection={'presentationImage'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
           <TextCustomization title={'Quiz Heading'} propertySection={'heading'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
           <TextCustomization title={'Quiz Description'} propertySection={'description'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
           <TextCustomization title={'Start Quiz Button'} propertySection={'startBtn'} isShared={true} sharedProperties={quizProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>

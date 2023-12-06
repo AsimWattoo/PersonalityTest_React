@@ -23,6 +23,16 @@ function NewQuizPage() {
     dispatch(createNewQuiz({}));
   };
 
+  const quizPlay = (id) => {
+    let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
+    dispatch(resetProperties(quiz.sharedProperties.properties));
+    dispatch(resetQuestions(quiz.questions));
+    dispatch(resetSelection({}));
+    dispatch(resetPresentationProperties(quiz.presentationProperties.properties));
+    dispatch(resetQuiz(id));
+    navigate(`/quiz/play/presentation/${id}`)
+  }
+
   const quizEdit = (id: number) => {
     let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
     dispatch(resetProperties(quiz.sharedProperties.properties));
@@ -45,7 +55,11 @@ function NewQuizPage() {
         {
           quizState.quizes.map((quiz, index) => {
             return (
-              <QuizCard key={index} id={quiz.id} name={quiz.title} onQuizEdit={quizEdit} onQuizDelete={quizDelete}/>
+              <QuizCard key={index} id={quiz.id} name={quiz.title} 
+                imageProperties={quiz.presentationProperties.properties.presentationImage} 
+                onQuizEdit={quizEdit} 
+                onQuizDelete={quizDelete}
+                onQuizPlay={quizPlay}/>
             )
           })
         }
