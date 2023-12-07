@@ -1,50 +1,116 @@
 "use client"; // pages/quiz.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import NavigationBar from "../NavigationBar.js";
 import QuizCard from "../components/Quizcard.js";
 import AddQuizCard from '../components/AddQuiz.js';
-import { resetProperties } from '../redux/shared.js';
-import { resetProperties as resetPresentationProperties } from '../redux/presentationProperties.js';
-import { resetQuestions } from '../redux/question.js';
-import { resetSelection } from '../redux/question.js';
-import { createNewQuiz, deleteQuiz, resetQuiz } from '../redux/quiz.js';
-import { useAppDispatch, useAppSelector } from '../redux/hooks.js';
 import { useNavigate } from 'react-router';
-
+import { sendRequest } from '../helpers/request.js';
+import Urls from '../links.js';
+import { useAppDispatch } from '../redux/hooks.js';
+import { setQuiz, resetQuiz } from '../redux/quiz.js';
+import { initializeProperties, resetProperties } from '../redux/presentationProperties.js';
+import { initializeProperties as initializeSharedProperties, resetProperties as resetSharedProperties } from '../redux/shared.js';
+import { resetQuestions, setQuestions } from '../redux/question.js';
+import type { Quiz } from '../redux/quiz.js';
 
 function NewQuizPage() {
   
-  let quizState = useAppSelector(state => state.quiz);
   let dispatch = useAppDispatch();
   let navigate = useNavigate();
+  let [quizes, setQuizes] = useState([]);
+
+  let loadQuizes = async () => {
+    dispatch(resetQuestions({}))
+    dispatch(resetQuiz({}));
+    dispatch(resetProperties({}));
+    dispatch(resetSharedProperties({}));
+    let response = await sendRequest(Urls.getAllQuizes.url(), Urls.getAllQuizes.type);
+    if(!response.error) {
+      setQuizes(response.quizes.map(quiz => {
+        quiz.presentationProperties = JSON.parse(quiz.presentationProperties);
+        return quiz;
+      }));
+    } else {
+      console.log(response.error);
+    }
+  }
+
+  useEffect(() => {
+    loadQuizes();
+  }, []);
 
   // Function to handle adding a new quiz
-  const handleAddQuiz = () => {
-    dispatch(createNewQuiz({}));
+  const handleAddQuiz = async () => {
+    let response = await sendRequest(Urls.createQuiz.url(), Urls.createQuiz.type, {title: "Enter Quiz Name", description: ""});
+    if(response.error){
+      console.log(response.error)
+    } else {
+      response.quiz.presentationProperties = JSON.parse(response.quiz.presentationProperties);
+      response.quiz.sharedProperties = JSON.parse(response.quiz.sharedProperties);
+      let quiz = response.quiz;
+      dispatch(setQuiz({
+        id: quiz._id,
+        description: quiz.description,
+        title: quiz.title,
+        presentationProperties: quiz.presentationProperties,
+        sharedProperties: quiz.sharedProperties,
+        isDraft: quiz.isDraft
+      } as Quiz))
+      dispatch(initializeProperties(quiz.presentationProperties.properties))
+      dispatch(initializeSharedProperties(quiz.sharedProperties.properties))
+      navigate(`/quiz/presentation/${quiz._id}`)
+    }
   };
 
-  const quizPlay = (id) => {
-    let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
-    dispatch(resetProperties(quiz.sharedProperties.properties));
-    dispatch(resetQuestions(quiz.questions));
-    dispatch(resetSelection({}));
-    dispatch(resetPresentationProperties(quiz.presentationProperties.properties));
-    dispatch(resetQuiz(id));
+  const quizPlay = (id: string) => {
     navigate(`/quiz/play/presentation/${id}`)
   }
 
-  const quizEdit = (id: number) => {
-    let quiz = quizState.quizes.filter(quiz => quiz.id == id)[0];
-    dispatch(resetProperties(quiz.sharedProperties.properties));
-    dispatch(resetQuestions(quiz.questions));
-    dispatch(resetSelection({}));
-    dispatch(resetPresentationProperties(quiz.presentationProperties.properties));
-    dispatch(resetQuiz(id));
+  const quizEdit = async (id: string) => {
+    dispatch(resetQuestions({}))
+    let response = await sendRequest(Urls.getQuiz.url(id), Urls.getQuiz.type);
+    if(response.error) {
+      console.log(response.error);
+    }
+    else {
+      response.quiz.presentationProperties = JSON.parse(response.quiz.presentationProperties);
+      response.quiz.sharedProperties = JSON.parse(response.quiz.sharedProperties);
+      let quiz = response.quiz;
+      dispatch(setQuiz({
+        id: quiz._id,
+        description: quiz.description,
+        title: quiz.title,
+        presentationProperties: quiz.presentationProperties,
+        sharedProperties: quiz.sharedProperties,
+        isDraft: quiz.isDraft
+      } as Quiz))
+
+      dispatch(initializeProperties(quiz.presentationProperties.properties))
+      dispatch(initializeSharedProperties(quiz.sharedProperties.properties))
+    }
+
+    //Loading Questions
+    let questionResponse = await sendRequest(Urls.getQuestions.url(id), Urls.getQuestions.type);
+    if(questionResponse.error) {
+      console.log(questionResponse.error);
+    }
+    else {
+      questionResponse.questions = questionResponse.questions.map(question => {
+        question.properties = JSON.parse(question.properties);
+        return question;
+      })
+      dispatch(setQuestions(questionResponse.questions))
+    }
     navigate(`/quiz/presentation/${id}`)
   }
 
-  const quizDelete = (id: number) => {
-    dispatch(deleteQuiz(id));
+  const quizDelete = async (id: string) => {
+    let response = await sendRequest(Urls.deleteQuiz.url(id), Urls.deleteQuiz.type);
+    if(response.error) {
+      console.log(response.error);
+    } else {
+      await loadQuizes();
+    }
   }
 
   return (
@@ -53,21 +119,23 @@ function NewQuizPage() {
       <div style={styles.gridContainer}>
         <AddQuizCard onAddQuiz={handleAddQuiz} />
         {
-          quizState.quizes.map((quiz, index) => {
-            return (
-              <QuizCard key={index} id={quiz.id} name={quiz.title} 
-                imageProperties={quiz.presentationProperties.properties.presentationImage} 
-                onQuizEdit={quizEdit} 
-                onQuizDelete={quizDelete}
-                onQuizPlay={quizPlay}/>
-            )
-          })
+          quizes.length > 0 ? 
+            quizes.map((quiz, index) => {
+              return (
+                <QuizCard key={index} id={quiz._id} name={quiz.title}
+                  isDraft={quiz.isDraft}
+                  imageProperties={quiz.presentationProperties.properties.presentationImage} 
+                  onQuizEdit={quizEdit} 
+                  onQuizDelete={quizDelete}
+                  onQuizPlay={quizPlay}/>
+              )
+            }) : 
+            <div></div>
         }
       </div>
     </div>
   );
 }
-
 
 // Styles for the components
 const styles = {

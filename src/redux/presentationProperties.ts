@@ -1,10 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createDefaultStyle, createButtonStyle, createOptionStyle } from "./shared";
 import type { SharedPropertyUpdate, SharedPropertyRemove } from "./shared";
 
-const initialState = {
-    properties: {}
+interface PropertiesState {
+    properties: {} | null
 }
+
+const initialState = {
+    properties: null
+} as PropertiesState
 
 export const presentationSlice = createSlice({
     name: "presentation",
@@ -14,21 +17,29 @@ export const presentationSlice = createSlice({
           state.properties = action.payload;
         },
         updateProperty: (state, action: PayloadAction<SharedPropertyUpdate>) => {
-            let payload = action.payload;
-            state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            if(state.properties != null) {
+                let payload = action.payload;
+                state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            }
         },
         addProperty: (state, action: PayloadAction<SharedPropertyUpdate>) => {
-            let payload = action.payload;
-            state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            if(state.properties != null) {
+                let payload = action.payload;
+                state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            }
         },
         removeProperty: (state, action: PayloadAction<SharedPropertyRemove>) => {
-            let payload = action.payload;
-            for(let propertyName of payload.propertyNames) {
-                delete state.properties[payload.propertySection][propertyName]
+            if(state.properties != null) {
+                let payload = action.payload;
+                for(let propertyName of payload.propertyNames) {
+                    delete state.properties[payload.propertySection][propertyName]
+                }
             }
         },
         resetProperties: (state, action) => {
-          state.properties = action.payload;
+          if(state.properties != null) {
+            state.properties = null;
+          }
         }
     }
 });

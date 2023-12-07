@@ -8,6 +8,8 @@ type Option = {
 }
 
 type Question = {
+    _id: string,
+    quizId: string,
     heading: string,
     options: Option[],
     properties: {}
@@ -57,8 +59,11 @@ export const questionSlice = createSlice({
     name: "questions",
     initialState: initialState,
     reducers: {
-        resetQuestions: (state, action: PayloadAction<Question[]>) => {
+        setQuestions: (state, action: PayloadAction<Question[]>) => {
             state.questions = action.payload;
+        },
+        resetQuestions: (state, action) => {
+            state.questions = [];
         },
         selectOption: (state, action: PayloadAction<OptionSelection>) => {
             let payload = action.payload
@@ -125,6 +130,7 @@ export const {
     removeProperty, 
     resetQuestions,
     resetSelection,
-    selectOption} = questionSlice.actions;
+    selectOption,
+    setQuestions} = questionSlice.actions;
 
 export default questionSlice.reducer

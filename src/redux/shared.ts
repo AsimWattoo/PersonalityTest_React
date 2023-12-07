@@ -84,24 +84,12 @@ function createDefaultStyle (fontSize: number) {
     }
   }
 
+interface SharedPropertiesState {
+  properties: {} | null
+}
+
 const initialState = {
-    properties: {
-      heading: createDefaultStyle(24),
-      options: createOptionStyle(),
-      submitBtn: createButtonStyle(18),
-      prevBtn: createButtonStyle(18),
-      OptionHoverStyle: createOptionStyle(),
-      SelectedOptionStyle: createOptionStyle(),
-      ButtonHoverStyle: {
-        NextButtonText: "Next",
-        NextButtonHoverColor: "#dedede",
-        NextButtonHoverTextColor: "#000000",
-        SubmitButtonText: "Submit",
-        PreviousButtonText: "Prev",
-        PreviousButtonHoverColor: "#dedede",
-        PreviousButtonHoverTextColor: "#000000",
-      }
-  }
+    properties: null
 }
 
 export const sharedSlice = createSlice({
@@ -112,21 +100,27 @@ export const sharedSlice = createSlice({
           state.properties = action.payload;
         },
         updateProperty: (state, action: PayloadAction<SharedPropertyUpdate>) => {
-            let payload = action.payload;
-            state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            if(state.properties != null) {
+              let payload = action.payload;
+              state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            }
         },
         addProperty: (state, action: PayloadAction<SharedPropertyUpdate>) => {
-            let payload = action.payload;
-            state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            if(state.properties != null) {
+              let payload = action.payload;
+              state.properties[payload.propertySection][payload.propertyName] = payload.value;
+            }
         },
         removeProperty: (state, action: PayloadAction<SharedPropertyRemove>) => {
-            let payload = action.payload;
-            for(let propertyName of payload.propertyNames) {
-                delete state.properties[payload.propertySection][propertyName]
+            if(state.properties != null) {
+              let payload = action.payload;
+              for(let propertyName of payload.propertyNames) {
+                  delete state.properties[payload.propertySection][propertyName]
+              }
             }
         },
         resetProperties: (state, action) => {
-          state.properties = action.payload;
+          state.properties = null
         }
     }
 });

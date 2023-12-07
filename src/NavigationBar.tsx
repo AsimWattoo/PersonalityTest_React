@@ -2,8 +2,10 @@ import React from 'react';
 import { MdEdit, MdVisibility } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
-import { updateQuestions, updateProperties, updatePresentationProperties, saveQuiz } from './redux/quiz';
+import { updateQuestions, updateProperties, updatePresentationProperties } from './redux/quiz';
 import type { QuestionUpdate, PropertiesUpdate } from './redux/quiz';
+import { sendRequest } from './helpers/request';
+import Urls from './links';
 
 type NavigateProps = {
   hasSubmitBtn: boolean,
@@ -17,34 +19,47 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: Nav
   let navigate = useNavigate();
   let params = useParams();
 
+  let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared);
   let presentationProperties = useAppSelector(state => state.presentation);
   let dispatch = useAppDispatch();
 
-  let onSave = () => {
+  let onSave = async () => {
     if(params.id) {
-      let id = parseInt(params.id);
-      let questionUpdate: QuestionUpdate = {
-        quizId: id,
-        questions: questions
+      let id = params.id;
+      //Sending Update Request to the server
+      let response = await sendRequest(Urls.updateQuiz.url(id), Urls.updateQuiz.type, {
+        title: quiz?.title,
+        description: quiz?.description,
+        presentationProperties: JSON.stringify(presentationProperties),
+        sharedProperties: JSON.stringify(sharedProperties),
+        isDraft: false,
+      });
+
+      if(!response.error) {
+        let deleteQuizQuestions = await sendRequest(Urls.deleteQuizQuestions.url(id), Urls.deleteQuizQuestions.type);
+        console.log(deleteQuizQuestions);
+        if(deleteQuizQuestions.error) {
+          console.log(deleteQuizQuestions.error)
+        }
+        else {
+          let questionObjs = questions.map(question => {
+            return {
+              quizId: id,
+              heading: question.heading,
+              options: question.options,
+              properties: JSON.stringify(question.properties)
+            }
+          })
+          let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
+          console.log(createQuizResponse)
+        }
+      }
+      else {
+        console.log(response.error)
       }
 
-      dispatch(updateQuestions(questionUpdate));
-
-      let propertiesUpdate: PropertiesUpdate = {
-        quizId: id,
-        properties: sharedProperties.properties
-      }
-      dispatch(updateProperties(propertiesUpdate))
-
-      let presentationPropertiesUpdate: PropertiesUpdate = {
-        quizId: id,
-        properties: presentationProperties.properties
-      }
-      dispatch(updatePresentationProperties(presentationPropertiesUpdate))
-
-      dispatch(saveQuiz(id));
     }
   }
 

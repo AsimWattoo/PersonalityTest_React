@@ -2,16 +2,16 @@ import React from 'react';
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 type QuizInfo = {
-  id: number,
+  id: string,
   name: string,
+  isDraft: boolean
   imageProperties: {}
-  onQuizEdit(id: number): void,
-  onQuizDelete(id: number): void,
-  onQuizPlay(id: number): void
+  onQuizEdit(id: string): void,
+  onQuizDelete(id: string): void,
+  onQuizPlay(id: string): void
 }
 
 function QuizCard(props: QuizInfo) {
-
   return (
     <div style={styles.card}>
       <div style={{...props.imageProperties, ...styles.addquizcard}} onClick={() => props.onQuizPlay(props.id)}>
@@ -20,6 +20,9 @@ function QuizCard(props: QuizInfo) {
         <h3  style={styles.addicon}>
           {props.name}
         </h3>
+        <div>
+          {props.isDraft ? "Draft" : ""}
+        </div>
         <div className="d-flex align-items-center">
           <a className='btn btn-secondary mx-2' onClick={() => props.onQuizEdit(props.id)}>
             <MdEdit />

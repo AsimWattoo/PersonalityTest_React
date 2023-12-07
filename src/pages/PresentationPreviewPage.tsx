@@ -9,10 +9,11 @@ import { useNavigate, useParams } from "react-router";
 export default function PresentationPreviewPage() {
   
     let params = useParams();
-    let id = parseInt(params.id);
+    let id = params.id;
     let [windowWidth, setWindowWidth] = useState(600);
     let quizProperties = useAppSelector(state => state.presentation.properties);
-    const quiz = useAppSelector(state => state.quiz.quizes.filter(quiz => quiz.id == id)[0]);
+    const quiz = useAppSelector(state => state.quiz.quiz);
+
     let navigate = useNavigate();
     let [startBtnHoverState, setStartBtnHoverState] = useState({
         backgroundColor: quizProperties.startBtn.backgroundColor,
@@ -56,8 +57,8 @@ export default function PresentationPreviewPage() {
                 <div className='left-column'>
                     <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
                         <div style={quizProperties.presentationImage}></div>
-                        <div style={quizProperties.heading}>{quiz.newTitle}</div>
-                        <div style={quizProperties.description}>{quiz.newDescription}</div>
+                        <div className="w-50" style={quizProperties.heading}>{quiz.title}</div>
+                        <div className="w-50" style={quizProperties.description}>{quiz.description}</div>
                         <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
                             <a className='btn btn-primary' style={{...quizProperties.startBtn, ...startBtnHoverState}} onClick={startQuiz} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                                 {quizProperties.ButtonHoverStyle.StartButtonText}
