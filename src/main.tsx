@@ -13,6 +13,9 @@ import { PersistGate } from 'redux-persist/integration/react';
 import PresentationPage from './pages/PresentationPage';
 import PresentationPlayPage from './pages/PresentationPlayPage';
 import QuestionsPlayPage from './pages/QuestionsPlayPage';
+import SettingsPage from './pages/SettingsPage';
+import FontsPage from './pages/FontsPage';
+import FontAddPage from './pages/FontAddPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -27,6 +30,10 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path="/quiz/presentation/:id" element={<PresentationPage />} />
               <Route path='/quiz/play/presentation/:id' element={<PresentationPlayPage />} />
               <Route path='/quiz/play/questions/:id' element={<QuestionsPlayPage />} />
+              <Route path='/settings' element={<SettingsPage />}>
+                <Route path='fonts' element={<FontsPage />}/>
+                <Route path='fonts/add' element={<FontAddPage />}/>
+              </Route>
             </Routes>
           </BrowserRouter>
         </PersistGate>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { MdEdit, MdVisibility } from 'react-icons/md';
+import { MdEdit, MdSettings, MdVisibility } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
 import { updateQuestions, updateProperties, updatePresentationProperties } from './redux/quiz';
@@ -113,6 +113,9 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: Nav
               </button> :
               <></>
             }
+            <div className='btn btn-primary' onClick={() => navigate("/settings/fonts")}>
+              <MdSettings />
+            </div>
           </div>
         }
       </div>

@@ -35,8 +35,22 @@ function NewQuizPage() {
     }
   }
 
+  let loadFonts = async () => {
+    let response = await sendRequest(Urls.getFonts.url(), Urls.getFonts.type);
+    if(response.error) {
+
+    }
+    else {
+      var sheet = window.document.styleSheets[1];
+      for(let font of response.files) {
+        sheet.insertRule(`@font-face {font-family: '${font.name}';src:url('${font.url}');}`, sheet.cssRules.length);
+      }
+    }
+  }
+
   useEffect(() => {
     loadQuizes();
+    loadFonts();
   }, []);
 
   // Function to handle adding a new quiz

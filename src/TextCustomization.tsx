@@ -25,6 +25,8 @@ import type { Question } from "./redux/question";
 import Select from "./components/Select";
 import ToggleBtn from "./components/ToggleBtn";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { sendRequest } from "./helpers/request";
+import Urls from "./links";
 
 type SelectDropDownProps = {
   propertyName: string,
@@ -391,6 +393,78 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
+  let [fontFamilies, setFontFamilies] = useState([{label: "Select Font", value: "Select Font"}]);
+
+  useEffect(() => {
+    let loadFonts = async () => {
+      let response = await sendRequest(Urls.getFonts.url(), Urls.getFonts.type);
+      let fonts = [
+        "Arial",
+        "Helvetica",
+        "Verdana",
+        "Trebuchet MS",
+        "Gill Sans",
+        "Noto Sans",
+        "Avantgarde",
+        "Optima",
+        "Arial Narrow",
+        "Times",
+        "Times New Roman",
+        "Didot",
+        "Georgia",
+        "Palatino",
+        "URW Palladio L",
+        "Bookman",
+        "URW Bookman L",
+        "New Century Schoolbook",
+        "TeX Gyre Schola",
+        "American Typewriter",
+        "Andale Mono",
+        "Courier New",
+        "Courier",
+        "FreeMono",
+        "OCR A Std",
+        "DejaVu Sans Mono",
+        "Comic Sans MS",
+        "Comic Sans",
+        "Apple Chancery",
+        "Bradley Hand",
+        "Brush Script MT",
+        "Brush Script Std",
+        "Snell Roundhand",
+        "URW Chancery L",
+        "Impact",
+        "Luminari",
+        "Chalkduster",
+        "Jazz LET",
+        "Blippo",
+        "Stencil Std",
+        "Marker Felt",
+        "Trattatello",
+      ]
+      if(!response.error) {
+        let loadedFontFamilies = response.files.map(file => file.name);
+        let allFonts = [...fonts, ...loadedFontFamilies];
+        allFonts = allFonts.map(font => {
+          return {
+            label: font,
+            value: font
+          }
+        })
+        setFontFamilies(allFonts)
+      } else {
+        let allFonts = fonts.map(font => {
+          return {
+            label: font,
+            value: font
+          }
+        })
+        setFontFamilies(allFonts)
+      }
+    }
+
+    loadFonts();
+  }, []);
 
   const toggleExpand = () => {
     setIsExpanded(!isExpanded);
@@ -462,51 +536,6 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
       dispatch(updateProperty(propertyUpdate))
     }
   }
-
-  let fontFamilies = [
-    "Arial",
-    "Helvetica",
-    "Verdana",
-    "Trebuchet MS",
-    "Gill Sans",
-    "Noto Sans",
-    "Avantgarde",
-    "Optima",
-    "Arial Narrow",
-    "Times",
-    "Times New Roman",
-    "Didot",
-    "Georgia",
-    "Palatino",
-    "URW Palladio L",
-    "Bookman",
-    "URW Bookman L",
-    "New Century Schoolbook",
-    "TeX Gyre Schola",
-    "American Typewriter",
-    "Andale Mono",
-    "Courier New",
-    "Courier",
-    "FreeMono",
-    "OCR A Std",
-    "DejaVu Sans Mono",
-    "Comic Sans MS",
-    "Comic Sans",
-    "Apple Chancery",
-    "Bradley Hand",
-    "Brush Script MT",
-    "Brush Script Std",
-    "Snell Roundhand",
-    "URW Chancery L",
-    "Impact",
-    "Luminari",
-    "Chalkduster",
-    "Jazz LET",
-    "Blippo",
-    "Stencil Std",
-    "Marker Felt",
-    "Trattatello",
-  ]
 
   let alignBtns = [
     {
@@ -686,7 +715,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
     "fontFamily": {
       render: SelectDropDown,
       options: fontFamilies,
-      process: true,
+      process: false,
       requiresName: true,
       hasOptions: true,
     },
@@ -1121,7 +1150,7 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
       renderControls.push(control)
     }
     setControls(renderControls);
-  }, [required_properties]);
+  }, [required_properties, fontFamilies]);
 
   return (
     <>

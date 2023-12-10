@@ -41,6 +41,18 @@ let Urls = {
         url: (questionId: string) => `${baseUrl}/questions/${questionId}`,
         type: 'DELETE',
     },
+    createFont: {
+        url: () => `${baseUrl}/file`,
+        type: 'POST'
+    },
+    getFonts: {
+        url: () => `${baseUrl}/file/type/font`,
+        type: 'GET'
+    },
+    deleteFont: {
+        url: (fileId: string) => `${baseUrl}/file/${fileId}`,
+        type: 'DELETE'
+    }
 }
 
 export default Urls
