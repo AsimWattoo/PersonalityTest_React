@@ -116,7 +116,7 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
         }
       </div>
       <div className='d-flex align-items-center w-100'>
-        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.prevBtn["justifyContent"]}}>
+        <div className="btn-container d-flex w-100" style={{"justifyContent": sharedProperties.prevBtn["justifyContent"]}}>
           {
             properties.configuration.PreviousButton ? 
             <div className="btn" style={sharedProperties.prevBtn}>
@@ -125,7 +125,7 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
             <></>
           }
         </div>
-        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}}>
+        <div className="btn-container d-flex w-100" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}}>
           {
             properties.configuration.NextButton ? 
             (

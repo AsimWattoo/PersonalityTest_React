@@ -2,7 +2,7 @@
 "use client"; // pages/quiz.js
 import React, { useState, useEffect } from "react";
 import { addQuestion } from "../redux/question";
-import { Question, Option } from "../redux/question";
+import { Question, Option, setQuestions } from "../redux/question";
 import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
 import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
@@ -12,13 +12,23 @@ import { MdAdd, MdWarning } from "react-icons/md";
 import PagesBar from "../components/PagesBar";
 import { useParams } from "react-router";
 import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "../redux/shared";
+import loadData from "../helpers/dataLoader";
 
 export default function QuestionsPage() {
   
   const params = useParams();
+  let quiz = useAppSelector(state => state.quiz.quiz)
   const dispatch = useAppDispatch();
   const questions = useAppSelector(state => state.question.questions);
   const sharedProperties = useAppSelector(state => state.shared.properties);
+
+  useEffect(() => {
+
+    if(!quiz || !quiz.title) {
+      loadData(params.id, dispatch);
+    }
+
+  }, []);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   let getTransform = (slide) => {
@@ -57,7 +67,7 @@ export default function QuestionsPage() {
         <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >
           <div className={`slide-container ${questions.length == 0 ? "d-flex" : ""}`}>
             {
-              questions.length == 0 ? 
+              questions.length == 0 || !sharedProperties ? 
               <div className={`slide w-100`}>
                 <div className="no-question">
                   <MdWarning />
@@ -97,16 +107,16 @@ export default function QuestionsPage() {
         {
           questions.length > 0 ? 
           <div className='right-column'>
-            <TextCustomization title={'Question Background'} propertySection={'background'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Mobile Background'} propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Header'} propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
-            <TextCustomization title={'Option'} propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Next Button'} propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Prev Button'} propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Button Hover Styles'} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Configuration'} propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Option Hover Style'} propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Selected Option Style'} propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Question Background'} mainSection="question" propertySection={'background'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Question Mobile Background'} mainSection="question" propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Question Header'} mainSection="sharedProperties" propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
+            <TextCustomization title={'Option'} mainSection="sharedProperties" propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Next Button'} mainSection="sharedProperties" propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Prev Button'} mainSection="sharedProperties" propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Button Hover Styles'} mainSection="sharedProperties" propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Configuration'} mainSection="question" propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
+            <TextCustomization title={'Option Hover Style'} mainSection="sharedProperties" propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            <TextCustomization title={'Selected Option Style'} mainSection="sharedProperties" propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
           </div>
           : <></>
         }

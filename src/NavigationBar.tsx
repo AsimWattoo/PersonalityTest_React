@@ -2,10 +2,13 @@ import React from 'react';
 import { MdEdit, MdSettings, MdVisibility } from 'react-icons/md';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from './redux/hooks';
+import { updateProperty as updatePresentationProperty } from './redux/presentationProperties';
+import type { PropertyUpdate } from './redux/question';
 import { updateQuestions, updateProperties, updatePresentationProperties } from './redux/quiz';
 import type { QuestionUpdate, PropertiesUpdate } from './redux/quiz';
 import { sendRequest } from './helpers/request';
 import Urls from './links';
+import { resetFiles } from './redux/files';
 
 type NavigateProps = {
   hasSubmitBtn: boolean,
@@ -23,17 +26,57 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: Nav
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared);
   let presentationProperties = useAppSelector(state => state.presentation);
+  let files = useAppSelector(state => state.files.files);
   let dispatch = useAppDispatch();
+  
+  let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: []) => {
+    for(let file of files) {
+      if(file.state == "added") {
+        let result = await fetch(file.url);
+        let blob = await result.blob();
+        let newFile = new File([blob], file.fileName);
+        let formData = new FormData();
+        formData.append("file", newFile);
+        formData.append("type", "image")
+        let response = await sendRequest(Urls.uploadFile.url(), Urls.uploadFile.type, formData, "", false);
+        if(!response.error) {
+          //If the image file belongs to the shared properties
+          if(file.mainSection == "presentationProperties" && presentationProperties) {
+            presentationProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+          } else if(file.mainSection == "sharedProperties" && sharedProperties) {
+            sharedProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+          } else if(file.mainSection == "question" && file.questionIndex !== undefined && questions) {
+            questions[file.questionIndex].properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`;
+          }
+        }
+      } else if (file.state == "removed") {
+        let response = await sendRequest(Urls.deleteFileByName.url(file.fileName), Urls.deleteFileByName.type);
+      }
+    }
+    dispatch(resetFiles({}));
+  }
 
   let onSave = async () => {
     if(params.id) {
       let id = params.id;
+      let preProperties = JSON.parse(JSON.stringify(presentationProperties));
+      let shProperties = JSON.parse(JSON.stringify(sharedProperties));
+      let questionObjs = questions.map(question => {
+        return {
+          quizId: id,
+          heading: question.heading,
+          options: question.options,
+          properties: JSON.parse(JSON.stringify(question.properties))
+        }
+      })
+      await uploadFiles(preProperties, shProperties, questionObjs);
+
       //Sending Update Request to the server
       let response = await sendRequest(Urls.updateQuiz.url(id), Urls.updateQuiz.type, {
         title: quiz?.title,
         description: quiz?.description,
-        presentationProperties: JSON.stringify(presentationProperties),
-        sharedProperties: JSON.stringify(sharedProperties),
+        presentationProperties: JSON.stringify(preProperties),
+        sharedProperties: JSON.stringify(shProperties),
         isDraft: false,
       });
 
@@ -44,7 +87,7 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: Nav
           console.log(deleteQuizQuestions.error)
         }
         else {
-          let questionObjs = questions.map(question => {
+          questionObjs = questionObjs.map(question => {
             return {
               quizId: id,
               heading: question.heading,
@@ -53,7 +96,6 @@ function NavigationBar({hasSubmitBtn, hasPreview, hasEditBtn, hasCancelBtn}: Nav
             }
           })
           let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
-          console.log(createQuizResponse)
         }
       }
       else {

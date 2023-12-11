@@ -1,10 +1,11 @@
 // pages/quiz.js
 "use client"; // pages/quiz.js
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from "../redux/hooks.js";
+import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
 import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
 import { useNavigate, useParams } from "react-router";
+import loadData from "../helpers/dataLoader.js";
 
 export default function PresentationPreviewPage() {
   
@@ -13,23 +14,39 @@ export default function PresentationPreviewPage() {
     let [windowWidth, setWindowWidth] = useState(600);
     let quizProperties = useAppSelector(state => state.presentation.properties);
     const quiz = useAppSelector(state => state.quiz.quiz);
-
+    let dispatch = useAppDispatch();
     let navigate = useNavigate();
-    let [startBtnHoverState, setStartBtnHoverState] = useState({
-        backgroundColor: quizProperties.startBtn.backgroundColor,
-        color: quizProperties.startBtn.color
-      });
+    let [startBtnHoverState, setStartBtnHoverState] = useState({});
+
+    useEffect(() => {
+
+      if(!quiz || !quiz.title) {
+        loadData(id, dispatch);
+      }
+
+    }, []);
+
+    useEffect(() => {
+      if(quizProperties) {
+        setStartBtnHoverState({
+          backgroundColor: quizProperties.startBtn.backgroundColor,
+          color: quizProperties.startBtn.color
+        });
+      }
+    }, [quizProperties])
 
     let startQuiz = () => {
         navigate(`/quiz/preview/questions/${id}`);
     }
 
     let onStartMouseEnter = () => {
-        if(quizProperties.startBtn.backgroundColor) {
+        if(quizProperties) {
+          if(quizProperties.startBtn.backgroundColor) {
             setStartBtnHoverState({
-            backgroundColor: quizProperties.ButtonHoverStyle.StartButtonHoverColor,
-            color: quizProperties.ButtonHoverStyle.StartButtonHoverTextColor
-          })
+              backgroundColor: quizProperties.ButtonHoverStyle.StartButtonHoverColor,
+              color: quizProperties.ButtonHoverStyle.StartButtonHoverTextColor
+            })
+          }
         }
       }
     
@@ -38,11 +55,13 @@ export default function PresentationPreviewPage() {
       })
 
       let onStartMouseLeave = () => {
-        if(quizProperties.startBtn.backgroundColor) {
+        if(quizProperties) {
+          if(quizProperties.startBtn.backgroundColor) {
             setStartBtnHoverState({
-            backgroundColor: quizProperties.startBtn.backgroundColor,
-            color: quizProperties.startBtn.color
-          })
+              backgroundColor: quizProperties.startBtn.backgroundColor,
+              color: quizProperties.startBtn.color
+            })
+          }
         }
       }
 
@@ -53,7 +72,9 @@ export default function PresentationPreviewPage() {
     return (
         <div className="page preview-page">
             <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true} hasCancelBtn={true}/>
-            <div className='content-container'>
+            {
+              quiz && quizProperties ? 
+              <div className='content-container'>
                 <div className='left-column'>
                     <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
                         <div style={quizProperties.presentationImage}></div>
@@ -66,9 +87,8 @@ export default function PresentationPreviewPage() {
                         </div>
                     </div>
                 </div>
-            </div>
+              </div> : <></>
+            }
         </div>
     );
 }
-
-// Styles

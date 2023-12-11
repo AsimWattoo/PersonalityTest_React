@@ -77,7 +77,7 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
         }
       </div>
       <div className='d-flex align-items-center'>
-        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.prevBtn["justifyContent"]}} onClick={() => prevQuestion()}>
+        <div className="btn-container w-100 d-flex" style={{"justifyContent": sharedProperties.prevBtn["justifyContent"]}} onClick={() => prevQuestion()}>
             {
               properties.configuration.PreviousButton && questionId > 0 ?
               <div className="btn" style={{...sharedProperties.prevBtn, ...previousBtnHoverState}} onMouseEnter={onPrevMouseEnter} onMouseLeave={onPrevMouseLeave}>
@@ -86,7 +86,7 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
               : <></>
             }
         </div>
-        <div className="btn-container w-50" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}} onClick={() => nextQuestion()}>
+        <div className="btn-container w-100 d-flex" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}} onClick={() => nextQuestion()}>
             {
               properties.configuration.NextButton ? 
               (questionId == questions.length - 1 ?

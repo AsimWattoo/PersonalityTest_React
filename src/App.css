@@ -3,6 +3,26 @@
   src: url("/src/assets/fonts/poppins/Poppins-Regular.ttf");
 }
 
+@font-face {
+  font-family: Poppins-Medium;
+  src: url("/src/assets/fonts/poppins/Poppins-Medium.ttf");
+}
+
+@font-face {
+  font-family: Poppins-SemiBold;
+  src: url("/src/assets/fonts/poppins/Poppins-SemiBold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Bold;
+  src: url("/src/assets/fonts/poppins/Poppins-Bold.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Thin;
+  src: url("/src/assets/fonts/poppins/Poppins-Thin.ttf");
+}
+
 .app-container {
     display: flex;
     flex-direction: column;

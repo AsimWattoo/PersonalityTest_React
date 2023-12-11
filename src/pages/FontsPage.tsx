@@ -23,7 +23,7 @@ function FontsPage() {
     }, []);
 
     let deleteFont = async (id: string) => {
-        let response = await sendRequest(Urls.deleteFont.url(id), Urls.deleteFont.type);
+        let response = await sendRequest(Urls.deleteFile.url(id), Urls.deleteFile.type);
         if(response.error) {
             alert(response.error);
         } else {

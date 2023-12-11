@@ -1,4 +1,6 @@
 import React from 'react';
+import "./component.css";
+import '../App.css'
 import { MdDelete, MdEdit } from 'react-icons/md';
 
 type QuizInfo = {
@@ -13,22 +15,24 @@ type QuizInfo = {
 
 function QuizCard(props: QuizInfo) {
   return (
-    <div style={styles.card}>
-      <div style={{...props.imageProperties, ...styles.addquizcard}} onClick={() => props.onQuizPlay(props.id)}>
+    <div className='quiz-card'>
+      <div style={{...props.imageProperties}} className='quiz-image' onClick={() => props.onQuizPlay(props.id)}>
       </div>
-      <div className='d-flex justify-content-between align-items-center w-100 mt-2'>
-        <h3  style={styles.addicon}>
-          {props.name}
-        </h3>
-        <div>
-          {props.isDraft ? "Draft" : ""}
+      <div className='content'>
+        <div className='content-header'>
+          <h3  className='title'>
+            {props.name}
+          </h3>
+          <div className='status status-red'>
+            Draft
+          </div>
         </div>
-        <div className="d-flex align-items-center">
-          <a className='btn btn-secondary mx-2' onClick={() => props.onQuizEdit(props.id)}>
-            <MdEdit />
+        <div className="btn-container">
+          <a className='secondary-outline-btn me-2' onClick={() => props.onQuizEdit(props.id)}>
+            Edit
           </a>
-          <a className='btn btn-danger mx-2' onClick={() => props.onQuizDelete(props.id)}>
-            <MdDelete />
+          <a className='danger-outline-btn' onClick={() => props.onQuizDelete(props.id)}>
+            Delete
           </a>
         </div>
       </div>
@@ -37,34 +41,3 @@ function QuizCard(props: QuizInfo) {
 }
 
 export default QuizCard;
-
-const styles = {
-  card: {
-    display: "flex",
-    alignItems: "center",
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
-  addquizcard: {
-    flexDirection: "column",
-    textAlign: "center",
-    borderRadius: "10px",
-    padding: "0rem",
-    color: "#000",
-    cursor: "pointer",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: "250px",
-    width: "250px",
-    margin: 0,
-  },
-  addicon: {
-    fontSize: " 1.2rem",
-    marginTop: "20px",
-    color: "#000",
-    marginBottom: "0.5rem",
-    textAlign: "center",
-    width: "100%"
-  },
-};

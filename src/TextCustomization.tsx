@@ -16,7 +16,8 @@ import {
   MdClose,
   MdHorizontalRule,
   MdRoundedCorner,
-  MdBlock} from 'react-icons/md';
+  MdBlock,
+  MdGirl} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
 import { updateProperty, addProperty, removeProperty } from "./redux/question";
 import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
@@ -26,6 +27,8 @@ import Select from "./components/Select";
 import ToggleBtn from "./components/ToggleBtn";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { sendRequest } from "./helpers/request";
+import { addFile, removeFile } from "./redux/files";
+import type { File } from "./redux/files";
 import Urls from "./links";
 
 type SelectDropDownProps = {
@@ -176,8 +179,12 @@ const InputField = ({propertyName, value, type, updateProperty, icon, unit, form
 
 const Margin = ({propertyName, value, updateProperty, formatter}) => {
   let changeMargin = (propName, value) => {
-    let val = parseFloat(value);
-    updateProperty(propName, val);
+    if(value) {
+      let val = parseFloat(value);
+      updateProperty(propName, val);
+    } else {
+      updateProperty(propName, 0);
+    }
   }
 
   return (
@@ -249,21 +256,43 @@ const Margin = ({propertyName, value, updateProperty, formatter}) => {
   )
 }
 
-const FileUpload = ({propertySection, propertyName, value, updateProperty, accept}) => {
+const FileUpload = ({mainSection, questionId, propertySection, propertyName, value, updateProperty, accept, dispatch}) => {
+
   let selectFile = () => {
     document.getElementById(`fileInput-${propertySection}`)?.click();
   }
 
-  let readFile = (e) => {
+  let readFile = async (e) => {
     let file = e.target.files[0];
     const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      updateProperty(propertyName, `url(${URL.createObjectURL(file)})`)
-    };
+    let blobUrl = URL.createObjectURL(file);
+    let newFile = {
+      id: "",
+      url: blobUrl,
+      fileName: file.name,
+      mainSection: mainSection,
+      propertySection: propertySection,
+      property: propertyName,
+      questionIndex: questionId,
+      state: "added",
+    } as File;
+    dispatch(addFile(newFile));
+    updateProperty(propertyName, `url(${blobUrl})`)
   }
 
-  let clearImage = () => {
+  let clearImage = async () => {
+    let urlParts = value.split("/");
+    let fileName = urlParts[urlParts.length - 1].replace(")", "");
+    let fileToRemove = {
+      id: "",
+      fileName: fileName,
+      mainSection: mainSection,
+      property: propertyName,
+      propertySection: propertySection,
+      questionIndex: questionId,
+      state: "removed",
+    } as File;
+    dispatch(removeFile(fileToRemove));
     updateProperty(propertyName, "");
   };
 
@@ -295,8 +324,12 @@ const FileUpload = ({propertySection, propertyName, value, updateProperty, accep
 const Padding = ({propertyName, value, updateProperty}) => {
 
   let changePadding = (propName, value) => {
-    let val = parseFloat(value);
-    updateProperty(propName, val);
+    if(value) {
+      let val = parseFloat(value);
+      updateProperty(propName, val);
+    } else {
+      updateProperty(propName, 0);
+    }
   }
 
   return (
@@ -379,6 +412,7 @@ const CheckBox = ({propertyName, value, updateProperty}) => {
 
 type TextCustomizationProps = {
   title: string,
+  mainSection: string,
   propertySection: string,
   isShared: boolean,
   sharedProperties: {},
@@ -389,7 +423,7 @@ type TextCustomizationProps = {
   removeSharedProperty(action: PayloadAction<SharedPropertyRemove>): void,
 }
 
-const TextCustomization = ({title, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}: TextCustomizationProps) => {
+const TextCustomization = ({title, mainSection, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}: TextCustomizationProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
@@ -1069,7 +1103,12 @@ const TextCustomization = ({title, propertySection, isShared=false, sharedProper
       value = isShared ? sharedProperties[propertySection][property] : questions[questionId].properties[propertySection][property];
     }
 
-    let control_configuration = {value: value, updateProperty: configuration.customAction ? configuration.customAction : updateCSSProperty};
+    let control_configuration = {value: value, 
+      mainSection: mainSection, 
+      questionId: questionId, 
+      updateProperty: configuration.customAction ? configuration.customAction : updateCSSProperty,
+      dispatch: dispatch,
+    };
       if(configuration.requiresName)
         control_configuration["propertyName"] = property;
 

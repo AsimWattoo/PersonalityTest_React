@@ -19,13 +19,12 @@ const Select = ({options, value, onChange=(opt) => {}}) => {
             onChange(option);
         }
     }
-
     useEffect(() => {
         let filteredOption = options.filter(option => option.value == value);
         if(filteredOption && filteredOption.length > 0) {
             setSelectedOption(filteredOption[0])
         }
-    }, []);
+    }, [options]);
 
     return (
         <div className={`select child ${isExpanded ? "expanded" : ""}`}>

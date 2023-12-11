@@ -5,6 +5,7 @@ import storage from "redux-persist/lib/storage";
 import sharedReducer from './redux/shared';
 import quizReducer from "./redux/quiz";
 import presentationReducer from "./redux/presentationProperties";
+import fileReducer from "./redux/files";
 
 const persistConfig = {
     key: 'root',
@@ -18,17 +19,15 @@ const persistedPresentationReducer = persistReducer(persistConfig, presentationR
 
 const store = configureStore({
     reducer: {
-        question: persistedReducer,
-        shared: persistedSharedReducer,
-        quiz: persistedQuizReducer,
-        presentation: persistedPresentationReducer
+        question: questionReducer,
+        shared: sharedReducer,
+        quiz: quizReducer,
+        presentation: presentationReducer,
+        files: fileReducer
     }
 })
-
-let persistor = persistStore(store)
 
 export type RootState = ReturnType<typeof store.getState>
 export type AppDispatch = typeof store.dispatch
 
 export default store
-export {persistor}

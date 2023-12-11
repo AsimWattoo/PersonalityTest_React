@@ -49,9 +49,21 @@ let Urls = {
         url: () => `${baseUrl}/file/type/font`,
         type: 'GET'
     },
-    deleteFont: {
+    deleteFile: {
         url: (fileId: string) => `${baseUrl}/file/${fileId}`,
         type: 'DELETE'
+    },
+    uploadFile: {
+        url: () => `${baseUrl}/file`,
+        type: 'POST'
+    },
+    getFileUrl: {
+        url: (id: string) => `${baseUrl}/file/${id}`,
+        type: 'GET'
+    },
+    deleteFileByName: {
+        url: (name: string) => `${baseUrl}/file/name/${name}`,
+        type: "DELETE"
     }
 }
 

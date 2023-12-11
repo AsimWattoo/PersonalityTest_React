@@ -1,18 +1,28 @@
 // pages/quiz.js
 "use client"; // pages/quiz.js
 import React, { useState, useEffect } from "react";
-import { useAppSelector } from "../redux/hooks.js";
+import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
 import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
 import QuestionPreview from "../components/QuestionPreview.js";
 import { useParams } from "react-router";
+import loadData from "../helpers/dataLoader.js";
 
 export default function QuestionsPlayPage() {
   
   let params = useParams();
-  let id = parseInt(params.id);
+  let dispatch = useAppDispatch();
+  let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared.properties);
+
+  useEffect(() => {
+
+    if(!quiz || !quiz.title) {
+      loadData(params.id, dispatch);
+    }
+
+  }, []);
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -24,20 +34,32 @@ export default function QuestionsPlayPage() {
     setCurrentSlide(slide);
   }
 
+  let [windowWidth, setWindowWidth] = useState(600);
+
+  useEffect(() => {
+    setWindowWidth(window.innerWidth)
+  })
+
+  window.onresize = () => {
+    setWindowWidth(window.innerWidth)
+  }
+
   return (
     <div className="page preview-page">
-      <NavigationBar hasSubmitBtn={false} hasPreview={false} hasEditBtn={false}  hasCancelBtn={false}/>
+      <NavigationBar hasSubmitBtn={false} hasPreview={false} hasEditBtn={false} hasCancelBtn={false}/>
       <div className='content-container'>
         <div className='left-column' >
           <div className="slide-container">
             {
+              questions.length > 0 && sharedProperties ? 
               questions.map((question, index) => {
                 return (
-                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...questions[index].properties.background}} key={index}>
+                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
                     <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
                   </div>
                 )
-              })
+              }) : 
+              <></>
             }
           </div>
         </div>
