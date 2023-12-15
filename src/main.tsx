@@ -15,22 +15,25 @@ import QuestionsPlayPage from './pages/QuestionsPlayPage';
 import SettingsPage from './pages/SettingsPage';
 import FontsPage from './pages/FontsPage';
 import FontAddPage from './pages/FontAddPage';
+import App from './App';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<NewQuizPage />} />
-            <Route path="/quiz/questions/:id" element={<PageLayout />} />
-            <Route path="/quiz/preview/questions/:id" element={<QuestionPreviewPage />} />
-            <Route path="/quiz/preview/presentation/:id" element={<PresentationPreviewPage />} />
-            <Route path="/quiz/presentation/:id" element={<PresentationPage />} />
-            <Route path='/quiz/play/presentation/:id' element={<PresentationPlayPage />} />
-            <Route path='/quiz/play/questions/:id' element={<QuestionsPlayPage />} />
-            <Route path='/settings' element={<SettingsPage />}>
-              <Route path='fonts' element={<FontsPage />}/>
-              <Route path='fonts/add' element={<FontAddPage />}/>
+            <Route path='/' element={<App />}>
+              <Route path="/" element={<NewQuizPage />} />
+              <Route path="/quiz/questions/:id" element={<PageLayout />} />
+              <Route path="/quiz/preview/questions/:id" element={<QuestionPreviewPage />} />
+              <Route path="/quiz/preview/presentation/:id" element={<PresentationPreviewPage />} />
+              <Route path="/quiz/presentation/:id" element={<PresentationPage />} />
+              <Route path='/quiz/play/presentation/:id' element={<PresentationPlayPage />} />
+              <Route path='/quiz/play/questions/:id' element={<QuestionsPlayPage />} />
+              <Route path='/settings' element={<SettingsPage />}>
+                <Route path='fonts' element={<FontsPage />}/>
+                <Route path='fonts/add' element={<FontAddPage />}/>
+              </Route>
             </Route>
           </Routes>
         </BrowserRouter>

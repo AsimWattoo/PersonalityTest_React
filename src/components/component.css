@@ -6,21 +6,29 @@
     justify-content: space-between;
     padding: 4px;
     border-radius: 10px;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    box-shadow: rgba(0, 0, 0, 0.15) 0px 5px 15px 0px;
     background-color: white;
     cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.quiz-card:hover {
+    transform: scale(1.02, 1.02);
 }
 
 .quiz-image {
-    background-color: gray;
-    width: 100% !important;
-    border-radius: 10px 10px 0 0 !important;
-    height: 70% !important;
+    background-color: #dedede;
+    border-radius: 10px!important;
+    width: 300px !important;
+    height: 200px !important;
 }
 
 .quiz-card .content {
     width: 100%;
     padding: 5px 10px 10px 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .quiz-card .content .content-header {
@@ -32,9 +40,18 @@
 
 .content-header .title {
     font-family: Poppins-Regular;
-    font-size:  1.2rem;
+    font-size:  1.4rem;
     margin-top: 10px;
     color: #210f46;
+    margin-bottom: 0.5rem;
+    width: 100%;
+}
+
+.description {
+    font-family: Poppins-Regular;
+    font-size:  1rem;
+    margin-top: 10px;
+    color: #989898;
     margin-bottom: 0.5rem;
     width: 100%;
 }
@@ -66,81 +83,77 @@
     grid-column-gap: 20px;
 }
 
-.secondary-btn {
+.status-circle {
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+}
+
+.status-circle.status-red {
+    background-color: red;
+}
+
+.status-circle.status-green {
+    background-color: rgb(76, 187, 23);
+}  
+  .nav-bar {
+    width: 100%;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+    border-bottom: 1px solid #dedede;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-bar .navigation-container {
     display: flex;
     align-items: center;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    background-color: #210f46;
-    padding: 5px 20px;
-    width: 100%;
-    border-radius: 10px;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
+    justify-content: space-between;
     font-family: Poppins-Regular;
-}
+    padding: 20px;
+  }
 
-.secondary-outline-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #210f46;
-    border: 1px solid #210f46;
-    text-decoration: none;
-    background-color: transparent;
-    padding: 5px 20px;
-    width: 100%;
-    border-radius: 10px;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
+  .nav-bar .navigation-container .brand {
+    font-size: 1.5rem;
     cursor: pointer;
-    letter-spacing: 0.6px;
-    font-family: Poppins-Regular;
-}
+  }
 
-.secondary-outline-btn:hover {
-    color: white;
-    background-color: #210f46;
-}
+  .nav-bar .navigation-container .brand span {
+    color: #a97fff;
+    font-weight: 600;
+  }
 
-.danger-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    color: white;
-    text-decoration: none;
-    background-color: #d4101c;
-    padding: 5px 20px;
-    width: 100%;
-    border-radius: 5px;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    font-family: Poppins-Regular;
-}
 
-.danger-outline-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    color: #d4101c;
-    border: 1px solid #d4101c;
-    text-decoration: none;
-    background-color: transparent;
-    padding: 5px 20px;
-    width: 100%;
-    border-radius: 10px;
-    text-align: center;
-    transition: all 0.2s ease-in-out;
-    cursor: pointer;
-    font-family: Poppins-Regular;
-}
+  @media screen and (max-width: 450px) {
 
-.danger-outline-btn:hover {
-    color: white;
-    background-color: #d4101c;
-}
+    .nav-bar .navigation-container{
+        padding: 10px;
+    }
+
+    .nav-bar .navigation-container .brand {
+        font-size: 1.2rem;
+        cursor: pointer;
+    }
+
+    .quiz-card .content {
+        padding: 5px;
+    }
+
+    .quiz-card .content .content-header .title {
+        font-size: 0.9rem;
+    }
+
+    .quiz-card .content .content-header .status-circle {
+        width: 12px;
+        height: 12px;
+    }
+
+    .quiz-card .content .description {
+        font-size: 0.8rem;
+    }
+
+    .quiz-image {
+        width: 150px !important;
+        height: 100px !important;
+        border-radius: 5px;
+    }
+  }

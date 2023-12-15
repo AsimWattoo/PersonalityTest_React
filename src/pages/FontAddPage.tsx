@@ -27,7 +27,7 @@ function FontAddPage() {
         <div className="inner-page">
             <div className="header">
                 <div className="d-flex align-items-center">
-                    <div className="text-btn me-2" onClick={() => navigate(-1)}>
+                    <div className="primary-text-btn me-2" onClick={() => navigate(-1)}>
                         <MdChevronLeft />
                     </div>
                     <div className="title">
@@ -35,10 +35,10 @@ function FontAddPage() {
                     </div>
                 </div>
                 <div className="d-flex align-items-center">
-                    <div className="btn btn-danger me-2" onClick={() => navigate(-1)}>
+                    <div className="danger-outline-btn me-2" onClick={() => navigate(-1)}>
                         Cancel
                     </div>
-                    <div className="btn btn-primary d-flex align-items-center" onClick={saveFont}>
+                    <div className="primary-btn d-flex align-items-center" onClick={saveFont}>
                         <MdSave className="me-2"/>
                         Save
                     </div>

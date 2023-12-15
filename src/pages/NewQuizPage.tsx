@@ -1,26 +1,30 @@
 "use client"; // pages/quiz.js
+import "./QuizPage.css";
 import React, { useEffect, useState } from 'react';
-import NavigationBar from "../NavigationBar.js";
 import QuizCard from "../components/Quizcard.js";
-import AddQuizCard from '../components/AddQuiz.js';
 import { useNavigate } from 'react-router';
 import { sendRequest } from '../helpers/request.js';
 import Urls from '../links.js';
 import { useAppDispatch } from '../redux/hooks.js';
-import { setQuiz, resetQuiz } from '../redux/quiz.js';
-import { initializeProperties, resetProperties } from '../redux/presentationProperties.js';
-import { initializeProperties as initializeSharedProperties, resetProperties as resetSharedProperties } from '../redux/shared.js';
-import { resetQuestions, setQuestions } from '../redux/question.js';
-import type { Quiz } from '../redux/quiz.js';
+import { resetQuiz } from '../redux/quiz.js';
+import { resetProperties } from '../redux/presentationProperties.js';
+import { resetProperties as resetSharedProperties } from '../redux/shared.js';
+import { resetQuestions} from '../redux/question.js';
 import { resetFiles } from '../redux/files.js';
+import { MdAdd } from "react-icons/md";
+import NoResultImage from "../assets/images/no-result.png";
+import Loader from "../components/Loader";
 
 function NewQuizPage() {
   
   let dispatch = useAppDispatch();
   let navigate = useNavigate();
   let [quizes, setQuizes] = useState([]);
+  let [showDrafts, setShowDrafts] = useState(false);
+  let [isLoading, setIsLoading] = useState(true);
 
   let loadQuizes = async () => {
+    setIsLoading(true);
     dispatch(resetQuestions({}))
     dispatch(resetQuiz({}));
     dispatch(resetProperties({}));
@@ -28,13 +32,19 @@ function NewQuizPage() {
     dispatch(resetFiles({}));
     let response = await sendRequest(Urls.getAllQuizes.url(), Urls.getAllQuizes.type);
     if(!response.error) {
-      setQuizes(response.quizes.map(quiz => {
+      setQuizes(response.quizes
+        .filter(quiz => showDrafts ? quiz.isDraft : !quiz.isDraft)
+        .map(quiz => {
         quiz.presentationProperties = JSON.parse(quiz.presentationProperties);
         return quiz;
       }));
     } else {
       console.log(response.error);
     }
+    
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   }
 
   let loadFonts = async () => {
@@ -51,9 +61,12 @@ function NewQuizPage() {
   }
 
   useEffect(() => {
-    loadQuizes();
     loadFonts();
   }, []);
+
+  useEffect(() => {
+    loadQuizes();
+  }, [showDrafts]);
 
   // Function to handle adding a new quiz
   const handleAddQuiz = async () => {
@@ -77,6 +90,7 @@ function NewQuizPage() {
 
   const quizDelete = async (id: string) => {
     let response = await sendRequest(Urls.deleteQuiz.url(id), Urls.deleteQuiz.type);
+    console.log(response);
     if(response.error) {
       console.log(response.error);
     } else {
@@ -84,69 +98,56 @@ function NewQuizPage() {
     }
   }
 
+  let changeTab = (tab: boolean) => {
+    setShowDrafts(tab);
+  }
+
   return (
-    <div style={styles.page}>
-      <NavigationBar hasEditBtn={false} hasPreview={false} hasSubmitBtn={false} hasCancelBtn={false}/>
-      <div style={styles.gridContainer}>
-        <AddQuizCard onAddQuiz={handleAddQuiz} />
+    <div className="quiz-view-container">
+      <div className="header-container">
+        <div className="header">
+          <div className="tabs">
+            <div className={`tab ${showDrafts ? "" : "active"}`} onClick={() => changeTab(false)}>
+              Published Tests
+            </div>
+            <div className={`tab ${showDrafts ? "active" : ""}`} onClick={() => changeTab(true)}>
+              Draft Test
+            </div>
+          </div>
+          <div className="primary-btn" onClick={handleAddQuiz}>
+            <MdAdd />
+            Create New Test
+          </div>
+        </div>
+      </div>
+      <div className="container">
         {
-          quizes.length > 0 ? 
-            quizes.map((quiz, index) => {
-              return (
-                <QuizCard key={index} id={quiz._id} name={quiz.title}
-                  isDraft={quiz.isDraft}
-                  imageProperties={quiz.presentationProperties.properties.presentationImage} 
-                  onQuizEdit={quizEdit} 
-                  onQuizDelete={quizDelete}
-                  onQuizPlay={quizPlay}/>
-              )
-            }) : 
-            <div></div>
+          isLoading ? 
+          <Loader /> : 
+          <div className={`${quizes.length > 0 ? "gridContainer" : ""}`}>
+          {
+            quizes.length > 0 ? 
+              quizes.map((quiz, index) => {
+                return (
+                  <QuizCard key={index} id={quiz._id} name={quiz.title}
+                    isDraft={quiz.isDraft}
+                    description={quiz.description}
+                    imageProperties={quiz.presentationProperties.properties.presentationImage} 
+                    onQuizEdit={quizEdit} 
+                    onQuizDelete={quizDelete}
+                    onQuizPlay={quizPlay}/>
+                )
+              }) : 
+              <div className="empty-message">
+                <img src={NoResultImage}/>
+                <p>No Test Found. Please use the <strong>Create New Button</strong> to add a new test</p>
+              </div>
+          }
+        </div>
         }
       </div>
     </div>
   );
 }
-
-// Styles for the components
-const styles = {
-  page: {
-    fontFamily: 'Montserrat, sans-serif',
-    display: 'flex',
-    alignItems: 'center',
-    width: "100%",
-    backgroundColor: 'white',
-    height: '100vh',
-    overflow: 'hidden',
-    flexDirection: "column"
-  },
-  gridContainer: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(4, 1fr)',
-    gap: '5rem',
-    padding: '100px',
-    width: '100%',
-    "overflowX": "hidden",
-    "overflowY": "auto",
-  },
-  addNewCard: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    border: '2px dashed #ccc',
-    borderRadius: '8px',
-    height: '150px',
-    cursor: 'pointer',
-    color:'#000'
-
-  },
-  plusIcon: {
-    fontSize: '2rem',
-    marginBottom: '0.5rem',
-    color:'#000'
-  },
-  // ...other styles
-};
 
 export default NewQuizPage;

@@ -13,6 +13,7 @@ import PagesBar from "../components/PagesBar";
 import { useParams } from "react-router";
 import { updateProperty as updateSharedProperty, addProperty as addSharedProperty, removeProperty as removeSharedProperty } from "../redux/shared";
 import loadData from "../helpers/dataLoader";
+import Loader from "../components/Loader";
 
 export default function QuestionsPage() {
   
@@ -21,11 +22,17 @@ export default function QuestionsPage() {
   const dispatch = useAppDispatch();
   const questions = useAppSelector(state => state.question.questions);
   const sharedProperties = useAppSelector(state => state.shared.properties);
+  let [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
 
     if(!quiz || !quiz.title) {
-      loadData(params.id, dispatch);
+      setIsLoading(true);
+      loadData(params.id, dispatch, () => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      });
     }
 
   }, []);
@@ -39,10 +46,12 @@ export default function QuestionsPage() {
     let question : Question = {
       properties: {
         background: {
-          "backgroundColor": "#FFFFFF"
+          "backgroundColor": "#FFFFFF",
+          'opacity': 1
         },
         mobileBackground: {
-          "backgroundColor": "#FFFFFF"
+          "backgroundColor": "#FFFFFF",
+          'opacity': 1
         },
         configuration: {
           NextButton: true,
@@ -61,66 +70,77 @@ export default function QuestionsPage() {
 
   return (
     <div className="page">
-      <NavigationBar hasSubmitBtn={true} hasPreview={true} hasEditBtn={false} hasCancelBtn={true}/>
-      <div className='content-container'>
-        <PagesBar currentPage={'questions'} quizId={params.id}/>
-        <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >
-          <div className={`slide-container ${questions.length == 0 ? "d-flex" : ""}`}>
-            {
-              questions.length == 0 || !sharedProperties ? 
-              <div className={`slide w-100`}>
-                <div className="no-question">
-                  <MdWarning />
-                  <div>
-                    No Question has been added
-                  </div>
-                  <div>
-                    Use the <strong>add button</strong> below to add your first question
+      {
+        isLoading ? 
+        <Loader /> : 
+        <div className='content-container'>
+          <div className="quiz-view-container">
+            <div className='header-container'>
+              <PagesBar currentPage={'questions'} quizId={params.id} canPreview={true} canEdit={false}/>
+            </div>
+            <div className="page-container">
+              <div className={`left-column ${questions.length == 0 ? "w-100" : ""}`} >
+                <div className={`slide-container ${questions.length == 0 ? "d-flex" : ""}`}>
+                  {
+                    questions.length == 0 || !sharedProperties ? 
+                    <div className={`slide w-100`}>
+                      <div className="no-question">
+                        <MdWarning />
+                        <div>
+                          No Question has been added
+                        </div>
+                        <div>
+                          Use the <strong>add button</strong> below to add your first question
+                        </div>
+                      </div>
+                    </div> : 
+                    questions.map((question, index) => {
+                      return (
+                        <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} 
+                        style={{transform: `translateX(${getTransform(index)}%)`}} key={index}>
+                          <div className="background" style={questions[index].properties.background}></div>
+                          <QuestionCard changePage={changeSlide} sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index}/>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+                <div className="navigation-bar">
+                  {
+                    questions.map((question, index) => {
+                      return (
+                        <div key={index} className={`item ${currentSlide == index ? 'active' : ''}`} onClick={() => changeSlide(index)}>
+                          {index + 1}
+                        </div>
+                      )
+                    })
+                  }
+                  <div className="item" onClick={createQuestion}>
+                    <MdAdd />
                   </div>
                 </div>
-              </div> : 
-              questions.map((question, index) => {
-                return (
-                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} 
-                  style={{transform: `translateX(${getTransform(index)}%)`, ...questions[index].properties.background}} key={index}>
-                    <QuestionCard changePage={changeSlide} sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index}/>
-                  </div>
-                )
-              })
-            }
-          </div>
-          <div className="navigation-bar">
-            {
-              questions.map((question, index) => {
-                return (
-                  <div key={index} className={`item ${currentSlide == index ? 'active' : ''}`} onClick={() => changeSlide(index)}>
-                    {index + 1}
-                  </div>
-                )
-              })
-            }
-            <div className="item" onClick={createQuestion}>
-              <MdAdd />
+              </div>
             </div>
           </div>
+          {
+            questions.length > 0 ? 
+            <div className='right-column'>
+              <TextCustomization title={'Question Background'} mainSection="question" propertySection={'background'} questions={questions} questionId={currentSlide}/>
+              <TextCustomization title={'Question Mobile Background'} mainSection="question" propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
+              <TextCustomization title={'Question Header'} mainSection="sharedProperties" propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
+              <TextCustomization title={'Option'} mainSection="sharedProperties" propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Next Button'} mainSection="sharedProperties" propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Prev Button'} mainSection="sharedProperties" propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Button Hover Styles'} mainSection="sharedProperties" propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Configuration'} mainSection="question" propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
+              <TextCustomization title={'Option Hover Style'} mainSection="sharedProperties" propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Selected Option Style'} mainSection="sharedProperties" propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+            </div>
+            : <></>
+          }
         </div>
-        {
-          questions.length > 0 ? 
-          <div className='right-column'>
-            <TextCustomization title={'Question Background'} mainSection="question" propertySection={'background'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Mobile Background'} mainSection="question" propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Question Header'} mainSection="sharedProperties" propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
-            <TextCustomization title={'Option'} mainSection="sharedProperties" propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Next Button'} mainSection="sharedProperties" propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Prev Button'} mainSection="sharedProperties" propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Button Hover Styles'} mainSection="sharedProperties" propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Configuration'} mainSection="question" propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
-            <TextCustomization title={'Option Hover Style'} mainSection="sharedProperties" propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-            <TextCustomization title={'Selected Option Style'} mainSection="sharedProperties" propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
-          </div>
-          : <></>
-        }
-      </div>
+      }
+
     </div>
   );
 }

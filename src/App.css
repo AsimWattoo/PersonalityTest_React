@@ -42,3 +42,98 @@
     margin-top: 20px; /* Adjust margin as needed */
     margin-right: 20px; /* Adjust margin as needed */
   }
+
+
+  .loader-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 5em;
+  }
+
+  .loader-container .text {
+    font-family: Poppins-Regular;
+    font-size: 1.2rem;
+  }
+
+  .loader-container .text strong {
+    color: #a97fff
+  }
+  
+.loading-wave {
+  width: 300px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-bar {
+  width: 10px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #a97fff;
+  border-radius: 5px;
+  animation: loading-wave-animation 1s ease-in-out infinite;
+}
+
+.loading-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loading-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.loading-bar:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+@keyframes loading-wave-animation {
+  0% {
+    height: 10px;
+  }
+
+  50% {
+    height: 50px;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .loader-container .text {
+    font-size: 0.8rem;
+    text-align: center !important;
+  }
+
+  .loading-wave {
+    height: 50px;
+    width: 100px;
+    gap: 0px;
+  }
+
+  .loading-bar {
+    width: 5px;
+    margin: 0 2px;
+    animation: loading-wave-animation 1s ease-in-out infinite;
+  }
+
+  @keyframes loading-wave-animation {
+    0% {
+      height: 10px;
+    }
+  
+    50% {
+      height: 30px;
+    }
+  
+    100% {
+      height: 10px;
+    }
+  }
+}

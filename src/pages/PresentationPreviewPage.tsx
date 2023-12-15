@@ -6,6 +6,8 @@ import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
 import { useNavigate, useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
+import PagesBar from "../components/PagesBar.js";
+import Loader from "../components/Loader.js";
 
 export default function PresentationPreviewPage() {
   
@@ -17,11 +19,17 @@ export default function PresentationPreviewPage() {
     let dispatch = useAppDispatch();
     let navigate = useNavigate();
     let [startBtnHoverState, setStartBtnHoverState] = useState({});
+    let [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
 
       if(!quiz || !quiz.title) {
-        loadData(id, dispatch);
+        setIsLoading(true);
+        loadData(id, dispatch, () => {
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        });
       }
 
     }, []);
@@ -71,23 +79,31 @@ export default function PresentationPreviewPage() {
     
     return (
         <div className="page preview-page">
-            <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true} hasCancelBtn={true}/>
             {
+              isLoading ? 
+              <Loader /> :(
               quiz && quizProperties ? 
               <div className='content-container'>
-                <div className='left-column'>
-                    <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
-                        <div style={quizProperties.presentationImage}></div>
-                        <div className="w-50" style={quizProperties.heading}>{quiz.title}</div>
-                        <div className="w-50" style={quizProperties.description}>{quiz.description}</div>
-                        <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
-                            <a className='btn btn-primary' style={{...quizProperties.startBtn, ...startBtnHoverState}} onClick={startQuiz} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
-                                {quizProperties.ButtonHoverStyle.StartButtonText}
-                            </a>
+                <div className="quiz-view-container">
+                  <div className='header-container'>
+                    <PagesBar currentPage={'presentation'} quizId={params.id} canPreview={false} canEdit={true} canNavigate={false}/>
+                  </div>
+                  <div className="page-container">
+                    <div className='left-column'>
+                        <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
+                            <div style={quizProperties.presentationImage}></div>
+                            <div className="w-50" style={quizProperties.heading}>{quiz.title}</div>
+                            <div className="w-50" style={quizProperties.description}>{quiz.description}</div>
+                            <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
+                                <a className='btn btn-primary' style={{...quizProperties.startBtn, ...startBtnHoverState}} onClick={startQuiz} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                                    {quizProperties.ButtonHoverStyle.StartButtonText}
+                                </a>
+                            </div>
                         </div>
                     </div>
+                  </div>
                 </div>
-              </div> : <></>
+              </div> : <></> )
             }
         </div>
     );

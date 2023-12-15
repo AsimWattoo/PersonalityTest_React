@@ -1,6 +1,7 @@
 /* TextCustomization.css */
 
 .text-customization {
+  font-family: Poppins-Regular;
 }
 
 
@@ -194,6 +195,10 @@ input {
 
 .item.item-combined.w-60-40 .child:last-child {
   width: 40%;
+}
+
+.item.item-combined input[type='range'] {
+  width: 80%;
 }
 
 .item .color-box {

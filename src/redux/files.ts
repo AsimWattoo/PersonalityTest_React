@@ -34,7 +34,7 @@ export const fileSlice = createSlice({
             state.files = [];
         },
         removeFile: (state, action: PayloadAction<File>) => {
-            let newFiles = state.files.filter(file => file.fileName!== action.payload.fileName && file.mainSection == action.payload.mainSection && file.propertySection == action.payload.propertySection && file.questionIndex == action.payload.questionIndex);
+            let newFiles = state.files.filter(file => file.url !== action.payload.url && file.mainSection == action.payload.mainSection && file.propertySection == action.payload.propertySection && file.questionIndex == action.payload.questionIndex);
             //No file found then add a link to remove the file
             if(newFiles.length == state.files.length) {
                 state.files.push(action.payload)

@@ -44,9 +44,12 @@ else {
 }
 }
 
-let loadData = async (id: string, dispatch) => {
+let loadData = async (id: string, dispatch, cb: () => {}) => {
     await loadQuizData(id, dispatch);
     await loadQuestions(id, dispatch);
+    if(cb) {
+      cb();
+    }
 }
 
 export default loadData;

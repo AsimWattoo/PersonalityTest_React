@@ -17,7 +17,8 @@ import {
   MdHorizontalRule,
   MdRoundedCorner,
   MdBlock,
-  MdGirl} from 'react-icons/md';
+  MdGirl,
+  MdOpacity} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
 import { updateProperty, addProperty, removeProperty } from "./redux/question";
 import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
@@ -286,6 +287,7 @@ const FileUpload = ({mainSection, questionId, propertySection, propertyName, val
     let fileToRemove = {
       id: "",
       fileName: fileName,
+      url: value,
       mainSection: mainSection,
       property: propertyName,
       propertySection: propertySection,
@@ -406,6 +408,22 @@ const CheckBox = ({propertyName, value, updateProperty}) => {
     <div className="item item-check">
         <label>{propertyName}</label>
       <ToggleBtn value={value} onChange={v => updateProperty(propertyName, v)} />
+    </div>
+  )
+}
+
+const OpacityBar = ({propertyName, value, updateProperty}) => {
+  return (
+    <div className="item item-combined w-60-40">
+      <div className="child d-flex align-items-center justify-content-start">
+        <input type="range" min='0' max='1' step={0.01} value={value} onChange={e => updateProperty(propertyName, e.target.value)}/>
+      </div>
+      <div className="input-combined child">
+        <div className="label left">
+          <MdOpacity />
+        </div>
+        <input type='number' min={0} max={1} step={0.01} value={value} onChange={e => updateProperty(propertyName, e.target.value)}/>
+      </div>
     </div>
   )
 }
@@ -743,6 +761,10 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
         {
           heading: "Height",
           dependencies: ["height"]
+        }, 
+        {
+          heading: "Opacity",
+          dependencies: ['opacity']
         }
       ]
     },
@@ -819,6 +841,23 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
         return  backgroundColor ? "backgroundColor" : (backgroundImage !== undefined ? "backgroundImage" : "noBackground");
       },
       customAction: (propertyName, value) => {
+
+        let removeBackgroundImage = (imageUrl) => {
+          let urlParts = imageUrl.split("/");
+          let fileName = urlParts[urlParts.length - 1].replace(")", "");
+          let fileToRemove = {
+            id: "",
+            fileName: fileName,
+            url: imageUrl,
+            mainSection: mainSection,
+            property: propertyName,
+            propertySection: propertySection,
+            questionIndex: questionId,
+            state: "removed",
+          } as File;
+          dispatch(removeFile(fileToRemove));
+        }
+
         if(isShared) {
           if(value == "backgroundImage"){
             let propertyRemove : SharedPropertyRemove = {
@@ -854,7 +893,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundColor") {
-  
+            let imageUrl = sharedProperties[propertySection]["backgroundImage"];
+            removeBackgroundImage(imageUrl);
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
@@ -870,6 +910,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(addSharedProperty(propertyAdd))
           }
           else {
+            let imageUrl = sharedProperties[propertySection]["backgroundImage"];
+            removeBackgroundImage(imageUrl);
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
@@ -926,7 +968,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundColor") {
-  
+            let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
+            removeBackgroundImage(imageUrl);
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
@@ -944,6 +987,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(addProperty(propertyAdd))
           }
           else {
+            let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
+            removeBackgroundImage(imageUrl);
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
@@ -1074,6 +1119,11 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       unit: "%",
       formatter: (number: string | number) => `${number}%`,
       parser: (number: string | number) => parseFloat(number.toString().replace("%", ''))
+    },
+    'opacity': {
+      render: OpacityBar,
+      type: 'number',
+      requiresName: true,
     }
   }
 

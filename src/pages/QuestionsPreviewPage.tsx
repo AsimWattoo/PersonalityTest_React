@@ -1,14 +1,13 @@
 // pages/quiz.js
 "use client"; // pages/quiz.js
-import React, { useState, useEffect } from "react";
-import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
-import NavigationBar from "../NavigationBar.js";
-import "./QuizPage.css";
-import TextCustomization from "../TextCustomization.js";
-import QuestionPreview from "../components/QuestionPreview.js";
-import { MdAdd } from "react-icons/md";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import PagesBar from "../components/PagesBar.js";
+import QuestionPreview from "../components/QuestionPreview.js";
 import loadData from "../helpers/dataLoader.js";
+import { useAppDispatch, useAppSelector } from "../redux/hooks.js";
+import "./QuizPage.css";
+import Loader from "../components/Loader.js";
 
 export default function QuestionsPreviewPage() {
   
@@ -17,11 +16,17 @@ export default function QuestionsPreviewPage() {
   let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared.properties);
+  let [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
 
     if(!quiz || !quiz.title) {
-      loadData(params.id, dispatch);
+      setIsLoading(true);
+      loadData(params.id, dispatch, () => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      });
     }
 
   }, []);
@@ -48,24 +53,34 @@ export default function QuestionsPreviewPage() {
 
   return (
     <div className="page preview-page">
-      <NavigationBar hasSubmitBtn={true} hasPreview={false} hasEditBtn={true} hasCancelBtn={true}/>
-      <div className='content-container'>
-        <div className='left-column' >
-          <div className="slide-container">
-            {
-              questions.length > 0 && sharedProperties ? 
-              questions.map((question, index) => {
-                return (
-                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
-                    <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
-                  </div>
-                )
-              }) : 
-              <></>
-            }
+      {
+        isLoading ? 
+        <Loader /> :
+        <div className='content-container'>
+          <div className="quiz-view-container">
+            <div className='header-container'>
+              <PagesBar currentPage={'questions'} quizId={params.id} canPreview={false} canEdit={true} canNavigate={false}/>
+            </div>
+            <div className="page-container">
+              <div className='left-column' >
+                <div className="slide-container">
+                  {
+                    questions.length > 0 && sharedProperties ? 
+                    questions.map((question, index) => {
+                      return (
+                        <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
+                          <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
+                        </div>
+                      )
+                    }) : 
+                    <></>
+                  }
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   );
 }

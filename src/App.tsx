@@ -1,26 +1,16 @@
 import React from 'react';
-import PageLayout from './pages/QuestionsPage';
-import NewQuizPage from './pages/NewQuizPage';
-import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import { Provider } from 'react-redux';
-import PreviewPage from './pages/QuestionsPreviewPage';
+import NavigationBar from './NavigationBar';
+import { Outlet } from 'react-router';
 
-import store, {persistor} from './store';
-import { PersistGate } from 'redux-persist/integration/react';
 
 function App() {
   return (
-    <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<NewQuizPage />} />
-            <Route path="/quiz" element={<PageLayout />} />
-            <Route path="/preview" element={<PreviewPage />} />
-          </Routes>
-        </BrowserRouter>
-      </PersistGate>
-    </Provider>
+    <div className='page d-flex flex-column'>
+      <NavigationBar hasCancelBtn={true} hasEditBtn={true} hasPreview={true} hasSubmitBtn={true} />
+      <div style={{height: "92%"}}>
+        <Outlet />
+      </div>
+    </div>
   );
 }
 

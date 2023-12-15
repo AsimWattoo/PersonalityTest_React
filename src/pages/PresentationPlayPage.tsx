@@ -5,22 +5,30 @@ import NavigationBar from "../NavigationBar.js";
 import "./QuizPage.css";
 import { useNavigate, useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
+import Loader from "../components/Loader.js";
 
 export default function PresentationPlayPage() {
   
     let params = useParams();
     let id = params.id;
     let [windowWidth, setWindowWidth] = useState(600);
+    let [background, setBackground] = useState({});
     let quizProperties = useAppSelector(state => state.presentation.properties);
     const quiz = useAppSelector(state => state.quiz.quiz);
     let dispatch = useAppDispatch();
     let navigate = useNavigate();
     let [startBtnHoverState, setStartBtnHoverState] = useState({});
+    let [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
 
       if(!quiz || !quiz.title) {
-        loadData(id, dispatch);
+        setIsLoading(true);
+        loadData(id, dispatch, () => {
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 2000);
+        });
       }
 
     }, []);
@@ -67,15 +75,22 @@ export default function PresentationPlayPage() {
     window.onresize = () => {
         setWindowWidth(window.innerWidth)
     }
+
+    useEffect(() => {
+      if(quizProperties) {
+        setBackground(windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background);
+      }
+    }, [windowWidth, quizProperties]); 
     
     return (
         <div className="page preview-page">
-            <NavigationBar hasSubmitBtn={false} hasPreview={false} hasEditBtn={false} hasCancelBtn={false}/>
             {
+              isLoading ? 
+              <Loader /> :
               quiz && quizProperties ? 
               <div className='content-container'>
                 <div className='left-column'>
-                    <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
+                    <div className="page-content">
                         <div style={quizProperties.presentationImage}></div>
                         <div className="w-50" style={quizProperties.heading}>{quiz.title}</div>
                         <div className="w-50" style={quizProperties.description}>{quiz.description}</div>
@@ -84,6 +99,7 @@ export default function PresentationPlayPage() {
                                 {quizProperties.ButtonHoverStyle.StartButtonText}
                             </a>
                         </div>
+                        <div className="background" style={{...background}}></div>
                     </div>
                 </div>
               </div> : <></>

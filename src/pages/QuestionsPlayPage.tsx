@@ -7,6 +7,7 @@ import "./QuizPage.css";
 import QuestionPreview from "../components/QuestionPreview.js";
 import { useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
+import Loader from "../components/Loader.js";
 
 export default function QuestionsPlayPage() {
   
@@ -15,11 +16,17 @@ export default function QuestionsPlayPage() {
   let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared.properties);
+  let [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
 
     if(!quiz || !quiz.title) {
-      loadData(params.id, dispatch);
+      setIsLoading(true)
+      loadData(params.id, dispatch, () => {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 2000);
+      });
     }
 
   }, []);
@@ -46,24 +53,27 @@ export default function QuestionsPlayPage() {
 
   return (
     <div className="page preview-page">
-      <NavigationBar hasSubmitBtn={false} hasPreview={false} hasEditBtn={false} hasCancelBtn={false}/>
-      <div className='content-container'>
-        <div className='left-column' >
-          <div className="slide-container">
-            {
-              questions.length > 0 && sharedProperties ? 
-              questions.map((question, index) => {
-                return (
-                  <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
-                    <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
-                  </div>
-                )
-              }) : 
-              <></>
-            }
+      {
+        isLoading ? 
+        <Loader /> :
+        <div className='content-container'>
+          <div className='left-column' >
+            <div className="slide-container">
+              {
+                questions.length > 0 && sharedProperties ? 
+                questions.map((question, index) => {
+                  return (
+                    <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
+                      <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
+                    </div>
+                  )
+                }) : 
+                <></>
+              }
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   );
 }
