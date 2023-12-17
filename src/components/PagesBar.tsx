@@ -33,6 +33,10 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       }
   }
 
+  let onPersonalityClick = () => {
+    navigate(`/quiz/personality/${quizId}`)
+  }
+
   let params = useParams();
   let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
@@ -149,6 +153,9 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           </div>
           <div className='tab'>
             Loosers Page
+          </div>
+          <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>
+            Personalities Page
           </div>
         </div>
         <div className='d-flex align-items-center'>
