@@ -171,17 +171,28 @@
 }
 
 .option-container > *:first-child {
-  width: 80% !important;
+  width: 50% !important;
 }
 
 .option-container > *:last-child {
-  width: 20% !important;
+  width: 50% !important;
   margin-left: 0.5em;
 }
 
 .option-container .controls {
   display: flex;
   align-items: center;
+}
+
+.option-container .controls .input-default {
+  margin: 0 10px;
+  width: 35%;
+}
+
+.option-container .controls .select {
+  margin: 0 10px;
+  width: 50%;
+  text-align: left;
 }
 
 .input-default {
@@ -198,7 +209,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50% !important;
+  width: 40% !important;
   color: gray
 }
 
@@ -535,6 +546,13 @@
   grid-column-gap: 10px;
 }
 
+
+.grid-col-3 {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr);
+  grid-column-gap: 10px;
+}
+
 .error {
   color: red;
 }
@@ -575,6 +593,12 @@
   border-bottom: 1px solid #dedede;
 }
 
+.table .row .item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .table .table-row .item:last-child{
   text-align: right;
   display: flex;
@@ -583,6 +607,12 @@
 
 .table .table-row .item {
   margin: 0px;  
+}
+
+.table .row .item textarea {
+  width: 100%;
+  border: 1px solid #dedede;
+  outline: none;
 }
 
 .quiz-view-container {

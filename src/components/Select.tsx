@@ -7,7 +7,13 @@ import { FaUserFriends } from 'react-icons/fa';
 const Select = ({options, value, onChange=(opt) => {}}) => {
 
     let [isExpanded, setIsExpanded] = useState(false);
-    let [selectedOption, setSelectedOption] = useState(options[0]);
+    let [selectedOption, setSelectedOption] = useState({label: 'Select an Option'});
+
+    useEffect(() => {
+        if(options.length > 0) 
+            setSelectedOption(options[0]);
+    }, [options])
+
     let selectClick = () => {
         setIsExpanded(!isExpanded);
     }

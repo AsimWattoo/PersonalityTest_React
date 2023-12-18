@@ -64,7 +64,23 @@ let Urls = {
     deleteFileByName: {
         url: (name: string) => `${baseUrl}/file/name/${name}`,
         type: "DELETE"
-    }
+    },
+    createPersonality: {
+        url: () => `${baseUrl}/personalities`,
+        type: 'POST'
+    },
+    getPersonalities: {
+        url: (quizId: string) => `${baseUrl}/personalities/${quizId}`,
+        type: 'GET'
+    },
+    deletePersonality: {
+        url: (id: string) => `${baseUrl}/personalities/${id}`,
+        type: 'DELETE'
+    },
+    updatePersonality: {
+        url: (id: string) => `${baseUrl}/personalities/${id}`,
+        type: 'PUT'
+    },
 }
 
 export default Urls

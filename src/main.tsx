@@ -17,6 +17,8 @@ import FontsPage from './pages/FontsPage';
 import FontAddPage from './pages/FontAddPage';
 import App from './App';
 import PersonalityPage from './pages/PersonalityPage';
+import WinnerPage from './pages/WinnerPage';
+import WinnerPreviewPage from './pages/WinnerPreviewPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -32,6 +34,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path='/quiz/play/presentation/:id' element={<PresentationPlayPage />} />
               <Route path='/quiz/play/questions/:id' element={<QuestionsPlayPage />} />
               <Route path="/quiz/personality/:id" element={<PersonalityPage />} />
+              <Route path='/quiz/winner/:id' element={<WinnerPage />} />
+              <Route path='/quiz/preview/winner/:id' element={<WinnerPreviewPage />} />
               <Route path='/settings' element={<SettingsPage />}>
                 <Route path='fonts' element={<FontsPage />}/>
                 <Route path='fonts/add' element={<FontAddPage />}/>

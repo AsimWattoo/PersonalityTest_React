@@ -4,9 +4,10 @@ import type { HeadingUpdate, Option, OptionAdd, OptionUpdate } from '../redux/qu
 import { removeQuestion, updateHeading, removeOption, addOption, updateOption } from '../redux/question';
 import { useAppDispatch } from '../redux/hooks';
 import {MdAdd, MdClose, MdDelete} from 'react-icons/md';
+import Select from './Select';
 
 // QuestionCard component
-function QuestionCard({properties, sharedProperties, questions, questionId, changePage}) {
+function QuestionCard({properties, sharedProperties, questions, questionId, changePage, personalities}) {
 
   let [style, setStyle] = useState({});
   let dispatch = useAppDispatch()
@@ -21,6 +22,7 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
     let newOption: Option = {
       text: "",
       value: 0,
+      personalityId: personalities.length > 0 ? personalities[0]._id : null,
       selected: false,
     }
 
@@ -39,6 +41,7 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
     let updatedOption : Option = {
       text: value,
       value: option.value,
+      personalityId: option.personalityId,
       selected: false,
     }
 
@@ -55,7 +58,24 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
 
     let updatedOption : Option = {
       text: option.text,
-      value: value
+      value: value,
+      personalityId: option.personalityId,
+    }
+
+    let optionUpdateProperties : OptionUpdate = {
+      questionIndex: questionId,
+      optionIndex: index,
+      option: updatedOption
+    }
+    dispatch(updateOption(optionUpdateProperties))
+  }
+
+  let updateOptionPersonality = (index, value) => {
+    let option = questions[questionId].options[index];
+    let updatedOption : Option = {
+      text: option.text,
+      value: option.value,
+      personalityId: value,
     }
 
     let optionUpdateProperties : OptionUpdate = {
@@ -106,6 +126,14 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
                     <label>Value</label>
                     <input type="number" value={option.value} onChange={e => updateOptionValue(index, e.target.value)}/>
                   </div>
+                  <Select options={
+                    personalities.length > 0 ? 
+                    personalities.map(p => {
+                      return {
+                        label: p.name,
+                        value: p._id
+                      }}) : []
+                  } value={option.personalityId} onChange={val => updateOptionPersonality(index, val.value)}/>
                   <div className="btn btn-danger ms-2" onClick={() => deleteOption(index)}>
                     <MdDelete />
                   </div>

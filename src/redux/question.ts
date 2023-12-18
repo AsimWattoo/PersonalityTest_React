@@ -4,6 +4,7 @@ import type {PayloadAction} from "@reduxjs/toolkit";
 type Option = {
     text: string,
     value: number,
+    personalityId: string,
     selected: boolean
 }
 

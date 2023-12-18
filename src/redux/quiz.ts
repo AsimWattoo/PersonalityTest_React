@@ -8,6 +8,7 @@ type Quiz = {
     description: string,
     sharedProperties: {},
     presentationProperties: {},
+    winnerPageProperties: {},
     isDraft: true,
 }
 
@@ -58,6 +59,11 @@ export const quizSlice = createSlice({
             state.quiz.description = action.payload.description;
             }
         },
+        updateWinnerProperties(state, action: PayloadAction<PropertiesUpdate>) {
+            if(state.quiz != null) {
+                state.quiz.winnerPageProperties.properties = action.payload.properties;
+            }
+        },
         resetQuiz(state, action) {
             state.quiz = null;
         }
@@ -66,6 +72,6 @@ export const quizSlice = createSlice({
 
 export type {Quiz, QuestionUpdate, PropertiesUpdate, QuizUpdate}
 
-export const {updateQuestions, updateProperties, updateQuiz,updatePresentationProperties, setQuiz, resetQuiz} = quizSlice.actions;
+export const {updateQuestions, updateProperties, updateQuiz, updatePresentationProperties, updateWinnerProperties, setQuiz, resetQuiz} = quizSlice.actions;
 
 export default quizSlice.reducer;

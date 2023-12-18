@@ -755,6 +755,18 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           dependencies: ["StartButtonHoverTextColor"]
         },
         {
+          heading: "Restart Button Text",
+          dependencies: ["ReStartButtonText"]
+        },
+        {
+          heading: "Restart Button Hover Color",
+          dependencies: ["ReStartButtonHoverColor"]
+        }, 
+        {
+          heading: "Restart Button Hover Text Color",
+          dependencies: ["ReStartButtonHoverTextColor"]
+        },
+        {
           heading: "Width",
           dependencies: ["width"]
         },
@@ -765,7 +777,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
         {
           heading: "Opacity",
           dependencies: ['opacity']
-        }
+        },
       ]
     },
     "fontFamily": {
@@ -894,7 +906,11 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           }
           else if(value == "backgroundColor") {
             let imageUrl = sharedProperties[propertySection]["backgroundImage"];
-            removeBackgroundImage(imageUrl);
+            
+            if(imageUrl) {
+              removeBackgroundImage(imageUrl);
+            }
+
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
@@ -911,7 +927,9 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           }
           else {
             let imageUrl = sharedProperties[propertySection]["backgroundImage"];
-            removeBackgroundImage(imageUrl);
+            if(imageUrl) {
+              removeBackgroundImage(imageUrl);
+            }
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
@@ -969,7 +987,11 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           }
           else if(value == "backgroundColor") {
             let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
-            removeBackgroundImage(imageUrl);
+            
+            if(imageUrl) {
+              removeBackgroundImage(imageUrl);
+            }
+
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
@@ -988,7 +1010,11 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           }
           else {
             let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
-            removeBackgroundImage(imageUrl);
+            
+            if(imageUrl) {
+              removeBackgroundImage(imageUrl);
+            }
+
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
@@ -1056,6 +1082,10 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       render: CheckBox,
       requiresName: true
     },
+    "ShowRestartButton": {
+      render: CheckBox,
+      requiresName: true
+    },
     "NextButtonText" : {
       render: InputField,
       type: "text",
@@ -1101,6 +1131,19 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       requiresName: true
     },
     "StartButtonHoverTextColor" : {
+      render: ColorBox,
+      requiresName: true
+    },
+    "ReStartButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "ReStartButtonHoverColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "ReStartButtonHoverTextColor" : {
       render: ColorBox,
       requiresName: true
     },

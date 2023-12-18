@@ -1,69 +1,119 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./QuizPage.css";
 import Loader from "../components/Loader";
 import PagesBar from "../components/PagesBar";
 import { useParams } from "react-router";
 import { MdDelete, MdEdit, MdOutlineCancel, MdOutlineDelete, MdOutlineEdit, MdOutlineSave } from "react-icons/md";
 import NoResult from '../assets/images/no-result.png';
+import { useAppDispatch, useAppSelector } from "../redux/hooks";
+import { createPersonality, updatePersonality, savePersonality as reduxSavePersonality, editPersonality as reduxEditPersonality, deletePersonality as reduxDeletePersonality, cancelPersonality as reduxCancelPersonality, setId, setPersonalities} from "../redux/personality";
+import { sendRequest } from "../helpers/request";
+import Urls from "../links";
 
-type Personality = {
-    name: string,
-    editName: string,
-    editable: boolean,
-    isSaved: boolean
-}
+
 
 function PersonalityPage() {
     let [isLoading, setIsLoading] = useState(false);
-    let [personalities, setPersonalities] = useState([] as Personality[]);
     let params = useParams();
     let id = params.id;
+    let dispath = useAppDispatch();
+    let personalities = useAppSelector(state => state.personality.personalities);
+
+    useEffect(() => {
+        let loadPersonalities = async () => {
+            setIsLoading(true);
+            let response = await sendRequest(Urls.getPersonalities.url(id), Urls.getPersonalities.type);
+            if(!response.error) {
+                let ps = response.personalities.map(p => {
+                    return {
+                        _id: p._id,
+                        name: p.name,
+                        editName: p.name,
+                        description: p.description,
+                        editDescription: p.description,
+                        isSaved: true,
+                        editable: false
+                    }
+                });
+                dispath(setPersonalities(ps));
+            }
+            setIsLoading(false);
+        }
+
+        loadPersonalities();
+    }, []);
 
     let addPersonality = () => {
-        setPersonalities([...personalities, {
-            name: "",
-            editName: "",
-            isSaved: false,
+        dispath(createPersonality({
+            _id: '',
             editable: true,
-        }])
+            editName: '',
+            isSaved: false,
+            name: '',
+        }))
     }
 
     let editName = (index: number, value: string) => {
-        let newPersonalities = [...personalities];
-        newPersonalities[index].editName = value;
-        setPersonalities(newPersonalities);
+        dispath(updatePersonality({
+            index: index,
+            editName: value,
+            editDescription: personalities[index].editDescription
+        }))
     }
 
-    let savePersonality = (index: number) => {
-        let newPersonalities = [...personalities];
-        newPersonalities[index].name = newPersonalities[index].editName;
-        newPersonalities[index].editable = false;
-        newPersonalities[index].isSaved = true;
-        setPersonalities(newPersonalities);
+    let editDescription = (index: number, value: string) => {
+        dispath(updatePersonality({
+            index: index,
+            editName: personalities[index].editName,
+            editDescription: value
+        }))
+    }
+
+    let savePersonality = async (index: number) => {
+
+        setIsLoading(true);
+        dispath(reduxSavePersonality(index));
+
+        if(personalities[index].isSaved) {
+            let response = await sendRequest(Urls.updatePersonality.url(personalities[index]._id), Urls.updatePersonality.type, {
+                name: personalities[index].editName,
+                description: personalities[index].editDescription
+            }, 'application/json', true);
+        } else {
+            let response = await sendRequest(Urls.createPersonality.url(), Urls.createPersonality.type, {
+                name: personalities[index].editName,
+                description: personalities[index].editDescription,
+                quizId: id
+            }, 'application/json', true);
+    
+            if(!response.error) {
+                dispath(setId({
+                    index: index,
+                    id: response.personality._id,
+                }))
+            } else {
+                console.log(response.error);
+            }
+        }
+
+        setIsLoading(false);
     }
 
     let cancelPersonality = (index: number) => {
-        if(personalities[index].isSaved) {
-            let newPersonalities = [...personalities];
-            newPersonalities[index].editable = false;
-            newPersonalities[index].isSaved = true;
-            setPersonalities(newPersonalities);
-        } else {
-            let newPersonalities = [...personalities.filter((p, i) => i != index)];
-            setPersonalities(newPersonalities);
-        }
+        dispath(reduxCancelPersonality(index))
     }
 
     let editPersonality = (index: number) => {
-        let newPersonalities = [...personalities];
-        newPersonalities[index].editable = true;
-        newPersonalities[index].editName = newPersonalities[index].name;
-        setPersonalities(newPersonalities);
+        dispath(reduxEditPersonality(index))
     }
 
-    let deletePersonality = (index: number) => {
-        let newPersonalities = personalities.filter((p, i) => i != index);
-        setPersonalities([...newPersonalities]);
+    let deletePersonality = async (index: number) => {
+        setIsLoading(true);
+
+        dispath(reduxDeletePersonality(index))
+
+        let response = await sendRequest(Urls.deletePersonality.url(personalities[index]._id), Urls.deletePersonality.type);
+        setIsLoading(false);
     }
 
     return (
@@ -82,9 +132,12 @@ function PersonalityPage() {
                         <div className="primary-btn" onClick={addPersonality}>Add Personality</div>
                     </div>
                     <div className="table">
-                        <div className="grid-col-2 header">
+                        <div className="grid-col-3 header">
                             <div className="item">
-                                Personality Name
+                                Name
+                            </div>
+                            <div className="item">
+                                Description
                             </div>
                             <div className="item">
                             </div>
@@ -94,12 +147,15 @@ function PersonalityPage() {
                                 personalities.map((personality, index) => {
                                     return (
                                                 
-                                        <div className="grid-col-2 row editable">
+                                        <div className="grid-col-3 row editable" key={index}>
                                             {
                                                 personality.editable ? 
                                                 <>
                                                     <div className="item">
                                                         <input type="text" value={personality.editName} placeholder="Enter name" onChange={e => editName(index, e.target.value)}/>
+                                                    </div>
+                                                    <div className="item">
+                                                        <textarea value={personality.editDescription} placeholder="Enter description" onChange={e => editDescription(index, e.target.value)}/>
                                                     </div>
                                                     <div className="item">
                                                         <div className="primary-text-btn" onClick={() => savePersonality(index)}>
@@ -113,6 +169,9 @@ function PersonalityPage() {
                                                 <>
                                                     <div className="item">
                                                         {personality.name}
+                                                    </div>
+                                                    <div className="item">
+                                                        {personality.description}
                                                     </div>
                                                     <div className="item">
                                                         <div className="primary-text-btn">

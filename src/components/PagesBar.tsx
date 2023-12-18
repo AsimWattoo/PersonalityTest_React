@@ -33,6 +33,10 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       }
   }
 
+  let onWinnerPageClick = () => {
+    navigate(`/quiz/winner/${quizId}`)
+  }
+
   let onPersonalityClick = () => {
     navigate(`/quiz/personality/${quizId}`)
   }
@@ -42,10 +46,11 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   let questions = useAppSelector(state => state.question.questions);
   let sharedProperties = useAppSelector(state => state.shared);
   let presentationProperties = useAppSelector(state => state.presentation);
+  let winnerPageProperties = useAppSelector(state => state.winner);
   let files = useAppSelector(state => state.files.files);
   let dispatch = useAppDispatch();
   
-  let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: []) => {
+  let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}) => {
     for(let file of files) {
       if(file.state == "added") {
         let result = await fetch(file.url);
@@ -64,6 +69,8 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
             sharedProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
           } else if(file.mainSection == "question" && file.questionIndex !== undefined && questions) {
             questions[file.questionIndex].properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`;
+          } else if(file.mainSection == "winnerPageProperties" && winnerPageProperties) {
+            winnerPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
           }
         }
       } else if (file.state == "removed") {
@@ -78,15 +85,17 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       let id = params.id;
       let preProperties = JSON.parse(JSON.stringify(presentationProperties));
       let shProperties = JSON.parse(JSON.stringify(sharedProperties));
+      let wpProperties = JSON.parse(JSON.stringify(winnerPageProperties));
+      console.log(winnerPageProperties)
       let questionObjs = questions.map(question => {
         return {
           quizId: id,
           heading: question.heading,
           options: question.options,
-          properties: JSON.parse(JSON.stringify(question.properties))
+          properties: JSON.parse(JSON.stringify(question.properties)),
         }
       })
-      await uploadFiles(preProperties, shProperties, questionObjs);
+      await uploadFiles(preProperties, shProperties, questionObjs, wpProperties);
 
       //Sending Update Request to the server
       let response = await sendRequest(Urls.updateQuiz.url(id), Urls.updateQuiz.type, {
@@ -94,6 +103,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
         description: quiz?.description,
         presentationProperties: JSON.stringify(preProperties),
         sharedProperties: JSON.stringify(shProperties),
+        winnerPageProperties: JSON.stringify(wpProperties),
         isDraft: draft,
       });
 
@@ -107,7 +117,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           dispatch(initializeSharedProperties(shProperties.properties));
           dispatch(initializePresentationProperties(preProperties.properties));
           dispatch(setQuestions(questionObjs));
-
+          console.log(questionObjs)
           questionObjs = questionObjs.map(question => {
             return {
               quizId: id,
@@ -148,10 +158,10 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           <div className={`tab ${currentPage == "questions" ? 'active' : ''}`} onClick={onQuestionsPageClick}>
             Questions Page
           </div>
-          <div className='tab'>
+          <div className={`tab ${currentPage == "winner" ? 'active' : ''}`} onClick={onWinnerPageClick}>
             Winners Page
           </div>
-          <div className='tab'>
+          <div className={`tab ${currentPage == "looser" ? 'active' : ''}`}>
             Loosers Page
           </div>
           <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>

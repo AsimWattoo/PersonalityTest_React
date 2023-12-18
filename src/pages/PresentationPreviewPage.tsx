@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
 import PagesBar from "../components/PagesBar.js";
 import Loader from "../components/Loader.js";
+import { resetSelection } from "../redux/question.js";
 
 export default function PresentationPreviewPage() {
   
@@ -30,6 +31,8 @@ export default function PresentationPreviewPage() {
             setIsLoading(false);
           }, 2000);
         });
+      } else {
+        dispatch(resetSelection({}));
       }
 
     }, []);

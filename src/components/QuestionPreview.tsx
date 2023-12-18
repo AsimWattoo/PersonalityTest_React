@@ -1,8 +1,11 @@
 import React, {useState} from 'react';
 import Option from './Option';
+import { Navigate, useNavigate, useParams } from 'react-router';
 
 // QuestionCard component
 function QuestionPreview({properties, sharedProperties, questions, questionId, changeQuestion}) {
+  let navigate = useNavigate();
+  let params = useParams();
 
   let [previousBtnHoverState, setPreviousBtnHoverState] = useState({
     backgroundColor: sharedProperties.prevBtn.backgroundColor,
@@ -53,6 +56,9 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
   let nextQuestion = () => {
     if(questionId < questions.length - 1)
       changeQuestion(questionId + 1)
+    else {
+      navigate(`/quiz/preview/winner/${params.id}`)
+    }
   }
 
   let prevQuestion = () => {

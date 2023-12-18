@@ -22,6 +22,7 @@ export default function QuestionsPage() {
   const dispatch = useAppDispatch();
   const questions = useAppSelector(state => state.question.questions);
   const sharedProperties = useAppSelector(state => state.shared.properties);
+  const personalities = useAppSelector(state => state.personality.personalities);
   let [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export default function QuestionsPage() {
       loadData(params.id, dispatch, () => {
         setTimeout(() => {
           setIsLoading(false);
-        }, 2000);
+        }, 200);
       });
     }
 
@@ -99,7 +100,11 @@ export default function QuestionsPage() {
                         <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} 
                         style={{transform: `translateX(${getTransform(index)}%)`}} key={index}>
                           <div className="background" style={questions[index].properties.background}></div>
-                          <QuestionCard changePage={changeSlide} sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index}/>
+                          <QuestionCard changePage={changeSlide} 
+                            sharedProperties={sharedProperties} 
+                            properties={questions[index].properties} 
+                            questions={questions} questionId={index}
+                            personalities={personalities}/>
                         </div>
                       )
                     })
