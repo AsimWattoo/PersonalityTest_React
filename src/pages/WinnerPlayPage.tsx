@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import TextCustomization from '../TextCustomization';
-import { updateProperty, removeProperty, addProperty, initializeProperties } from '../redux/winnerProperties';
 import loadData from '../helpers/dataLoader';
-import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
 
-let WinnerPreviewPage = () => {
+let WinnerPlayPage = () => {
 
     let params = useParams();
     let id = params.id
@@ -19,6 +16,7 @@ let WinnerPreviewPage = () => {
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
     let [personality, setPersonality] = useState({});
+
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
 
@@ -87,13 +85,14 @@ let WinnerPreviewPage = () => {
                         personalityDict[option.personalityId] += parseFloat(option.value);
                 }
             }
+            console.log(personalities)
+            console.log(selectedOptions)
             console.log(personalityDict)
             let scores = Object.values(personalityDict);
             let maxScore = Math.max(...scores);
             let maxScoreIndex = scores.indexOf(maxScore);
             let maxScoredPersonality = Object.keys(personalityDict)[maxScoreIndex];
             let userPersonality = personalities.filter(p => p._id == maxScoredPersonality);
-            console.log(personalityDict, scores, maxScore, maxScoreIndex, maxScoredPersonality, userPersonality)
             if(userPersonality.length > 0) {
                 setPersonality(userPersonality[0]);
             }
@@ -109,37 +108,30 @@ let WinnerPreviewPage = () => {
             quiz && winnerPageProperties ? 
             <>
             <div className='content-container'>
-                <div className='quiz-view-container'>
-                    <div className='header-container'>
-                        <PagesBar currentPage={'winner'} quizId={id} canPreview={false} canEdit={true} canNavigate={false}/>
-                    </div>
-                    <div className='page-container'>
-                        <div className='left-column'>
-                          <div className='page-content'>
-                              <div style={winnerPageProperties.heading}>
-                              {
-                                  personality ? 
-                                  personality.name : "Personality Name"
-                              }
-                              </div>
-                              <div style={winnerPageProperties.description}>
-                              {
-                                  personality ? 
-                                  personality.description : "Personality Description"
-                              }
-                              </div>
-                              {
-                              winnerPageProperties.Config.ShowRestartButton ? 
-                              <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
-                                  <a className='btn btn-primary' style={restartBtnHoverState} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
-                                  {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
-                                  </a>
-                              </div> : 
-                              <></>
-                              }
-                              <div className='background' style={windowWidth < 450 ? winnerPageProperties.mobileBackground : winnerPageProperties.background}></div>
-                          </div>
+                <div className='left-column'>
+                    <div className='page-content'>
+                        <div style={winnerPageProperties.heading}>
+                        {
+                            personality ? 
+                            personality.name : "Personality Name"
+                        }
                         </div>
+                        <div style={winnerPageProperties.description}>
+                        {
+                            personality ? 
+                            personality.description : "Personality Description"
+                        }
+                        </div>
+                        {
+                        winnerPageProperties.Config.ShowRestartButton ? 
+                        <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
+                            <a className='btn btn-primary' style={restartBtnHoverState} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                            {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
+                            </a>
+                        </div> : 
+                        <></>
+                        }
+                        <div className='background' style={windowWidth < 450 ? winnerPageProperties.mobileBackground : winnerPageProperties.background}></div>
                     </div>
                 </div>
             </div>
@@ -150,4 +142,4 @@ let WinnerPreviewPage = () => {
     )
 }
 
-export default WinnerPreviewPage;
+export default WinnerPlayPage;

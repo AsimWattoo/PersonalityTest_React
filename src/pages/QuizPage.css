@@ -694,10 +694,11 @@
 }
 
 .gridContainer {
-  padding: 2em 1em 1em 1em;
+  padding: 2em 0.5em 0.5em 0.5em;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 5rem;
+  grid-template-rows: auto;
+  gap: 1em;
   width: 100%;
   overflow-x: hidden;
   overflow-y: auto;
@@ -866,7 +867,7 @@
     padding: 0px;
   }
 
-  .page.preview-page .content-container .left-column .page-content > div{
+  .page.preview-page .content-container .left-column .page-content > div:not(.background){
     width: 80% !important; 
   }
 

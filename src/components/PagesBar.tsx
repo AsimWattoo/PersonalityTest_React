@@ -8,6 +8,7 @@ import { resetFiles } from '../redux/files';
 import { initializeProperties as initializeSharedProperties } from '../redux/shared';
 import { initializeProperties as initializePresentationProperties } from '../redux/presentationProperties';
 import { setQuestions } from '../redux/question';
+import { isDraft } from '@reduxjs/toolkit';
 
 type PagesBarProps = {
   currentPage: string,
@@ -34,11 +35,15 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   }
 
   let onWinnerPageClick = () => {
-    navigate(`/quiz/winner/${quizId}`)
+    if(canNavigate) {
+      navigate(`/quiz/winner/${quizId}`)
+    }
   }
 
   let onPersonalityClick = () => {
-    navigate(`/quiz/personality/${quizId}`)
+    if(canNavigate) {
+      navigate(`/quiz/personality/${quizId}`)
+    }
   }
 
   let params = useParams();
@@ -86,7 +91,6 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       let preProperties = JSON.parse(JSON.stringify(presentationProperties));
       let shProperties = JSON.parse(JSON.stringify(sharedProperties));
       let wpProperties = JSON.parse(JSON.stringify(winnerPageProperties));
-      console.log(winnerPageProperties)
       let questionObjs = questions.map(question => {
         return {
           quizId: id,
@@ -128,6 +132,10 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           })
           let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
           console.log(createQuizResponse)
+        }
+
+        if(!draft) {
+          navigate("/");
         }
       }
       else {

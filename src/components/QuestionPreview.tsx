@@ -3,7 +3,7 @@ import Option from './Option';
 import { Navigate, useNavigate, useParams } from 'react-router';
 
 // QuestionCard component
-function QuestionPreview({properties, sharedProperties, questions, questionId, changeQuestion}) {
+function QuestionPreview({properties, sharedProperties, questions, questionId, changeQuestion, isPreview = true}) {
   let navigate = useNavigate();
   let params = useParams();
 
@@ -57,7 +57,11 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
     if(questionId < questions.length - 1)
       changeQuestion(questionId + 1)
     else {
-      navigate(`/quiz/preview/winner/${params.id}`)
+      if(isPreview) {
+        navigate(`/quiz/preview/winner/${params.id}`)
+      } else {
+        navigate(`/quiz/play/winner/${params.id}`)
+      }
     }
   }
 

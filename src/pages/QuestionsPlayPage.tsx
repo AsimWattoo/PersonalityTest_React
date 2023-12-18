@@ -38,7 +38,14 @@ export default function QuestionsPlayPage() {
   }
 
   let changeSlide = (slide) => {
-    setCurrentSlide(slide);
+    //If the next button is pressed
+    if(slide > currentSlide) {
+      let selectedOptions = questions[currentSlide].options.filter(option => option.selected);
+      //If an option is selected only then move to the next question
+      if(selectedOptions.length > 0) {
+        setCurrentSlide(slide);
+      }
+    }
   }
 
   let [windowWidth, setWindowWidth] = useState(600);
@@ -64,7 +71,7 @@ export default function QuestionsPlayPage() {
                 questions.map((question, index) => {
                   return (
                     <div className={`slide ${currentSlide == index ? "slide-active" : ''}`} style={{transform: `translateX(${getTransform(currentSlide, index)}%)`, ...(windowWidth < 450 ? questions[index].properties.mobileBackground : questions[index].properties.background)}} key={index}>
-                      <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} questions={questions} questionId={index} changeQuestion={changeSlide}/>
+                      <QuestionPreview sharedProperties={sharedProperties} properties={questions[index].properties} isPreview={false} questions={questions} questionId={index} changeQuestion={changeSlide}/>
                     </div>
                   )
                 }) : 

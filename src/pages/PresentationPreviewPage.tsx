@@ -63,7 +63,7 @@ export default function PresentationPreviewPage() {
     
       useEffect(() => {
         setWindowWidth(window.innerWidth)
-      })
+      }, [])
 
       let onStartMouseLeave = () => {
         if(quizProperties) {
