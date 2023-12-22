@@ -45,6 +45,28 @@ export default function QuestionsPlayPage() {
       if(selectedOptions.length > 0) {
         setCurrentSlide(slide);
       }
+    } else if(slide > -1){
+      let currentQuestion = slide;
+      while(true) {
+        if(questions[currentQuestion].properties.dependency.hasDependency) {
+          let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
+          let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
+          if(dependencyOption.selected) {
+            setCurrentSlide(currentQuestion)
+            break;
+          } 
+
+          if(currentQuestion == 0) {
+            setCurrentSlide(0);
+            break;
+          }
+
+          currentQuestion-=1;
+        } else {
+          setCurrentSlide(currentQuestion);
+          break;
+        }
+      }
     }
   }
 

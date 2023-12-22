@@ -19,6 +19,7 @@ let WinnerPlayPage = () => {
 
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
+    let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
 
     useEffect(() => {
 
@@ -50,6 +51,10 @@ let WinnerPlayPage = () => {
           backgroundColor: winnerPageProperties.restartBtn.backgroundColor,
           color: winnerPageProperties.restartBtn.color
         });
+        setLinkBtnHoverState({
+          backgroundColor: winnerPageProperties.linkBtn.backgroundColor,
+          color: winnerPageProperties.linkBtn.color
+        });
       }
     }, [winnerPageProperties])
   
@@ -70,6 +75,29 @@ let WinnerPlayPage = () => {
 
     window.onresize = () => {
       setWindowWidth(window.innerWidth)
+    }
+
+    let onLinkMouseEnter = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.linkBtn.backgroundColor) {
+          setLinkBtnHoverState({
+            backgroundColor: winnerPageProperties.ButtonHoverStyle.LinkButtonHoverColor,
+            color: winnerPageProperties.ButtonHoverStyle.LinkButtonHoverTextColor
+          })
+        }
+      }
+    }
+
+
+    let onLinkMouseLeave = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.linkBtn.backgroundColor) {
+          setLinkBtnHoverState({
+            backgroundColor: winnerPageProperties.linkBtn.backgroundColor,
+            color: winnerPageProperties.linkBtn.color
+          })
+        }
+      }
     }
 
     useEffect(() => {
@@ -128,15 +156,26 @@ let WinnerPlayPage = () => {
                             personality.description : "Personality Description"
                         }
                         </div>
+                        <div className='d-flex align-items-center w-50'>
                         {
-                        winnerPageProperties.Config.ShowRestartButton ? 
-                        <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
-                            <a className='btn btn-primary' style={{...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
-                            {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
-                            </a>
-                        </div> : 
-                        <></>
+                          winnerPageProperties.Config.ShowRestartButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
+                              <a className='btn btn-primary' style={{...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                              {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
+                              </a>
+                          </div> : 
+                          <></>
                         }
+                        {
+                          winnerPageProperties.Config.ShowLinkButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={{...winnerPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={winnerPageProperties?.Config?.ExternalLink}>
+                              {winnerPageProperties.ButtonHoverStyle.LinkButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
+                        </div>
                         <div className='background' style={windowWidth < 450 ? winnerPageProperties.mobileBackground : winnerPageProperties.background}></div>
                     </div>
                 </div>

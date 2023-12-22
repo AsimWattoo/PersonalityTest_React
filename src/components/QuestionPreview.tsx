@@ -55,7 +55,32 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
 
   let nextQuestion = () => {
     if(questionId < questions.length - 1)
-      changeQuestion(questionId + 1)
+    {
+      let currentQuestion = questionId + 1;
+      while(true) {
+        if(questions[currentQuestion].properties.dependency.hasDependency) {
+          let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
+          let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
+          if(dependencyOption.selected) {
+            changeQuestion(currentQuestion)
+            break;
+          } 
+
+          if(currentQuestion == questions.length - 1) {
+            if(isPreview) {
+              navigate(`/quiz/preview/winner/${params.id}`)
+            } else {
+              navigate(`/quiz/play/winner/${params.id}`)
+            }
+          }
+
+          currentQuestion+=1;
+        } else {
+          changeQuestion(currentQuestion);
+          break;
+        }
+      }
+    }
     else {
       if(isPreview) {
         navigate(`/quiz/preview/winner/${params.id}`)

@@ -106,6 +106,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       let lsProperties = JSON.parse(JSON.stringify(loserPageProperties));
       let questionObjs = questions.map(question => {
         return {
+          _id: question._id,
           quizId: id,
           heading: question.heading,
           options: question.options,

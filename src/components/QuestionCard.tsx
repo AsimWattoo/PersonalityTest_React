@@ -6,11 +6,21 @@ import { useAppDispatch } from '../redux/hooks';
 import {MdAdd, MdClose, MdDelete} from 'react-icons/md';
 import Select from './Select';
 
-// QuestionCard component
+// QuestionCard componentnpm
 function QuestionCard({properties, sharedProperties, questions, questionId, changePage, personalities}) {
 
   let [style, setStyle] = useState({});
   let dispatch = useAppDispatch()
+
+  useEffect(() => {
+    if(personalities.length > 0 && questions.length > 0) {
+      for(let i = 0; i < questions[questionId].options.length; i++) {
+        let chosenPersonality = personalities.filter(p => questions[questionId].options[i].personalityId == p._id);
+        if(chosenPersonality.length == 0)
+          updateOptionPersonality(i, personalities[0]._id);
+      }
+    }
+  }, [personalities, questions])
 
   useEffect(() => {
     let newStyle = {"marginTop": sharedProperties.options["marginTop"], 

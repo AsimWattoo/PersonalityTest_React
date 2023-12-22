@@ -53,15 +53,26 @@ let WinnerPage = () => {
                       <div style={winnerPageProperties.description}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non mauris lectus. Aenean accumsan molestie ante, non tincidunt arcu tempor ut. Aenean ullamcorper sapien eget consequat vulputate. Ut dapibus felis lectus, vel finibus odio lacinia vitae. Praesent faucibus, ex eu rutrum ornare, ipsum tortor consectetur neque, quis laoreet risus nunc laoreet turpis. Sed eget nulla id arcu finibus malesuada. Nunc a pulvinar nisl. Proin leo nibh, tincidunt sit amet volutpat et, faucibus quis urna.
                       </div>
-                      {
-                        winnerPageProperties.Config.ShowRestartButton ? 
-                        <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}}>
-                            <a className='btn btn-primary' style={winnerPageProperties.restartBtn}>
-                            {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
-                            </a>
-                        </div> : 
-                        <></>
-                      }
+                      <div className='d-flex align-items-center w-100'>
+                        {
+                          winnerPageProperties.Config.ShowRestartButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={winnerPageProperties.restartBtn}>
+                              {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
+                        {
+                          winnerPageProperties.Config.ShowLinkButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={winnerPageProperties.linkBtn}>
+                              {winnerPageProperties.ButtonHoverStyle.LinkButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
+                      </div>
                       <div className='background' style={winnerPageProperties.background}></div>
                     </div>
                   </div>
@@ -71,10 +82,11 @@ let WinnerPage = () => {
                 <TextCustomization title={'Background'} mainSection={"winnerPageProperties"} propertySection={'background'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Mobile Background'} mainSection={"winnerPageProperties"} propertySection={'mobileBackground'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Winner Page Image'} mainSection={"winnerPageProperties"} propertySection={'winnerImage'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
-                <TextCustomization title={' Heading'} mainSection={"winnerPageProperties"} propertySection={'heading'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Heading'} mainSection={"winnerPageProperties"} propertySection={'heading'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Description'} mainSection={"winnerPageProperties"} propertySection={'description'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Restart Quiz Button'} mainSection={"winnerPageProperties"} propertySection={'restartBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
-                <TextCustomization title={'Restart Button Hover Style'} mainSection={"winnerPageProperties"} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Quiz Link Button'} mainSection={"winnerPageProperties"} propertySection={'linkBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Buttons Hover Style'} mainSection={"winnerPageProperties"} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Configuration'} mainSection={"winnerPageProperties"} propertySection={'Config'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
               </div>
             </> : <></>

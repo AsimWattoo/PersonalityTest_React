@@ -51,15 +51,26 @@ let LosersPage = () => {
                       <div style={loserPageProperties.description}>
                         You have failed the test and have not fallen in any category. try changing your answers.
                       </div>
+                      <div className='d-flex align-items-center w-100'>
                       {
                         loserPageProperties.Config.ShowRestartButton ? 
-                        <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}}>
+                        <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}}>
                             <a className='btn btn-primary' style={loserPageProperties.restartBtn}>
                             {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
                             </a>
                         </div> : 
                         <></>
                       }
+                      {
+                          loserPageProperties.Config.ShowLinkButton ? 
+                          <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={loserPageProperties.linkBtn}>
+                              {loserPageProperties.ButtonHoverStyle.LinkButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
+                      </div>
                       <div className='background' style={loserPageProperties.background}></div>
                     </div>
                   </div>
@@ -72,7 +83,8 @@ let LosersPage = () => {
                 <TextCustomization title={' Heading'} mainSection={"loserPageProperties"} propertySection={'heading'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Description'} mainSection={"loserPageProperties"} propertySection={'description'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Restart Quiz Button'} mainSection={"loserPageProperties"} propertySection={'restartBtn'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
-                <TextCustomization title={'Restart Button Hover Style'} mainSection={"loserPageProperties"} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Quiz Link Button'} mainSection={"loserPageProperties"} propertySection={'linkBtn'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Buttons Hover Style'} mainSection={"loserPageProperties"} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Configuration'} mainSection={"loserPageProperties"} propertySection={'Config'} isShared={true} sharedProperties={loserPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
               </div>
             </> : <></>

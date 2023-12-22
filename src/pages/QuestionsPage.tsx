@@ -58,6 +58,11 @@ export default function QuestionsPage() {
           NextButton: true,
           PreviousButton: true,
         },
+        dependency: {
+          hasDependency: false,
+          dependencyQuestion: -1,
+          dependencyOption: -1,
+        }
       },
       options: [],
       heading: ""
@@ -138,6 +143,7 @@ export default function QuestionsPage() {
               <TextCustomization title={'Prev Button'} mainSection="sharedProperties" propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Button Hover Styles'} mainSection="sharedProperties" propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Configuration'} mainSection="question" propertySection={'configuration'} questions={questions} questionId={currentSlide}/>
+              <TextCustomization title={'Question Dependency'} mainSection="question" propertySection={'dependency'} questions={questions} questionId={currentSlide}/>
               <TextCustomization title={'Option Hover Style'} mainSection="sharedProperties" propertySection={'OptionHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Selected Option Style'} mainSection="sharedProperties" propertySection={'SelectedOptionStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
             </div>

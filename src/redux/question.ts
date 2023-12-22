@@ -2,6 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import type {PayloadAction} from "@reduxjs/toolkit";
 
 type Option = {
+    _id: string,
     text: string,
     value: number,
     personalityId: string,

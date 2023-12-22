@@ -6,6 +6,7 @@ import "./QuizPage.css";
 import { useNavigate, useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
 import Loader from "../components/Loader.js";
+import { resetSelection } from "../redux/question.js";
 
 export default function PresentationPlayPage() {
   
@@ -29,6 +30,8 @@ export default function PresentationPlayPage() {
             setIsLoading(false);
           }, 2000);
         });
+      } else {
+        dispatch(resetSelection({}));
       }
 
     }, []);

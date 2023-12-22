@@ -20,7 +20,7 @@ import {
   MdGirl,
   MdOpacity} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
-import { updateProperty, addProperty, removeProperty } from "./redux/question";
+import question, { updateProperty, addProperty, removeProperty } from "./redux/question";
 import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
 import { useAppDispatch } from "./redux/hooks";
 import type { Question } from "./redux/question";
@@ -446,6 +446,35 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
   const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
   let dispatch = useAppDispatch();
   let [fontFamilies, setFontFamilies] = useState([{label: "Select Font", value: "Select Font"}]);
+  let questionSelectOptions = questions
+  .filter((q, index) => index < questionId)
+  .map((q, index) => {
+    return {
+      label: `Question #${index + 1}`,
+      value: index,
+    }
+  });
+  if(questionSelectOptions.length == 0) {
+    questionSelectOptions = [{label: "No Question Available", value: ""}]
+  }
+
+  let optionsList = [{label: "No Option Available", value: ""}]
+
+  if(!isShared) {
+    let questionDependency = questions[questionId].properties[propertySection]["dependencyQuestion"];
+    if(questionDependency !== undefined) {
+      let questionOptions = questions[questionDependency];
+
+      if(questionOptions !== undefined) {
+        optionsList = questionOptions.options.map((option, index) => {
+          return {
+            label: option.text,
+            value: index,
+          }
+        });
+      }
+    }
+  }
 
   useEffect(() => {
     let loadFonts = async () => {
@@ -777,6 +806,30 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
         {
           heading: "Opacity",
           dependencies: ['opacity']
+        },
+        {
+          heading: "Question",
+          dependencies: ["dependencyQuestion"]
+        },
+        {
+          heading: "Dependent Option",
+          dependencies: ['dependencyOption']
+        },
+        {
+          heading: "Link Button Text",
+          dependencies: ["LinkButtonText"]
+        },
+        {
+          heading: "Link Button Hover Color",
+          dependencies: ["LinkButtonHoverColor"]
+        }, 
+        {
+          heading: "Link Button Hover Text Color",
+          dependencies: ["LinkButtonHoverTextColor"]
+        },
+        {
+          heading: "External URL",
+          dependencies: ["ExternalLink"]
         },
       ]
     },
@@ -1167,6 +1220,46 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       render: OpacityBar,
       type: 'number',
       requiresName: true,
+    },
+    "hasDependency": {
+      render: CheckBox,
+      requiresName: true,
+    },
+    "dependencyQuestion": {
+      render: SelectDropDown,
+      options: questionSelectOptions,
+      process: false,
+      requiresName: true,
+      hasOptions: true,
+    },
+    "dependencyOption": {
+      render: SelectDropDown,
+      options: optionsList,
+      process: false,
+      requiresName: true,
+      hasOptions: true,
+    },
+    "LinkButtonText" : {
+      render: InputField,
+      type: "text",
+      requiresName: true,
+    },
+    "LinkButtonHoverColor": {
+      render: ColorBox,
+      requiresName: true
+    },
+    "LinkButtonHoverTextColor" : {
+      render: ColorBox,
+      requiresName: true
+    },
+    "ShowLinkButton": {
+      render: CheckBox,
+      requiresName: true
+    },
+    "ExternalLink": {
+      render: InputField,
+      requiresName: true,
+      type: 'text'
     }
   }
 

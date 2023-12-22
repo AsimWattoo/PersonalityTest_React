@@ -18,6 +18,7 @@ let LoserPreviewPage = () => {
     let [isLoading, setIsLoading] = useState(false);
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
+    let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
 
     useEffect(() => {
 
@@ -49,6 +50,10 @@ let LoserPreviewPage = () => {
           backgroundColor: loserPageProperties.restartBtn.backgroundColor,
           color: loserPageProperties.restartBtn.color
         });
+        setLinkBtnHoverState({
+          backgroundColor: loserPageProperties.linkBtn.backgroundColor,
+          color: loserPageProperties.linkBtn.color
+        });
       }
     }, [loserPageProperties])
   
@@ -69,6 +74,29 @@ let LoserPreviewPage = () => {
 
     window.onresize = () => {
       setWindowWidth(window.innerWidth)
+    }
+
+    let onLinkMouseEnter = () => {
+      if(loserPageProperties) {
+        if(loserPageProperties.linkBtn.backgroundColor) {
+          setLinkBtnHoverState({
+            backgroundColor: loserPageProperties.ButtonHoverStyle.LinkButtonHoverColor,
+            color: loserPageProperties.ButtonHoverStyle.LinkButtonHoverTextColor
+          })
+        }
+      }
+    }
+
+
+    let onLinkMouseLeave = () => {
+      if(loserPageProperties) {
+        if(loserPageProperties.linkBtn.backgroundColor) {
+          setLinkBtnHoverState({
+            backgroundColor: loserPageProperties.linkBtn.backgroundColor,
+            color: loserPageProperties.linkBtn.color
+          })
+        }
+      }
     }
 
     return (
@@ -94,15 +122,26 @@ let LoserPreviewPage = () => {
                               <div style={loserPageProperties.description}>
                                 You have failed the test and have not fallen in any category. try changing your answers.
                               </div>
+                              <div className='d-flex align-items-center w-50'>
                               {
-                              loserPageProperties.Config.ShowRestartButton ? 
-                              <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
-                                  <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
-                                  {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
-                                  </a>
-                              </div> : 
-                              <></>
+                                loserPageProperties.Config.ShowRestartButton ? 
+                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
+                                    <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                                    {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
+                                    </a>
+                                </div> : 
+                                <></>
                               }
+                              {
+                                loserPageProperties.Config.ShowLinkButton ? 
+                                <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                                    <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={loserPageProperties?.Config?.ExternalLink}>
+                                    {loserPageProperties.ButtonHoverStyle.LinkButtonText}
+                                    </a>
+                                </div> : 
+                                <></>
+                              }
+                              </div>
                               <div className='background' style={windowWidth < 450 ? loserPageProperties.mobileBackground : loserPageProperties.background}></div>
                           </div>
                         </div>
