@@ -8,6 +8,8 @@ import presentationReducer from "./redux/presentationProperties";
 import fileReducer from "./redux/files";
 import personalityReducer from './redux/personality';
 import winnerPropertiesReducer from './redux/winnerProperties';
+import notificationReducer from './redux/notification';
+import loserPropertiesReducer from "./redux/loserProperties";
 
 const store = configureStore({
     reducer: {
@@ -18,6 +20,8 @@ const store = configureStore({
         files: fileReducer,
         personality: personalityReducer,
         winner: winnerPropertiesReducer,
+        Notification: notificationReducer,
+        loser: loserPropertiesReducer,
     }
 })
 

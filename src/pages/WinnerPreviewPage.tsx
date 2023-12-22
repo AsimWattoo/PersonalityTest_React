@@ -87,13 +87,17 @@ let WinnerPreviewPage = () => {
                         personalityDict[option.personalityId] += parseFloat(option.value);
                 }
             }
-            console.log(personalityDict)
             let scores = Object.values(personalityDict);
             let maxScore = Math.max(...scores);
+
+            //If the user has only selected options which were not weighted
+            if(maxScore == 0) {
+              navigate(`/quiz/preview/loser/${id}`);
+            }
+
             let maxScoreIndex = scores.indexOf(maxScore);
             let maxScoredPersonality = Object.keys(personalityDict)[maxScoreIndex];
             let userPersonality = personalities.filter(p => p._id == maxScoredPersonality);
-            console.log(personalityDict, scores, maxScore, maxScoreIndex, maxScoredPersonality, userPersonality)
             if(userPersonality.length > 0) {
                 setPersonality(userPersonality[0]);
             }
@@ -116,6 +120,7 @@ let WinnerPreviewPage = () => {
                     <div className='page-container'>
                         <div className='left-column'>
                           <div className='page-content'>
+                              <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
                               <div style={winnerPageProperties.heading}>
                               {
                                   personality ? 
@@ -131,7 +136,7 @@ let WinnerPreviewPage = () => {
                               {
                               winnerPageProperties.Config.ShowRestartButton ? 
                               <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
-                                  <a className='btn btn-primary' style={restartBtnHoverState} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                                  <a className='btn btn-primary' style={{ ...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                                   {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
                                   </a>
                               </div> : 

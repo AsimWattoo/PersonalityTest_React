@@ -46,6 +46,7 @@ let WinnerPage = () => {
                 <div className='page-container'>
                   <div className='left-column'>
                     <div className='page-content'>
+                      <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
                       <div style={winnerPageProperties.heading}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       </div>
@@ -69,6 +70,7 @@ let WinnerPage = () => {
               <div className='right-column'>
                 <TextCustomization title={'Background'} mainSection={"winnerPageProperties"} propertySection={'background'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Mobile Background'} mainSection={"winnerPageProperties"} propertySection={'mobileBackground'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Winner Page Image'} mainSection={"winnerPageProperties"} propertySection={'winnerImage'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={' Heading'} mainSection={"winnerPageProperties"} propertySection={'heading'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Description'} mainSection={"winnerPageProperties"} propertySection={'description'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Restart Quiz Button'} mainSection={"winnerPageProperties"} propertySection={'restartBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>

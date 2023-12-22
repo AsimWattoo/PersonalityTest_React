@@ -134,8 +134,8 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
                         value: p._id
                       }}) : []
                   } value={option.personalityId} onChange={val => updateOptionPersonality(index, val.value)}/>
-                  <div className="btn btn-danger ms-2" onClick={() => deleteOption(index)}>
-                    <MdDelete />
+                  <div className="danger-text-btn ms-2" onClick={() => deleteOption(index)}>
+                    <MdClose />
                   </div>
                 </div>
               </div>
@@ -171,11 +171,11 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
       </div>
       <div className="edit-btns mt-2">
         <div className="d-flex align-items-center justify-content-start ">
-          <div className="btn btn-primary d-flex justify-content-center align-items-center mx-2" onClick={newOption}>
+          <div className="primary-btn d-flex justify-content-center align-items-center me-2" onClick={newOption}>
             <MdAdd/>
             Add Option
           </div>
-          <div className="btn btn-danger d-flex justify-content-center align-items-center mx-2" onClick={() => deleteQuestion(questionId)}>
+          <div className="danger-outline-btn d-flex justify-content-center align-items-center" onClick={() => deleteQuestion(questionId)}>
             <MdClose />
             Delete Question
           </div>

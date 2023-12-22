@@ -6,6 +6,7 @@ import { initializeProperties } from "../redux/presentationProperties";
 import type { Quiz } from "../redux/quiz";
 import { initializeProperties as initializeSharedProperties } from "../redux/shared";
 import { initializeProperties as initializeWinnerPageProperties } from "../redux/winnerProperties";
+import { initializeProperties as initializeLoserPageProperties } from "../redux/loserProperties";
 import { setQuestions } from "../redux/question";
 import { FaLongArrowAltDown } from "react-icons/fa";
 import { setPersonalities } from "../redux/personality";
@@ -19,6 +20,7 @@ let loadQuizData = async (id: string, dispatch) => {
       response.quiz.presentationProperties = JSON.parse(response.quiz.presentationProperties);
       response.quiz.sharedProperties = JSON.parse(response.quiz.sharedProperties);
       response.quiz.winnerPageProperties = JSON.parse(response.quiz.winnerPageProperties);
+      response.quiz.loserPageProperties = JSON.parse(response.quiz.loserPageProperties);
       let routeQuiz = response.quiz;
         dispatch(setQuiz({
             id: routeQuiz._id,
@@ -31,6 +33,7 @@ let loadQuizData = async (id: string, dispatch) => {
         dispatch(initializeProperties(routeQuiz.presentationProperties.properties))
         dispatch(initializeSharedProperties(routeQuiz.sharedProperties.properties))
         dispatch(initializeWinnerPageProperties(routeQuiz.winnerPageProperties.properties));
+        dispatch(initializeLoserPageProperties(routeQuiz.loserPageProperties.properties));
     }
   }
 

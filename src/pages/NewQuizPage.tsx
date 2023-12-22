@@ -1,6 +1,6 @@
 "use client"; // pages/quiz.js
 import "./QuizPage.css";
-import React, { useEffect, useState } from 'react';
+import React, { isValidElement, useEffect, useState, useSyncExternalStore } from 'react';
 import QuizCard from "../components/Quizcard.js";
 import { useNavigate } from 'react-router';
 import { sendRequest } from '../helpers/request.js';
@@ -14,6 +14,8 @@ import { resetFiles } from '../redux/files.js';
 import { MdAdd } from "react-icons/md";
 import NoResultImage from "../assets/images/no-result.png";
 import Loader from "../components/Loader";
+import ConfirmationModal from "../components/Modals/ConfirmationModal";
+import { showNotification } from "../redux/notification";
 
 function NewQuizPage() {
   
@@ -22,6 +24,8 @@ function NewQuizPage() {
   let [quizes, setQuizes] = useState([]);
   let [showDrafts, setShowDrafts] = useState(false);
   let [isLoading, setIsLoading] = useState(true);
+  let [quizToDelete, setQuiztoDelete] = useState("");
+  let [isConfirmationShown, setIsConfirmationShown] = useState(false);
 
   let loadQuizes = async () => {
     setIsLoading(true);
@@ -88,11 +92,24 @@ function NewQuizPage() {
     navigate(`/quiz/presentation/${id}`)
   }
 
-  const quizDelete = async (id: string) => {
-    let response = await sendRequest(Urls.deleteQuiz.url(id), Urls.deleteQuiz.type);
-    console.log(response);
+  const quizDelete = (id: string) => {
+    setQuiztoDelete(id);
+    setIsConfirmationShown(true);
+  }
+
+  let onClose = () => {
+    setIsConfirmationShown(false);
+    setQuiztoDelete("");
+  }
+
+  let onDeleteConfirm = async () => {
+    let response = await sendRequest(Urls.deleteQuiz.url(quizToDelete), Urls.deleteQuiz.type);
+    onClose();
     if(response.error) {
-      console.log(response.error);
+      dispatch(showNotification({
+        message: response.error,
+        isError: true,
+      }));
     } else {
       await loadQuizes();
     }
@@ -103,50 +120,56 @@ function NewQuizPage() {
   }
 
   return (
-    <div className="quiz-view-container">
-      <div className="header-container">
-        <div className="header">
-          <div className="tabs">
-            <div className={`tab ${showDrafts ? "" : "active"}`} onClick={() => changeTab(false)}>
-              Published Tests
+    <>
+      {
+        isConfirmationShown ? 
+        <ConfirmationModal title={'Delete Quiz Confirmation'} message={'Are you sure you want to delete this quiz?'} onClose={onClose} onConfirm={onDeleteConfirm}/> : <></>
+      }
+      <div className="quiz-view-container">
+        <div className="header-container">
+          <div className="header">
+            <div className="tabs">
+              <div className={`tab ${showDrafts ? "" : "active"}`} onClick={() => changeTab(false)}>
+                Published Tests
+              </div>
+              <div className={`tab ${showDrafts ? "active" : ""}`} onClick={() => changeTab(true)}>
+                Draft Test
+              </div>
             </div>
-            <div className={`tab ${showDrafts ? "active" : ""}`} onClick={() => changeTab(true)}>
-              Draft Test
+            <div className="primary-btn" onClick={handleAddQuiz}>
+              <MdAdd />
+              Create New Test
             </div>
-          </div>
-          <div className="primary-btn" onClick={handleAddQuiz}>
-            <MdAdd />
-            Create New Test
           </div>
         </div>
-      </div>
-      <div className="container">
-        {
-          isLoading ? 
-          <Loader /> : 
-          <div className={`${quizes.length > 0 ? "gridContainer" : ""}`}>
+        <div className="container">
           {
-            quizes.length > 0 ? 
-              quizes.map((quiz, index) => {
-                return (
-                  <QuizCard key={index} id={quiz._id} name={quiz.title}
-                    isDraft={quiz.isDraft}
-                    description={quiz.description}
-                    imageProperties={quiz.presentationProperties.properties.presentationImage} 
-                    onQuizEdit={quizEdit} 
-                    onQuizDelete={quizDelete}
-                    onQuizPlay={quizPlay}/>
-                )
-              }) : 
-              <div className="empty-message">
-                <img src={NoResultImage}/>
-                <p>No Test Found. Please use the <strong>Create New Button</strong> to add a new test</p>
-              </div>
+            isLoading ? 
+            <Loader /> : 
+            <div className={`${quizes.length > 0 ? "gridContainer" : ""}`}>
+            {
+              quizes.length > 0 ? 
+                quizes.map((quiz, index) => {
+                  return (
+                    <QuizCard key={index} id={quiz._id} name={quiz.title}
+                      isDraft={quiz.isDraft}
+                      description={quiz.description}
+                      imageProperties={quiz.presentationProperties.properties.presentationImage} 
+                      onQuizEdit={quizEdit} 
+                      onQuizDelete={quizDelete}
+                      onQuizPlay={quizPlay}/>
+                  )
+                }) : 
+                <div className="empty-message">
+                  <img src={NoResultImage}/>
+                  <p>No Test Found. Please use the <strong>Create New Button</strong> to add a new test</p>
+                </div>
+            }
+          </div>
           }
         </div>
-        }
       </div>
-    </div>
+    </>
   );
 }
 

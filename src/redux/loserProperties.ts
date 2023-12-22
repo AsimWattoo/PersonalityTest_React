@@ -9,8 +9,8 @@ const initialState = {
     properties: null
 } as PropertiesState
 
-export const winnerPropertiesSlice = createSlice({
-    name: "winner",
+export const loserPropertiesSlice = createSlice({
+    name: "Loser",
     initialState: initialState,
     reducers: {
         initializeProperties: (state, action) => {
@@ -44,6 +44,6 @@ export const winnerPropertiesSlice = createSlice({
     }
 });
 
-export const {updateProperty, addProperty, removeProperty, resetProperties, initializeProperties} = winnerPropertiesSlice.actions;
+export const {updateProperty, addProperty, removeProperty, resetProperties, initializeProperties} = loserPropertiesSlice.actions;
 
-export default winnerPropertiesSlice.reducer;
+export default loserPropertiesSlice.reducer;

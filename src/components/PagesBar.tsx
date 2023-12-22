@@ -7,8 +7,11 @@ import Urls from '../links';
 import { resetFiles } from '../redux/files';
 import { initializeProperties as initializeSharedProperties } from '../redux/shared';
 import { initializeProperties as initializePresentationProperties } from '../redux/presentationProperties';
+import { initializeProperties as initializeWinnerProperties } from '../redux/winnerProperties';
+import { initializeProperties as initializeLoserProperties } from '../redux/loserProperties';
 import { setQuestions } from '../redux/question';
 import { isDraft } from '@reduxjs/toolkit';
+import { showNotification } from '../redux/notification';
 
 type PagesBarProps = {
   currentPage: string,
@@ -40,6 +43,12 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
     }
   }
 
+  let onLosersPageClick = () => {
+    if(canNavigate) {
+      navigate(`/quiz/loser/${quizId}`)
+    }
+  }
+
   let onPersonalityClick = () => {
     if(canNavigate) {
       navigate(`/quiz/personality/${quizId}`)
@@ -52,10 +61,11 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   let sharedProperties = useAppSelector(state => state.shared);
   let presentationProperties = useAppSelector(state => state.presentation);
   let winnerPageProperties = useAppSelector(state => state.winner);
+  let loserPageProperties = useAppSelector(state => state.loser);
   let files = useAppSelector(state => state.files.files);
   let dispatch = useAppDispatch();
   
-  let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}) => {
+  let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}, loserPageProperties: {}) => {
     for(let file of files) {
       if(file.state == "added") {
         let result = await fetch(file.url);
@@ -76,6 +86,8 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
             questions[file.questionIndex].properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`;
           } else if(file.mainSection == "winnerPageProperties" && winnerPageProperties) {
             winnerPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+          } else if(file.mainSection == "loserPageProperties" && loserPageProperties) {
+            loserPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
           }
         }
       } else if (file.state == "removed") {
@@ -91,6 +103,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       let preProperties = JSON.parse(JSON.stringify(presentationProperties));
       let shProperties = JSON.parse(JSON.stringify(sharedProperties));
       let wpProperties = JSON.parse(JSON.stringify(winnerPageProperties));
+      let lsProperties = JSON.parse(JSON.stringify(loserPageProperties));
       let questionObjs = questions.map(question => {
         return {
           quizId: id,
@@ -99,7 +112,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           properties: JSON.parse(JSON.stringify(question.properties)),
         }
       })
-      await uploadFiles(preProperties, shProperties, questionObjs, wpProperties);
+      await uploadFiles(preProperties, shProperties, questionObjs, wpProperties, lsProperties);
 
       //Sending Update Request to the server
       let response = await sendRequest(Urls.updateQuiz.url(id), Urls.updateQuiz.type, {
@@ -108,18 +121,23 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
         presentationProperties: JSON.stringify(preProperties),
         sharedProperties: JSON.stringify(shProperties),
         winnerPageProperties: JSON.stringify(wpProperties),
+        loserPageProperties: JSON.stringify(lsProperties),
         isDraft: draft,
       });
 
       if(!response.error) {
         let deleteQuizQuestions = await sendRequest(Urls.deleteQuizQuestions.url(id), Urls.deleteQuizQuestions.type);
-        console.log(deleteQuizQuestions);
         if(deleteQuizQuestions.error) {
-          console.log(deleteQuizQuestions.error)
+          dispatch(showNotification({
+            message: deleteQuizQuestions.error,
+            isError: true,
+          }));
         }
         else {
           dispatch(initializeSharedProperties(shProperties.properties));
           dispatch(initializePresentationProperties(preProperties.properties));
+          dispatch(initializeWinnerProperties(wpProperties.properties));
+          dispatch(initializeLoserProperties(lsProperties.properties));
           dispatch(setQuestions(questionObjs));
           console.log(questionObjs)
           questionObjs = questionObjs.map(question => {
@@ -132,6 +150,17 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           })
           let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
           console.log(createQuizResponse)
+          if(createQuizResponse.error) {
+            dispatch(showNotification({
+              message: createQuizResponse.error,
+              isError: true,
+            }));
+          } else {
+            dispatch(showNotification({
+              message: "Test Saved Successfully",
+              isError: false,
+            }));
+          }
         }
 
         if(!draft) {
@@ -139,7 +168,10 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
         }
       }
       else {
-        console.log(response.error)
+        dispatch(showNotification({
+          message: response.error,
+          isError: true,
+        }));
       }
 
     }
@@ -169,8 +201,8 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           <div className={`tab ${currentPage == "winner" ? 'active' : ''}`} onClick={onWinnerPageClick}>
             Winners Page
           </div>
-          <div className={`tab ${currentPage == "looser" ? 'active' : ''}`}>
-            Loosers Page
+          <div className={`tab ${currentPage == "losers" ? 'active' : ''}`} onClick={onLosersPageClick}>
+            Losers Page
           </div>
           <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>
             Personalities Page

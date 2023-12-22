@@ -73,31 +73,36 @@ let WinnerPlayPage = () => {
     }
 
     useEffect(() => {
-        if(questions.length > 0) {
-            let selectedOptions = questions.map(question => question.options.filter(option => option.selected)[0]);
-            let personalityDict = {}
-            for(let i = 0; i < selectedOptions.length; i += 1) {
-                let option = selectedOptions[i];
-                if(option) {
-                    if(personalityDict[option.personalityId] === undefined)
-                        personalityDict[option.personalityId] = parseFloat(option.value);
-                    else 
-                        personalityDict[option.personalityId] += parseFloat(option.value);
-                }
-            }
-            console.log(personalities)
-            console.log(selectedOptions)
-            console.log(personalityDict)
-            let scores = Object.values(personalityDict);
-            let maxScore = Math.max(...scores);
-            let maxScoreIndex = scores.indexOf(maxScore);
-            let maxScoredPersonality = Object.keys(personalityDict)[maxScoreIndex];
-            let userPersonality = personalities.filter(p => p._id == maxScoredPersonality);
-            if(userPersonality.length > 0) {
-                setPersonality(userPersonality[0]);
-            }
-        }
-    }, [questions])
+      if(questions.length > 0) {
+        console.log(personalities)
+          let selectedOptions = questions.map(question => question.options.filter(option => option.selected)[0]);
+          let personalityDict = {}
+          for(let i = 0; i < selectedOptions.length; i += 1) {
+              let option = selectedOptions[i];
+              console.log(option)
+              if(option) {
+                  if(personalityDict[option.personalityId] === undefined)
+                      personalityDict[option.personalityId] = parseFloat(option.value);
+                  else 
+                      personalityDict[option.personalityId] += parseFloat(option.value);
+              }
+          }
+          let scores = Object.values(personalityDict);
+          let maxScore = Math.max(...scores);
+
+          //If the user has only selected options which were not weighted
+          if(maxScore == 0) {
+            navigate(`/quiz/play/loser/${id}`);
+          }
+
+          let maxScoreIndex = scores.indexOf(maxScore);
+          let maxScoredPersonality = Object.keys(personalityDict)[maxScoreIndex];
+          let userPersonality = personalities.filter(p => p._id == maxScoredPersonality);
+          if(userPersonality.length > 0) {
+              setPersonality(userPersonality[0]);
+          }
+      }
+  }, [questions, personalities])
 
     return (
       <div className='page preview-page'>
@@ -110,6 +115,7 @@ let WinnerPlayPage = () => {
             <div className='content-container'>
                 <div className='left-column'>
                     <div className='page-content'>
+                        <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
                         <div style={winnerPageProperties.heading}>
                         {
                             personality ? 
@@ -125,7 +131,7 @@ let WinnerPlayPage = () => {
                         {
                         winnerPageProperties.Config.ShowRestartButton ? 
                         <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
-                            <a className='btn btn-primary' style={restartBtnHoverState} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                            <a className='btn btn-primary' style={{...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                             {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
                             </a>
                         </div> : 

@@ -1,0 +1,62 @@
+.modal-container {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
+
+.modal-backdrop {
+    background-color: rgba(0, 0, 0, 0.2) !important;
+    z-index: 10 !important;
+}
+
+.modal {
+    font-family: 'Poppins-Regular';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 35%;
+    min-height: 10%;
+    max-height: 80%;
+    height: auto;
+    background-color: white;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    display: block;
+    transition: all 0.3s ease-in-out;
+    animation: load-anim 0.2s ease-in-out;
+    border-radius: 5px !important;
+    overflow: hidden;
+}
+
+@keyframes load-anim {
+    0% {
+        transform: translate(-50%, -50%) scale(0.4, 0.4);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1, 1);
+    }
+}
+
+.modal .modal-header .title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+}
+
+
+.modal .modal-header .title svg{
+    font-size: 1.4rem;
+    margin-right: 0.2em;
+}
+
+.modal .modal-error-message {
+    font-size: 1.1rem;
+    color: red;
+}
+
+.modal .modal-success-message {
+    font-size: 1.1rem;
+    color: green;
+}
