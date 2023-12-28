@@ -28,7 +28,7 @@ let LosersPlayPage = () => {
           setTimeout(() => {
             setIsLoading(false);
           }, 2000);
-        });
+        }, true);
       }
 
     }, []);

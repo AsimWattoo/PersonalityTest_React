@@ -29,7 +29,7 @@ let WinnerPlayPage = () => {
           setTimeout(() => {
             setIsLoading(false);
           }, 2000);
-        });
+        }, true);
       }
 
     }, []);

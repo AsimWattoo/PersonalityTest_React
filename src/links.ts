@@ -13,6 +13,10 @@ let Urls = {
         url: (id: string) => `${baseUrl}/quiz/${id}`,
         type: 'GET'
     },
+    getPublishedQuiz: {
+        url: (id: string) => `${baseUrl}/quiz/published/${id}`,
+        type: 'GET'
+    },
     createQuiz: {
         url: () => `${baseUrl}/quiz`,
         type: "POST"
@@ -27,6 +31,10 @@ let Urls = {
     },
     getQuestions: {
         url: (quizId: string) => `${baseUrl}/questions/${quizId}`,
+        type: 'GET'
+    },
+    getPublishedQuestions: {
+        url: (quizId: string) => `${baseUrl}/questions/published/${quizId}`,
         type: 'GET'
     },
     createQuestions: {
@@ -73,6 +81,10 @@ let Urls = {
         url: (quizId: string) => `${baseUrl}/personalities/${quizId}`,
         type: 'GET'
     },
+    getPublishedPersonalities: {
+        url: (quizId: string) => `${baseUrl}/personalities/published/${quizId}`,
+        type: 'GET'
+    },
     deletePersonality: {
         url: (id: string) => `${baseUrl}/personalities/${id}`,
         type: 'DELETE'
@@ -81,6 +93,18 @@ let Urls = {
         url: (id: string) => `${baseUrl}/personalities/${id}`,
         type: 'PUT'
     },
+    register: {
+        url: () => `${baseUrl}/register`,
+        type: "POST",
+    },
+    login: {
+        url: () => `${baseUrl}/login`,
+        type: "POST",
+    },
+    validate_token: {
+        url: () => `${baseUrl}/validate-token`,
+        type: "POST",
+    }
 }
 
 export default Urls

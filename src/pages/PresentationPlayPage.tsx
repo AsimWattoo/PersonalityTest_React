@@ -29,7 +29,7 @@ export default function PresentationPlayPage() {
           setTimeout(() => {
             setIsLoading(false);
           }, 2000);
-        });
+        }, true);
       } else {
         dispatch(resetSelection({}));
       }

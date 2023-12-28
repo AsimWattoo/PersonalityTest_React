@@ -93,7 +93,7 @@ export default function PresentationPreviewPage() {
                   </div>
                   <div className="page-container">
                     <div className='left-column'>
-                        <div className="page-content" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}>
+                        <div className="page-content">
                             <div style={quizProperties.presentationImage}></div>
                             <div className="w-50" style={quizProperties.heading}>{quiz.title}</div>
                             <div className="w-50" style={quizProperties.description}>{quiz.description}</div>
@@ -102,6 +102,7 @@ export default function PresentationPreviewPage() {
                                     {quizProperties.ButtonHoverStyle.StartButtonText}
                                 </a>
                             </div>
+                            <div className="background" style={windowWidth < 450 ? quizProperties.mobileBackground : quizProperties.background}></div>
                         </div>
                     </div>
                   </div>

@@ -137,3 +137,92 @@
     }
   }
 }
+
+.full-page {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-center {
+  width: 60%;
+  height: 60%;
+  background-color: white;
+  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  border-radius: 10px;
+}
+
+.registration-page {
+  display: flex;
+  height: 100%;
+}
+
+.registration-page .form,
+.registration-page .image {
+  width: 100%;
+  margin-left: 2em;
+  font-family: 'Poppins-Regular';
+}
+
+.registration-page .image .img {
+  background-color: #dedede;
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.registration-page .form {
+  padding: 1.5em;
+}
+
+.registration-page .form .title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #a97fff;
+  text-align: center;
+}
+
+.registration-page .form .note {
+  font-size: 0.9rem;
+  text-align: center;
+  color: #989898;
+}
+
+.registration-page .form .note a{
+  text-decoration: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+}
+
+.registration-page .form .note a:hover {
+  color: #a97fff;
+}
+
+.input-controls {
+  margin-top: 4.5em;
+}
+
+.input-controls .input-group {
+  margin: 1.2em 0px;
+}
+
+.input-controls .input-group label {
+  font-size: 0.9rem;
+}
+
+.input-controls .input-group input {
+  border: 0px;
+  border-radius: 5px;
+  padding: 14px 10px;
+  margin-top: 0.3em;
+}
+
+.registration-loader {
+  border: 1px solid #a97fff;
+  padding: 5px;
+  border-radius: 5px;
+}

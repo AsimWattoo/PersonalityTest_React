@@ -1,5 +1,6 @@
+import { getToken } from "./token";
 
-let sendRequest = async (url: string, type: string, body: {} | null = null, contentType: string = "application/json", addContentType: boolean = true) => {
+let sendRequest = async (url: string, type: string, body: {} | null = null, contentType: string = "application/json", addContentType: boolean = true, addToken: boolean = true) => {
 
     let options = {
         mode: 'cors',
@@ -10,6 +11,11 @@ let sendRequest = async (url: string, type: string, body: {} | null = null, cont
 
     if(addContentType) {
         options.headers['Content-Type'] = contentType;
+    }
+
+    if(addToken) {
+        let token = getToken();
+        options.headers["Authorization"] = `Bearer ${token}`;
     }
 
     if((type == "POST" || type == "PUT") && contentType == "application/json" && body != null) {

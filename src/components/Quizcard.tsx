@@ -1,7 +1,10 @@
 import React from 'react';
 import "./component.css";
 import '../App.css'
-import { MdDelete, MdEdit, MdEditSquare } from 'react-icons/md';
+import { MdDelete, MdEdit, MdEditSquare, MdLink } from 'react-icons/md';
+import { useLocation } from 'react-router';
+import { showNotification } from '../redux/notification';
+import { useAppDispatch } from '../redux/hooks';
 
 type QuizInfo = {
   id: string,
@@ -16,6 +19,7 @@ type QuizInfo = {
 
 function QuizCard(props: QuizInfo) {
 
+  let dispatch = useAppDispatch();
   const playQuiz = () => {
     if(!props.isDraft) {
       props.onQuizPlay(props.id)
@@ -45,7 +49,18 @@ function QuizCard(props: QuizInfo) {
             <div className='primary-btn me-2' onClick={() => props.onQuizEdit(props.id)}>
               <MdEdit />
               Edit
-            </div> : <div></div>
+            </div> : 
+            <div className='primary-btn me-2' onClick={(e) =>{
+              e.stopPropagation();
+              navigator.clipboard.writeText(`${window.location.origin}/quiz/play/presentation/${props.id}`);
+              dispatch(showNotification({
+                isError: false,
+                message: "Test Link has been copied to the clipboard"
+              }))
+            }}>
+              <MdLink />
+              Get Link
+            </div>
           }
           <a className='danger-outline-btn' onClick={(e) => {
             e.stopPropagation();

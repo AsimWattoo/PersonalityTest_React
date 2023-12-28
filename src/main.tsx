@@ -23,6 +23,8 @@ import WinnerPlayPage from './pages/WinnerPlayPage';
 import LosersPage from './pages/LosersPage';
 import LosersPlayPage from './pages/LosersPlayPage';
 import LosersPreviewPage from './pages/LosersPreviewPage';
+import RegisterPage from './pages/RegisterPage';
+import LoginPage from './pages/LoginPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -49,6 +51,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path='fonts/add' element={<FontAddPage />}/>
               </Route>
             </Route>
+            <Route path='/login' element={<LoginPage />}/>
           </Routes>
         </BrowserRouter>
     </Provider>

@@ -26,7 +26,7 @@ export default function QuestionsPlayPage() {
         setTimeout(() => {
           setIsLoading(false);
         }, 2000);
-      });
+      }, true);
     }
 
   }, []);
