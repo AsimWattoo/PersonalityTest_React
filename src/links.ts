@@ -1,4 +1,5 @@
-let baseUrl = "http://localhost:3001"
+//let baseUrl = "http://localhost:3001"
+let baseUrl = "https://personality-test-backend.vercel.app";
 
 let Urls = {
     getAllQuizes: {

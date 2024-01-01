@@ -59,7 +59,7 @@ function QuizCard(props: QuizInfo) {
               }))
             }}>
               <MdLink />
-              Get Link
+              Copy Link
             </div>
           }
           <a className='danger-outline-btn' onClick={(e) => {
