@@ -10,6 +10,7 @@ import { initializeProperties as initializeLoserPageProperties } from "../redux/
 import { setQuestions } from "../redux/question";
 import { FaLongArrowAltDown } from "react-icons/fa";
 import { setPersonalities } from "../redux/personality";
+import { setIcons } from "../redux/social-icons";
 
 let loadQuizData = async (id: string, dispatch, isPublished: boolean = false) => {
     let response = 
@@ -78,10 +79,30 @@ let loadPersonalities = async (id: string, dispatch, isPublished: boolean = fals
   }
 }
 
+let loadSocialIcons = async (id: string, dispatch, isPublished: boolean = false) => {
+  let response = isPublished ? 
+  await sendRequest(Urls.getPublishedIcons.url(id), Urls.getPublishedIcons.type, null, '', true, false) 
+  : await sendRequest(Urls.getAllIcons.url(id), Urls.getAllIcons.type);
+  if(response.error) {
+    console.log(response.error);
+  } else {
+    let icons = response.icons.map(p => {
+      return {
+          _id: p._id,
+          quizId: p.quizId,
+          url: p.url,
+          icon: p.icon
+      }
+    });
+    dispatch(setIcons(icons));
+  }
+}
+
 let loadData = async (id: string, dispatch, cb: () => {}, isPublished: boolean = false) => {
     await loadQuizData(id, dispatch, isPublished);
     await loadQuestions(id, dispatch, isPublished);
     await loadPersonalities(id, dispatch, isPublished);
+    await loadSocialIcons(id, dispatch, isPublished)
     if(cb) {
       cb();
     }

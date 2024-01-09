@@ -3,6 +3,8 @@ import { useNavigate, useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import loadData from '../helpers/dataLoader';
 import Loader from '../components/Loader';
+import { MdQuestionMark } from 'react-icons/md';
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 let WinnerPlayPage = () => {
 
@@ -20,6 +22,21 @@ let WinnerPlayPage = () => {
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
+    let socialIcons = useAppSelector(state => state.socialIcons.icons);
+
+    let getIcon = (ic: string) => {
+      if(ic == "facebook") {
+        return <FaFacebook />;
+      } else if(ic == "instagram") {
+        return <FaInstagram />;
+      } else if(ic == "twitter") {
+        return <FaTwitter />;
+      } else if (ic == "linkedin") {
+        return <FaLinkedin />;
+      } else {
+        return <MdQuestionMark />;
+      }
+    }
 
     useEffect(() => {
 
@@ -156,6 +173,19 @@ let WinnerPlayPage = () => {
                             personality.description : "Personality Description"
                         }
                         </div>
+                        <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
+                                {
+                                  socialIcons ? 
+                                  socialIcons.map((icon, index) => {
+                                    return (
+                                      <a className='social-icon' key={index} href={icon.url}>
+                                        {getIcon(icon.icon)}
+                                      </a>
+                                    )
+                                  })
+                                  : <></>
+                                }
+                              </div>
                         <div className='d-flex align-items-center w-50'>
                         {
                           winnerPageProperties.Config.ShowRestartButton ? 

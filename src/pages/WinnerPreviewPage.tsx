@@ -6,6 +6,8 @@ import { updateProperty, removeProperty, addProperty, initializeProperties } fro
 import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
+import { MdClose, MdQuestionMark } from 'react-icons/md';
+import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
 
 let WinnerPreviewPage = () => {
 
@@ -22,6 +24,8 @@ let WinnerPreviewPage = () => {
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
+    let socialIcons = useAppSelector(state => state.socialIcons.icons);
+    console.log(socialIcons)
 
     useEffect(() => {
 
@@ -35,6 +39,20 @@ let WinnerPreviewPage = () => {
       }
 
     }, []);
+
+    let getIcon = (ic: string) => {
+      if(ic == "facebook") {
+        return <FaFacebook />;
+      } else if(ic == "instagram") {
+        return <FaInstagram />;
+      } else if(ic == "twitter") {
+        return <FaTwitter />;
+      } else if (ic == "linkedin") {
+        return <FaLinkedin />;
+      } else {
+        return <MdQuestionMark />;
+      }
+    }
 
     useEffect(() => {
       if(winnerPageProperties) {
@@ -161,6 +179,19 @@ let WinnerPreviewPage = () => {
                                   personality ? 
                                   personality.description : "Personality Description"
                               }
+                              </div>
+                              <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
+                                {
+                                  socialIcons ? 
+                                  socialIcons.map((icon, index) => {
+                                    return (
+                                      <a className='social-icon' key={index} href={icon.url}>
+                                        {getIcon(icon.icon)}
+                                      </a>
+                                    )
+                                  })
+                                  : <></>
+                                }
                               </div>
                               <div className='d-flex align-items-center w-50'>
                               {

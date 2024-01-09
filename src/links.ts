@@ -112,6 +112,18 @@ let Urls = {
     validate_token: {
         url: () => `${baseUrl}/validate-token`,
         type: "POST",
+    },
+    getAllIcons: {
+        url: (id: string) => `${baseUrl}/social-icons/${id}`,
+        type: "GET"
+    },
+    getPublishedIcons: {
+        url: (id: string) => `${baseUrl}/social-icons/published/${id}`,
+        type: "GET"
+    },
+    reCreateIcons: {
+        url: (id: string) => `${baseUrl}/social-icons/re-create/${id}`,
+        type: "POST",
     }
 }
 

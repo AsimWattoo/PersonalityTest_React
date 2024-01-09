@@ -63,6 +63,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   let winnerPageProperties = useAppSelector(state => state.winner);
   let loserPageProperties = useAppSelector(state => state.loser);
   let files = useAppSelector(state => state.files.files);
+  let icons = useAppSelector(state => state.socialIcons.icons);
   let dispatch = useAppDispatch();
   
   let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}, loserPageProperties: {}) => {
@@ -127,6 +128,24 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
       });
 
       if(!response.error) {
+
+        if(icons) {
+          //Recreating the icons
+          let recreateResult = await sendRequest(Urls.reCreateIcons.url(id), Urls.reCreateIcons.type, {
+            icons: icons.map(i => {
+              return {
+                quizId: i.quizId,
+                url: i.url,
+                icon: i.icon
+              }
+            })
+          }, "application/json", true, true);
+
+          if(recreateResult.error) {
+            console.log(recreateResult.error);
+          }
+        }
+
         let deleteQuizQuestions = await sendRequest(Urls.deleteQuizQuestions.url(id), Urls.deleteQuizQuestions.type);
         if(deleteQuizQuestions.error) {
           dispatch(showNotification({
@@ -140,7 +159,6 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           dispatch(initializeWinnerProperties(wpProperties.properties));
           dispatch(initializeLoserProperties(lsProperties.properties));
           dispatch(setQuestions(questionObjs));
-          console.log(questionObjs)
           questionObjs = questionObjs.map(question => {
             return {
               quizId: id,
