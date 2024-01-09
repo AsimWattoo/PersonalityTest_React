@@ -1,5 +1,12 @@
-//let baseUrl = "http://localhost:3001"
-let baseUrl = "https://personality-test-backend.vercel.app";
+let localUrl = "http://localhost:3001"
+let remoteUrl = "https://personality-test-backend.vercel.app";
+let baseUrl = '';
+
+if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
+    baseUrl = localUrl;
+  } else {
+    baseUrl = remoteUrl;
+  }
 
 let Urls = {
     getAllQuizes: {

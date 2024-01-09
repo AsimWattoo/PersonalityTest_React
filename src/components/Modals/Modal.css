@@ -60,3 +60,10 @@
     font-size: 1.1rem;
     color: green;
 }
+
+input{
+    border: 1px solid #dedede;
+    text-align: left;
+    width: 90%;
+    border-radius: 5px;
+  }

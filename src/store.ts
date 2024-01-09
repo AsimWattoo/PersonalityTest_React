@@ -10,6 +10,7 @@ import personalityReducer from './redux/personality';
 import winnerPropertiesReducer from './redux/winnerProperties';
 import notificationReducer from './redux/notification';
 import loserPropertiesReducer from "./redux/loserProperties";
+import socialIconsReducer from "./redux/social-icons";
 
 const store = configureStore({
     reducer: {
@@ -22,6 +23,7 @@ const store = configureStore({
         winner: winnerPropertiesReducer,
         Notification: notificationReducer,
         loser: loserPropertiesReducer,
+        socialIcons: socialIconsReducer,
     }
 })
 

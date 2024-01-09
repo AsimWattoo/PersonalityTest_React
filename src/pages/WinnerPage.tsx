@@ -3,11 +3,14 @@ import { useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import TextCustomization from '../TextCustomization';
 import { updateProperty, removeProperty, addProperty, initializeProperties } from '../redux/winnerProperties';
-import { updateQuiz, setQuiz } from '../redux/quiz';
-import type { Quiz, QuizUpdate } from '../redux/quiz';
+import {addIcon, deleteIcon, updateIcon} from "../redux/social-icons";
+import type {SocialIcon, SocialIconAdd, SocialIconUpdate} from "../redux/social-icons";
 import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
+import { MdAdd, MdClose, MdFacebook, MdQuestionMark, MdSettingsInputComponent } from 'react-icons/md';
+import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import SocialIconModal from '../components/Modals/SocialIconModal';
 
 let WinnerPage = () => {
 
@@ -15,8 +18,15 @@ let WinnerPage = () => {
     let id = params.id
     let dispatch = useAppDispatch();
     let winnerPageProperties = useAppSelector(state => state.winner.properties);
+    let socialIcons = useAppSelector(state => state.socialIcons.icons);
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
+    let [isModalShown, setIsModalShown] = useState(false);
+    let [modalTitle, setModalTitle] = useState("Add Icon");
+    let [mode, setMode] = useState("add");
+    let [url, setUrl] = useState("");
+    let [icon, setIcon] = useState("");
+    let [index, setIndex] = useState(0);
 
     useEffect(() => {
 
@@ -31,6 +41,67 @@ let WinnerPage = () => {
 
     }, []);
 
+    let createIcon = () => {
+      setMode("add");
+      setModalTitle("Add Icon");
+      setIsModalShown(true);
+    }
+
+    let getIcon = (ic: string) => {
+      if(ic == "facebook") {
+        return <FaFacebook />;
+      } else if(ic == "instagram") {
+        return <FaInstagram />;
+      } else if(ic == "twitter") {
+        return <FaTwitter />;
+      } else if (ic == "linkedin") {
+        return <FaLinkedin />;
+      } else {
+        return <MdQuestionMark />;
+      }
+    }
+
+    let saveIcon = (iconId: number, url: string, icon: string) => {
+      if(mode == "add") {
+        let value = {
+          quizId: id,
+          url: url,
+          icon: icon,
+        } as SocialIconAdd;
+  
+        dispatch(addIcon(value))
+      } else {
+        let update = {
+          id: iconId,
+          url: url,
+          icon: icon
+        } as SocialIconUpdate;
+
+        dispatch(updateIcon(update));
+      }
+    }
+
+    let editIcon = (index: number) => {
+      if(socialIcons) {
+        setMode("edit");
+        let icon = socialIcons.filter((icon, i) => i == index)[0];
+        setIcon(icon.icon);
+        setIndex(index);
+        setUrl(icon.url);
+        setModalTitle("Edit Icon");
+        setIsModalShown(true);
+      }
+    }
+
+    let removeIcon = (index: number) => {
+      dispatch(deleteIcon(index))
+    }
+
+    let closeModal = () => {
+      setMode("");
+      setIsModalShown(false);
+    }
+
     return (
       <div className='content-container'>
         {
@@ -39,6 +110,15 @@ let WinnerPage = () => {
           (
             quiz && winnerPageProperties ? 
             <>
+              {
+                isModalShown ? 
+                <SocialIconModal title={modalTitle} onSave={saveIcon} 
+                  onClose={closeModal}
+                  mode={mode}
+                  icon={icon}
+                  url={url}
+                  id={index}/> : <></>
+              }
               <div className='quiz-view-container'>
                 <div className='header-container'>
                   <PagesBar currentPage={'winner'} quizId={id} canPreview={true} canEdit={false}/>
@@ -52,6 +132,28 @@ let WinnerPage = () => {
                       </div>
                       <div style={winnerPageProperties.description}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non mauris lectus. Aenean accumsan molestie ante, non tincidunt arcu tempor ut. Aenean ullamcorper sapien eget consequat vulputate. Ut dapibus felis lectus, vel finibus odio lacinia vitae. Praesent faucibus, ex eu rutrum ornare, ipsum tortor consectetur neque, quis laoreet risus nunc laoreet turpis. Sed eget nulla id arcu finibus malesuada. Nunc a pulvinar nisl. Proin leo nibh, tincidunt sit amet volutpat et, faucibus quis urna.
+                      </div>
+                      <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
+                        {
+                          socialIcons ? 
+                          socialIcons.map((icon, index) => {
+                            return (
+                              <div className='social-icon' key={index} onClick={() => editIcon(index)}>
+                                <div className='close-icon' onClick={e => {
+                                  e.stopPropagation();
+                                  removeIcon(index);
+                                }}>
+                                  <MdClose />
+                                </div>
+                                {getIcon(icon.icon)}
+                              </div>
+                            )
+                          })
+                          : <></>
+                        }
+                        <div className='icon-select' onClick={createIcon}>
+                          <MdAdd />
+                        </div>
                       </div>
                       <div className='d-flex align-items-center w-100'>
                         {

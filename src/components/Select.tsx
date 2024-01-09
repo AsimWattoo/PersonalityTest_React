@@ -4,7 +4,7 @@ import {MdExpandMore} from 'react-icons/md';
 import { FaUserFriends } from 'react-icons/fa';
 
 
-const Select = ({options, value, onChange=(opt) => {}}) => {
+const Select = ({options, value, onChange=(opt) => {}, maxHeight= 500}) => {
 
     let [isExpanded, setIsExpanded] = useState(false);
     let [selectedOption, setSelectedOption] = useState({label: 'Select an Option', value: ""});
@@ -30,7 +30,7 @@ const Select = ({options, value, onChange=(opt) => {}}) => {
         if(filteredOption && filteredOption.length > 0) {
             setSelectedOption(filteredOption[0])
         }
-    }, [options]);
+    }, [options, value]);
 
     return (
         <div className={`select child ${isExpanded ? "expanded" : ""}`}>
@@ -38,7 +38,7 @@ const Select = ({options, value, onChange=(opt) => {}}) => {
                 <div>{selectedOption.label}</div>
                 <MdExpandMore />
             </div>
-            <div className="options">
+            <div className="options" style={isExpanded ? {maxHeight: maxHeight} : {}}>
                 {
                     options.map((option, index) => {
                         return (
