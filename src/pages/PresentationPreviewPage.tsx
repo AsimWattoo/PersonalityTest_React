@@ -27,9 +27,7 @@ export default function PresentationPreviewPage() {
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         });
       } else {
         dispatch(resetSelection({}));

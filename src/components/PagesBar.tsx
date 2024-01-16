@@ -1,4 +1,3 @@
-import React from 'react';
 import { MdCancel, MdEdit, MdOutlineCancel, MdOutlineEdit, MdOutlinePublic, MdOutlinePublish, MdOutlineSave, MdOutlineVisibility, MdPublish, MdSave, MdVisibility } from 'react-icons/md';
 import { useParams, useNavigate } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
@@ -10,7 +9,6 @@ import { initializeProperties as initializePresentationProperties } from '../red
 import { initializeProperties as initializeWinnerProperties } from '../redux/winnerProperties';
 import { initializeProperties as initializeLoserProperties } from '../redux/loserProperties';
 import { setQuestions } from '../redux/question';
-import { isDraft } from '@reduxjs/toolkit';
 import { showNotification } from '../redux/notification';
 
 type PagesBarProps = {
@@ -55,6 +53,12 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
     }
   }
 
+  let onRegistrationPageClick = () => {
+    if(canNavigate) {
+      navigate(`/quiz/registration/${quizId}`)
+    }
+  }
+
   let params = useParams();
   let quiz = useAppSelector(state => state.quiz.quiz);
   let questions = useAppSelector(state => state.question.questions);
@@ -64,6 +68,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   let loserPageProperties = useAppSelector(state => state.loser);
   let files = useAppSelector(state => state.files.files);
   let icons = useAppSelector(state => state.socialIcons.icons);
+  let registrationQuestions = useAppSelector(state => state.registration.questions);
   let dispatch = useAppDispatch();
   
   let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}, loserPageProperties: {}) => {
@@ -139,6 +144,17 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
                 icon: i.icon
               }
             })
+          }, "application/json", true, true);
+
+          if(recreateResult.error) {
+            console.log(recreateResult.error);
+          }
+        }
+
+        if(registrationQuestions) {
+
+          let recreateResult = await sendRequest(Urls.reCreateRegistrationQuestions.url(id), Urls.reCreateRegistrationQuestions.type, {
+            questions: registrationQuestions
           }, "application/json", true, true);
 
           if(recreateResult.error) {
@@ -222,6 +238,9 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           </div>
           <div className={`tab ${currentPage == "losers" ? 'active' : ''}`} onClick={onLosersPageClick}>
             Losers Page
+          </div>
+          <div className={`tab ${currentPage == "registration" ? 'active' : ''}`} onClick={onRegistrationPageClick}>
+            Registration Page
           </div>
           <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>
             Personalities Page

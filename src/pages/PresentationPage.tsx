@@ -23,9 +23,7 @@ let PresentationPage = () => {
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         });
       }
 

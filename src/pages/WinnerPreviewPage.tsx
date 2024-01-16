@@ -6,8 +6,7 @@ import { updateProperty, removeProperty, addProperty, initializeProperties } fro
 import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
-import { MdClose, MdQuestionMark } from 'react-icons/md';
-import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import getIcon from '../helpers/icon';
 
 let WinnerPreviewPage = () => {
 
@@ -24,35 +23,19 @@ let WinnerPreviewPage = () => {
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
+    let [nextBtnHoverState, setNextBtnHoverState] = useState({});
     let socialIcons = useAppSelector(state => state.socialIcons.icons);
-    console.log(socialIcons)
 
     useEffect(() => {
 
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         });
       }
 
     }, []);
-
-    let getIcon = (ic: string) => {
-      if(ic == "facebook") {
-        return <FaFacebook />;
-      } else if(ic == "instagram") {
-        return <FaInstagram />;
-      } else if(ic == "twitter") {
-        return <FaTwitter />;
-      } else if (ic == "linkedin") {
-        return <FaLinkedin />;
-      } else {
-        return <MdQuestionMark />;
-      }
-    }
 
     useEffect(() => {
       if(winnerPageProperties) {
@@ -64,6 +47,10 @@ let WinnerPreviewPage = () => {
           backgroundColor: winnerPageProperties.linkBtn.backgroundColor,
           color: winnerPageProperties.linkBtn.color
         });
+        setNextBtnHoverState({
+          backgroundColor: winnerPageProperties.nextBtn.backgroundColor,
+          color: winnerPageProperties.nextBtn.color
+        })
       }
     }, [winnerPageProperties])
   
@@ -81,7 +68,6 @@ let WinnerPreviewPage = () => {
         }
       }
     }
-
 
     let onStartMouseLeave = () => {
       if(winnerPageProperties) {
@@ -105,13 +91,34 @@ let WinnerPreviewPage = () => {
       }
     }
 
-
     let onLinkMouseLeave = () => {
       if(winnerPageProperties) {
         if(winnerPageProperties.linkBtn.backgroundColor) {
           setLinkBtnHoverState({
             backgroundColor: winnerPageProperties.linkBtn.backgroundColor,
             color: winnerPageProperties.linkBtn.color
+          })
+        }
+      }
+    }
+
+    let onNextMouseEnter = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: winnerPageProperties.ButtonHoverStyle.NextButtonHoverColor,
+            color: winnerPageProperties.ButtonHoverStyle.NextButtonHoverTextColor
+          })
+        }
+      }
+    }
+
+    let onNextMouseLeave = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: winnerPageProperties.nextBtn.backgroundColor,
+            color: winnerPageProperties.nextBtn.color
           })
         }
       }
@@ -186,7 +193,7 @@ let WinnerPreviewPage = () => {
                                   socialIcons.map((icon, index) => {
                                     return (
                                       <a className='social-icon' key={index} href={icon.url}>
-                                        {getIcon(icon.icon)}
+                                        {getIcon(icon.icon)()}
                                       </a>
                                     )
                                   })
@@ -208,6 +215,15 @@ let WinnerPreviewPage = () => {
                                 <div style={{"justifyContent": winnerPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
                                     <a className='btn btn-primary' style={{...winnerPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={winnerPageProperties?.Config?.ExternalLink}>
                                     {winnerPageProperties.ButtonHoverStyle.LinkButtonText}
+                                    </a>
+                                </div> : 
+                                <></>
+                              }
+                              {
+                                winnerPageProperties.Config.NextButton ? 
+                                <div style={{"justifyContent": winnerPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                                    <a className='btn btn-primary' style={{...winnerPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/preview/registration/${id}`)}>
+                                      {winnerPageProperties.ButtonHoverStyle.NextButtonText}
                                     </a>
                                 </div> : 
                                 <></>

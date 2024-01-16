@@ -8,9 +8,9 @@ import { initializeProperties as initializeSharedProperties } from "../redux/sha
 import { initializeProperties as initializeWinnerPageProperties } from "../redux/winnerProperties";
 import { initializeProperties as initializeLoserPageProperties } from "../redux/loserProperties";
 import { setQuestions } from "../redux/question";
-import { FaLongArrowAltDown } from "react-icons/fa";
 import { setPersonalities } from "../redux/personality";
 import { setIcons } from "../redux/social-icons";
+import { setQuestions as setRegistrationQuestions } from "../redux/registration";
 
 let loadQuizData = async (id: string, dispatch, isPublished: boolean = false) => {
     let response = 
@@ -98,11 +98,29 @@ let loadSocialIcons = async (id: string, dispatch, isPublished: boolean = false)
   }
 }
 
+let loadRegistrationQuestions = async (id: string, dispatch, isPublished: boolean = false) => {
+  let response = isPublished ? 
+  await sendRequest(Urls.getPublishedRegistrationQuestions.url(id), Urls.getPublishedRegistrationQuestions.type, null, '', true, false) 
+  : await sendRequest(Urls.getRegistrationQuestions.url(id), Urls.getRegistrationQuestions.type);
+  if(response.error) {
+    console.log(response.error);
+  } else {
+    let regQuestions = response.questions.map(q => {
+      return {
+          id: q.id,
+          text: q.text
+      }
+    });
+    dispatch(setRegistrationQuestions(regQuestions));
+  }
+}
+
 let loadData = async (id: string, dispatch, cb: () => {}, isPublished: boolean = false) => {
     await loadQuizData(id, dispatch, isPublished);
     await loadQuestions(id, dispatch, isPublished);
     await loadPersonalities(id, dispatch, isPublished);
-    await loadSocialIcons(id, dispatch, isPublished)
+    await loadSocialIcons(id, dispatch, isPublished);
+    await loadRegistrationQuestions(id, dispatch, isPublished);
     if(cb) {
       cb();
     }

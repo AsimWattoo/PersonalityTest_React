@@ -8,9 +8,9 @@ import type {SocialIcon, SocialIconAdd, SocialIconUpdate} from "../redux/social-
 import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
-import { MdAdd, MdClose, MdFacebook, MdQuestionMark, MdSettingsInputComponent } from 'react-icons/md';
-import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { MdAdd, MdClose, MdFacebook, MdSettingsInputComponent } from 'react-icons/md';
 import SocialIconModal from '../components/Modals/SocialIconModal';
+import getIcon from '../helpers/icon';
 
 let WinnerPage = () => {
 
@@ -33,9 +33,7 @@ let WinnerPage = () => {
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         });
       }
 
@@ -45,20 +43,6 @@ let WinnerPage = () => {
       setMode("add");
       setModalTitle("Add Icon");
       setIsModalShown(true);
-    }
-
-    let getIcon = (ic: string) => {
-      if(ic == "facebook") {
-        return <FaFacebook />;
-      } else if(ic == "instagram") {
-        return <FaInstagram />;
-      } else if(ic == "twitter") {
-        return <FaTwitter />;
-      } else if (ic == "linkedin") {
-        return <FaLinkedin />;
-      } else {
-        return <MdQuestionMark />;
-      }
     }
 
     let saveIcon = (iconId: number, url: string, icon: string) => {
@@ -145,7 +129,7 @@ let WinnerPage = () => {
                                 }}>
                                   <MdClose />
                                 </div>
-                                {getIcon(icon.icon)}
+                                {getIcon(icon.icon)()}
                               </div>
                             )
                           })
@@ -174,6 +158,15 @@ let WinnerPage = () => {
                           </div> : 
                           <></>
                         }
+                        {
+                          winnerPageProperties.Config.NextButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={winnerPageProperties.nextBtn}>
+                              {winnerPageProperties.ButtonHoverStyle.NextButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
                       </div>
                       <div className='background' style={winnerPageProperties.background}></div>
                     </div>
@@ -187,6 +180,7 @@ let WinnerPage = () => {
                 <TextCustomization title={'Heading'} mainSection={"winnerPageProperties"} propertySection={'heading'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Description'} mainSection={"winnerPageProperties"} propertySection={'description'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Restart Quiz Button'} mainSection={"winnerPageProperties"} propertySection={'restartBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
+                <TextCustomization title={'Next Button'} mainSection={"winnerPageProperties"} propertySection={'nextBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Quiz Link Button'} mainSection={"winnerPageProperties"} propertySection={'linkBtn'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Buttons Hover Style'} mainSection={"winnerPageProperties"} propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>
                 <TextCustomization title={'Configuration'} mainSection={"winnerPageProperties"} propertySection={'Config'} isShared={true} sharedProperties={winnerPageProperties} addSharedProperty={addProperty} removeSharedProperty={removeProperty} updateSharedProperty={updateProperty}/>

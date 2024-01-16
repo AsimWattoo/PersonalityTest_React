@@ -23,8 +23,10 @@ import WinnerPlayPage from './pages/WinnerPlayPage';
 import LosersPage from './pages/LosersPage';
 import LosersPlayPage from './pages/LosersPlayPage';
 import LosersPreviewPage from './pages/LosersPreviewPage';
-import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage';
+import RegistrationPage from './pages/RegistrationPage';
+import RegistrationPreviewPage from './pages/RegistrationPreviewPage';
+import RegistrationPlayPage from './pages/RegistrationPlayPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -46,6 +48,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path='/quiz/loser/:id' element={<LosersPage />} />
               <Route path='/quiz/preview/loser/:id' element={<LosersPreviewPage />} />
               <Route path='/quiz/play/loser/:id' element={<LosersPlayPage />} />
+              <Route path='/quiz/registration/:id' element={<RegistrationPage />} />
+              <Route path='/quiz/preview/registration/:id' element={<RegistrationPreviewPage />} />
+              <Route path='/quiz/play/registration/:id' element={<RegistrationPlayPage />} />
               <Route path='/settings' element={<SettingsPage />}>
                 <Route path='fonts' element={<FontsPage />}/>
                 <Route path='fonts/add' element={<FontAddPage />}/>

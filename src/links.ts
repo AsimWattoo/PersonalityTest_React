@@ -124,6 +124,18 @@ let Urls = {
     reCreateIcons: {
         url: (id: string) => `${baseUrl}/social-icons/re-create/${id}`,
         type: "POST",
+    },
+    reCreateRegistrationQuestions: {
+        url: (id: string) => `${baseUrl}/registration/${id}`,
+        type: "POST"
+    },
+    getRegistrationQuestions: {
+        url: (id: string) => `${baseUrl}/registration/${id}`,
+        type: "GET"
+    },
+    getPublishedRegistrationQuestions: {
+        url: (id: string) => `${baseUrl}/registration/published/${id}`,
+        type: "GET"
     }
 }
 

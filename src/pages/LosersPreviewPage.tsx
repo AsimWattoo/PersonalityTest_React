@@ -6,6 +6,7 @@ import { updateProperty, removeProperty, addProperty, initializeProperties } fro
 import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
+import getIcon from '../helpers/icon';
 
 let LoserPreviewPage = () => {
 
@@ -14,20 +15,20 @@ let LoserPreviewPage = () => {
     let dispatch = useAppDispatch();
     let navigate = useNavigate();
     let loserPageProperties = useAppSelector(state => state.loser.properties);
+    let socialIcons = useAppSelector(state => state.socialIcons.icons);
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
     let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
+    let [nextBtnHoverState, setNextBtnHoverState] = useState({});
 
     useEffect(() => {
 
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         });
       }
 
@@ -54,6 +55,10 @@ let LoserPreviewPage = () => {
           backgroundColor: loserPageProperties.linkBtn.backgroundColor,
           color: loserPageProperties.linkBtn.color
         });
+        setNextBtnHoverState({
+          backgroundColor: loserPageProperties.nextBtn.backgroundColor,
+          color: loserPageProperties.nextBtn.color
+        })
       }
     }, [loserPageProperties])
   
@@ -87,13 +92,34 @@ let LoserPreviewPage = () => {
       }
     }
 
-
     let onLinkMouseLeave = () => {
       if(loserPageProperties) {
         if(loserPageProperties.linkBtn.backgroundColor) {
           setLinkBtnHoverState({
             backgroundColor: loserPageProperties.linkBtn.backgroundColor,
             color: loserPageProperties.linkBtn.color
+          })
+        }
+      }
+    }
+
+    let onNextMouseEnter = () => {
+      if(loserPageProperties) {
+        if(loserPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: loserPageProperties.ButtonHoverStyle.NextButtonHoverColor,
+            color: loserPageProperties.ButtonHoverStyle.NextButtonHoverTextColor
+          })
+        }
+      }
+    }
+
+    let onNextMouseLeave = () => {
+      if(loserPageProperties) {
+        if(loserPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: loserPageProperties.nextBtn.backgroundColor,
+            color: loserPageProperties.nextBtn.color
           })
         }
       }
@@ -122,6 +148,19 @@ let LoserPreviewPage = () => {
                               <div style={loserPageProperties.description}>
                                 You have failed the test and have not fallen in any category. try changing your answers.
                               </div>
+                              <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
+                                {
+                                  socialIcons ? 
+                                  socialIcons.map((icon, index) => {
+                                    return (
+                                      <a className='social-icon' key={index} href={icon.url}>
+                                        {getIcon(icon.icon)()}
+                                      </a>
+                                    )
+                                  })
+                                  : <></>
+                                }
+                              </div>
                               <div className='d-flex align-items-center w-50'>
                               {
                                 loserPageProperties.Config.ShowRestartButton ? 
@@ -137,6 +176,15 @@ let LoserPreviewPage = () => {
                                 <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
                                     <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={loserPageProperties?.Config?.ExternalLink}>
                                     {loserPageProperties.ButtonHoverStyle.LinkButtonText}
+                                    </a>
+                                </div> : 
+                                <></>
+                              }
+                              {
+                                loserPageProperties.Config.NextButton ? 
+                                <div style={{"justifyContent": loserPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                                    <a className='btn btn-primary' style={{...loserPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/preview/registration/${id}`)}>
+                                    {loserPageProperties.ButtonHoverStyle.NextButtonText}
                                     </a>
                                 </div> : 
                                 <></>

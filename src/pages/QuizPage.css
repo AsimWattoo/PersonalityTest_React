@@ -511,7 +511,6 @@
   width: 100%;
   background-color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-
 }
 
 .text-btn {
@@ -636,7 +635,7 @@
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid #dedede;
-  width: 80%;
+  width: 90%;
 }
 
 .quiz-view-container .header .primary-text-btn,
@@ -657,7 +656,7 @@
   position: relative;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .quiz-view-container .header .tabs .tab::after {
@@ -938,6 +937,96 @@
 
 .social-icon .close-icon:hover {
   background-color: red;
+}
+
+.quiz-view-container {
+  height: 90%;
+}
+
+.right-column {
+  height: 90% !important;
+}
+
+.page-container .left-column .registration-form-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1em;
+  margin-bottom: 3em;
+  padding: 0 0 1em 0;
+}
+
+.page.preview-page .page-container .left-column .registration-form-container {
+  width: 50%;
+}
+
+.page.preview-page .page-container .left-column .registration-form {
+  width: 100%;
+}
+
+.page-container .left-column .registration-form {
+  width: 65%;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+  padding: 2em;
+  border-radius: 10px;
+  font-family: 'Poppins-Regular';
+}
+
+.page-container .left-column .registration-form .input-group {
+  margin: 1em 0;
+}
+
+.page-container .left-column .registration-form .input-group input{
+  border-radius: 5px !important;
+}
+
+.page-container .left-column .registration-form .input-group input:focus{
+  outline: none;
+  box-shadow: none;
+  border-color: #a97fff;
+}
+
+.page-container .left-column .registration-form .input-group.editable input:disabled {
+  margin-top: 5px;
+  background-color: #dedede;
+}
+
+.page-container .left-column .registration-form .input-group.editable input {
+  background-color: white;
+}
+
+.page-container .left-column .registration-form .input-group.horizontal {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-direction: row;
+}
+
+.page-container .left-column .registration-form .add-new-question {
+  border: 1px dashed #989898;
+  border-radius: 10px;
+  padding: 1em 3em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.page-container .left-column .registration-form .add-new-question:hover {
+  color: #a97fff;
+  border-color: #a97fff;
+}
+
+.page-container .left-column .registration-form .btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-container .left-column .registration-form .btn-container .danger-outline-btn,
+.page-container .left-column .registration-form .btn-container .primary-btn {
+  width: 20%;
 }
 
 @media screen and (max-width: 450px) {

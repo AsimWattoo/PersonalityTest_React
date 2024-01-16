@@ -3,8 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import loadData from '../helpers/dataLoader';
 import Loader from '../components/Loader';
-import { MdQuestionMark } from 'react-icons/md';
-import { FaFacebook, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import getIcon from '../helpers/icon';
 
 let WinnerPlayPage = () => {
 
@@ -23,29 +22,14 @@ let WinnerPlayPage = () => {
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
     let socialIcons = useAppSelector(state => state.socialIcons.icons);
-
-    let getIcon = (ic: string) => {
-      if(ic == "facebook") {
-        return <FaFacebook />;
-      } else if(ic == "instagram") {
-        return <FaInstagram />;
-      } else if(ic == "twitter") {
-        return <FaTwitter />;
-      } else if (ic == "linkedin") {
-        return <FaLinkedin />;
-      } else {
-        return <MdQuestionMark />;
-      }
-    }
+    let [nextBtnHoverState, setNextBtnHoverState] = useState({});
 
     useEffect(() => {
 
       if(!quiz || !quiz.title) {
         setIsLoading(true);
         loadData(id, dispatch, () => {
-          setTimeout(() => {
-            setIsLoading(false);
-          }, 2000);
+          setIsLoading(false);
         }, true);
       }
 
@@ -117,6 +101,28 @@ let WinnerPlayPage = () => {
       }
     }
 
+    let onNextMouseEnter = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: winnerPageProperties.ButtonHoverStyle.NextButtonHoverColor,
+            color: winnerPageProperties.ButtonHoverStyle.NextButtonHoverTextColor
+          })
+        }
+      }
+    }
+
+    let onNextMouseLeave = () => {
+      if(winnerPageProperties) {
+        if(winnerPageProperties.nextBtn.backgroundColor) {
+          setNextBtnHoverState({
+            backgroundColor: winnerPageProperties.nextBtn.backgroundColor,
+            color: winnerPageProperties.nextBtn.color
+          })
+        }
+      }
+    }
+
     useEffect(() => {
       if(questions.length > 0) {
         console.log(personalities)
@@ -174,18 +180,18 @@ let WinnerPlayPage = () => {
                         }
                         </div>
                         <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
-                                {
-                                  socialIcons ? 
-                                  socialIcons.map((icon, index) => {
-                                    return (
-                                      <a className='social-icon' key={index} href={icon.url}>
-                                        {getIcon(icon.icon)}
-                                      </a>
-                                    )
-                                  })
-                                  : <></>
-                                }
-                              </div>
+                          {
+                            socialIcons ? 
+                            socialIcons.map((icon, index) => {
+                              return (
+                                <a className='social-icon' key={index} href={icon.url}>
+                                  {getIcon(icon.icon)()}
+                                </a>
+                              )
+                            })
+                            : <></>
+                          }
+                        </div>
                         <div className='d-flex align-items-center w-50'>
                         {
                           winnerPageProperties.Config.ShowRestartButton ? 
@@ -201,6 +207,15 @@ let WinnerPlayPage = () => {
                           <div style={{"justifyContent": winnerPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
                               <a className='btn btn-primary' style={{...winnerPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={winnerPageProperties?.Config?.ExternalLink}>
                               {winnerPageProperties.ButtonHoverStyle.LinkButtonText}
+                              </a>
+                          </div> : 
+                          <></>
+                        }
+                        {
+                          winnerPageProperties.Config.NextButton ? 
+                          <div style={{"justifyContent": winnerPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                              <a className='btn btn-primary' style={{...winnerPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/play/registration/${id}`)}>
+                                {winnerPageProperties.ButtonHoverStyle.NextButtonText}
                               </a>
                           </div> : 
                           <></>

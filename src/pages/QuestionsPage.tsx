@@ -30,9 +30,7 @@ export default function QuestionsPage() {
     if(!quiz || !quiz.title) {
       setIsLoading(true);
       loadData(params.id, dispatch, () => {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 200);
+        setIsLoading(false);
       });
     }
 

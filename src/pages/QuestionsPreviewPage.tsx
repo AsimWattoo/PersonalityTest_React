@@ -23,9 +23,7 @@ export default function QuestionsPreviewPage() {
     if(!quiz || !quiz.title) {
       setIsLoading(true);
       loadData(params.id, dispatch, () => {
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 2000);
+        setIsLoading(false);
       });
     }
 

@@ -16,6 +16,7 @@ import NoResultImage from "../assets/images/no-result.png";
 import Loader from "../components/Loader";
 import ConfirmationModal from "../components/Modals/ConfirmationModal";
 import { showNotification } from "../redux/notification";
+import { resetQuestions as resetRegistrationQuestions } from "../redux/registration";
 
 function NewQuizPage() {
   
@@ -34,6 +35,7 @@ function NewQuizPage() {
     dispatch(resetProperties({}));
     dispatch(resetSharedProperties({}));
     dispatch(resetFiles({}));
+    dispatch(resetRegistrationQuestions({}));
     let response = await sendRequest(Urls.getAllQuizes.url(), Urls.getAllQuizes.type);
     if(!response.error) {
       setQuizes(response.quizes
@@ -45,10 +47,7 @@ function NewQuizPage() {
     } else {
       console.log(response.error);
     }
-    
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
+    setIsLoading(false);
   }
 
   let loadFonts = async () => {
