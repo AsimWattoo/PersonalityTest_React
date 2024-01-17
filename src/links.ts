@@ -136,6 +136,10 @@ let Urls = {
     getPublishedRegistrationQuestions: {
         url: (id: string) => `${baseUrl}/registration/published/${id}`,
         type: "GET"
+    },
+    createSubmission: {
+        url: (id: string) => `${baseUrl}/registration/submission/${id}`,
+        type: "POST"
     }
 }
 

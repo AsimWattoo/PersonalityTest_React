@@ -27,6 +27,7 @@ import LoginPage from './pages/LoginPage';
 import RegistrationPage from './pages/RegistrationPage';
 import RegistrationPreviewPage from './pages/RegistrationPreviewPage';
 import RegistrationPlayPage from './pages/RegistrationPlayPage';
+import ThankYouPage from './pages/ThankYouPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -51,6 +52,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
               <Route path='/quiz/registration/:id' element={<RegistrationPage />} />
               <Route path='/quiz/preview/registration/:id' element={<RegistrationPreviewPage />} />
               <Route path='/quiz/play/registration/:id' element={<RegistrationPlayPage />} />
+              <Route path='/quiz/thankyou/:id' element={<ThankYouPage />} />
               <Route path='/settings' element={<SettingsPage />}>
                 <Route path='fonts' element={<FontsPage />}/>
                 <Route path='fonts/add' element={<FontAddPage />}/>

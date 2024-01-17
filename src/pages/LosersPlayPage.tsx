@@ -177,7 +177,7 @@ let LosersPlayPage = () => {
                               {
                                 loserPageProperties.Config.NextButton ? 
                                 <div style={{"justifyContent": loserPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
-                                    <a className='btn btn-primary' style={{...loserPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/preview/registration/${id}`)}>
+                                    <a className='btn btn-primary' style={{...loserPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/play/registration/${id}`)}>
                                     {loserPageProperties.ButtonHoverStyle.NextButtonText}
                                     </a>
                                 </div> : 
