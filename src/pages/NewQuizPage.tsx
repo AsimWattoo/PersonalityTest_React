@@ -134,6 +134,9 @@ function NewQuizPage() {
               <div className={`tab ${showDrafts ? "active" : ""}`} onClick={() => changeTab(true)}>
                 Draft Test
               </div>
+              <div className={`tab`} onClick={() => navigate("/results")}>
+                Results
+              </div>
             </div>
             <div className="primary-btn" onClick={handleAddQuiz}>
               <MdAdd />

@@ -28,6 +28,8 @@ import RegistrationPage from './pages/RegistrationPage';
 import RegistrationPreviewPage from './pages/RegistrationPreviewPage';
 import RegistrationPlayPage from './pages/RegistrationPlayPage';
 import ThankYouPage from './pages/ThankYouPage';
+import ResultsPage from './pages/ResultsPage';
+import QuizResultPage from './pages/QuizResultPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -36,6 +38,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
           <Routes>
             <Route path='/' element={<App />}>
               <Route path="/" element={<NewQuizPage />} />
+              <Route path="/results" element={<ResultsPage />} />
+              <Route path="/results/quiz/:id" element={<QuizResultPage />} />
               <Route path="/quiz/questions/:id" element={<PageLayout />} />
               <Route path="/quiz/preview/questions/:id" element={<QuestionPreviewPage />} />
               <Route path="/quiz/preview/presentation/:id" element={<PresentationPreviewPage />} />

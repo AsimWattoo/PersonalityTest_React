@@ -1,7 +1,7 @@
 import React from 'react';
 import "./component.css";
 import '../App.css'
-import { MdDelete, MdEdit, MdEditSquare, MdLink } from 'react-icons/md';
+import { MdDelete, MdEdit, MdEditSquare, MdLink, MdMenu } from 'react-icons/md';
 import { useLocation } from 'react-router';
 import { showNotification } from '../redux/notification';
 import { useAppDispatch } from '../redux/hooks';
@@ -12,9 +12,11 @@ type QuizInfo = {
   isDraft: boolean,
   description: string,
   imageProperties: {},
+  showResults: boolean,
   onQuizEdit(id: string): void,
   onQuizDelete(id: string): void,
-  onQuizPlay(id: string): void
+  onQuizPlay(id: string): void,
+  onQuizResult(id: string): void
 }
 
 function QuizCard(props: QuizInfo) {
@@ -45,30 +47,39 @@ function QuizCard(props: QuizInfo) {
         </div>
         <div className="btn-container">
           {
-            props.isDraft ? 
-            <div className='primary-btn me-2' onClick={() => props.onQuizEdit(props.id)}>
-              <MdEdit />
-              Edit
-            </div> : 
-            <div className='primary-btn me-2' onClick={(e) =>{
-              e.stopPropagation();
-              navigator.clipboard.writeText(`${window.location.origin}/quiz/play/presentation/${props.id}`);
-              dispatch(showNotification({
-                isError: false,
-                message: "Test Link has been copied to the clipboard"
-              }))
-            }}>
-              <MdLink />
-              Copy Link
-            </div>
+            props.showResults ? 
+            <div className='primary-btn me-2' onClick={() => props.onQuizResult(props.id)}>
+              <MdMenu />
+              Results
+            </div>  :
+            <>
+              {
+                props.isDraft ? 
+                <div className='primary-btn me-2' onClick={() => props.onQuizEdit(props.id)}>
+                  <MdEdit />
+                  Edit
+                </div> : 
+                <div className='primary-btn me-2' onClick={(e) =>{
+                  e.stopPropagation();
+                  navigator.clipboard.writeText(`${window.location.origin}/quiz/play/presentation/${props.id}`);
+                  dispatch(showNotification({
+                    isError: false,
+                    message: "Test Link has been copied to the clipboard"
+                  }))
+                }}>
+                  <MdLink />
+                  Copy Link
+                </div>
+              }
+              <a className='danger-outline-btn' onClick={(e) => {
+                e.stopPropagation();
+                props.onQuizDelete(props.id)
+              }}>
+                <MdDelete />
+                Delete
+              </a>
+            </>
           }
-          <a className='danger-outline-btn' onClick={(e) => {
-            e.stopPropagation();
-            props.onQuizDelete(props.id)
-          }}>
-            <MdDelete />
-            Delete
-          </a>
         </div>
       </div>
     </div>

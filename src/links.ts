@@ -140,6 +140,10 @@ let Urls = {
     createSubmission: {
         url: (id: string) => `${baseUrl}/registration/submission/${id}`,
         type: "POST"
+    },
+    getSubmissions: {
+        url: (id: string) => `${baseUrl}/registration/submission/${id}`,
+        type: 'GET'
     }
 }
 
