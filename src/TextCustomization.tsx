@@ -18,7 +18,11 @@ import {
   MdRoundedCorner,
   MdBlock,
   MdGirl,
-  MdOpacity} from 'react-icons/md';
+  MdOpacity,
+  MdVideoFile,
+  MdAudioFile,
+  MdAudiotrack,
+  MdVideocam} from 'react-icons/md';
 import type { PropertyUpdate, PropertyRemove } from "./redux/question";
 import question, { updateProperty, addProperty, removeProperty } from "./redux/question";
 import type { SharedPropertyRemove, SharedPropertyUpdate } from "./redux/shared";
@@ -259,6 +263,14 @@ const Margin = ({propertyName, value, updateProperty, formatter}) => {
 
 const FileUpload = ({mainSection, questionId, propertySection, propertyName, value, updateProperty, accept, dispatch}) => {
 
+  let fileType = "image";
+
+  if(propertyName == "backgroundAudio") {
+    fileType = "audio";
+  } else if(propertyName == "backgroundVideo") {
+    fileType = "video";
+  }
+
   let selectFile = () => {
     document.getElementById(`fileInput-${propertySection}`)?.click();
   }
@@ -276,6 +288,7 @@ const FileUpload = ({mainSection, questionId, propertySection, propertyName, val
       property: propertyName,
       questionIndex: questionId,
       state: "added",
+      type: fileType,
     } as File;
     dispatch(addFile(newFile));
     updateProperty(propertyName, `url(${blobUrl})`)
@@ -304,10 +317,22 @@ const FileUpload = ({mainSection, questionId, propertySection, propertyName, val
         {
           value ? 
           <div className="preview">
+            {
+              fileType == "image" ?
+              <img src={value?.replace("url(", "").replace(")", "")} /> : 
+              (
+                fileType == "audio" ? 
+                  <audio controls>
+                    <source src={value?.replace("url(", "").replace(")", "")}/>
+                  </audio> :
+                  <video style={{height: "100%", width: "100%"}}>
+                    <source src={value?.replace("url(", "").replace(")", "")}/>
+                  </video>
+              )
+            }
             <div className="close" onClick={clearImage}>
               <MdClose/>
             </div>
-            <img src={value?.replace("url(", "").replace(")", "")} />
           </div> : 
           <></>
         }
@@ -443,7 +468,7 @@ type TextCustomizationProps = {
 
 const TextCustomization = ({title, mainSection, propertySection, isShared=false, sharedProperties={}, questions= [], questionId, updateSharedProperty, addSharedProperty, removeSharedProperty}: TextCustomizationProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false)
+  const [isOverFlowAllowed, setIsOverFlowAllowed] = useState(false);
   let dispatch = useAppDispatch();
   let [fontFamilies, setFontFamilies] = useState([{label: "Select Font", value: "Select Font"}]);
   let questionSelectOptions = questions
@@ -666,6 +691,14 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       value: "backgroundImage"
     },
     {
+      icon: () => <MdVideocam />,
+      value: "backgroundVideo"
+    },
+    {
+      icon: () => <MdAudiotrack />,
+      value: "backgroundAudio"
+    },
+    {
       icon: () => <MdBlock />,
       value: "noBackground"
     }
@@ -720,7 +753,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
         },
         {
           heading: 'Background',
-          dependencies: ["backgroundColor", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize", "noBackground"],
+          dependencies: ["backgroundColor", "backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize", "noBackground", "backgroundAudio", "backgroundVideo"],
           hasBtns: true,
           btnName: "backgroundBtns"
         },
@@ -903,7 +936,21 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       getValue: () => {
         let backgroundColor = isShared ? sharedProperties[propertySection].backgroundColor : questions[questionId].properties[propertySection]["backgroundColor"];
         let backgroundImage = isShared ? sharedProperties[propertySection].backgroundImage : questions[questionId].properties[propertySection]["backgroundImage"];
-        return  backgroundColor ? "backgroundColor" : (backgroundImage !== undefined ? "backgroundImage" : "noBackground");
+        let backgroundVideo = isShared ? sharedProperties[propertySection].backgroundVideo : questions[questionId].properties[propertySection]["backgroundVideo"];
+        let backgroundAudio = isShared ? sharedProperties[propertySection].backgroundAudio : questions[questionId].properties[propertySection]["backgroundAudio"];
+
+        if(backgroundColor) {
+          return "backgroundColor";
+        } else if(backgroundImage !== undefined) {
+          return "backgroundImage";
+        } else if(backgroundAudio !== undefined) {
+          return "backgroundAudio";
+        } else if(backgroundVideo !== undefined) {
+          return "backgroundVideo";
+        } else {
+          return "noBackground";
+        }
+
       },
       customAction: (propertyName, value) => {
 
@@ -927,7 +974,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           if(value == "backgroundImage"){
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
-              propertyNames: ["backgroundColor"]
+              propertyNames: ["backgroundColor", "backgroundVideo", "backgroundAudio"]
             }
   
             let propertiesToAdd : SharedPropertyUpdate[] = [
@@ -966,7 +1013,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
 
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
-              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize", "backgroundAudio", "backgroundVideo"]
             }
   
             let propertyAdd : SharedPropertyUpdate = {
@@ -978,6 +1025,42 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(removeSharedProperty(propertyRemove))
             dispatch(addSharedProperty(propertyAdd))
           }
+          else if(value == "backgroundAudio"){
+            let propertyRemove : SharedPropertyRemove = {
+              propertySection: propertySection,
+              propertyNames: ["backgroundColor", "backgroundVideo", "backgroundImage", "backgroundSize", "backgroundRepeat", "backgroundPosition"]
+            }
+  
+            let propertiesToAdd : SharedPropertyUpdate[] = [
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundAudio",
+                value: ""
+              },
+            ]
+            dispatch(removeSharedProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addSharedProperty(propertyAdd))
+            }
+          }
+          else if(value == "backgroundVideo"){
+            let propertyRemove : SharedPropertyRemove = {
+              propertySection: propertySection,
+              propertyNames: ["backgroundColor", "backgroundAudio", "backgroundImage", "backgroundSize", "backgroundRepeat", "backgroundPosition"]
+            }
+  
+            let propertiesToAdd : SharedPropertyUpdate[] = [
+              {
+                propertySection: propertySection,
+                propertyName: "backgroundVideo",
+                value: ""
+              },
+            ]
+            dispatch(removeSharedProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addSharedProperty(propertyAdd))
+            }
+          }
           else {
             let imageUrl = sharedProperties[propertySection]["backgroundImage"];
             if(imageUrl) {
@@ -985,7 +1068,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
-              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
+              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize", "backgroundVideo", "backgroundAudio"]
             }
   
             let propertyAdd : SharedPropertyUpdate = {
@@ -1004,7 +1087,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyNames: ["backgroundColor"]
+              propertyNames: ["backgroundColor", "backgroundVideo", "backgroundAudio"]
             }
   
             let propertiesToAdd : PropertyUpdate[] = [
@@ -1048,7 +1131,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize"]
+              propertyNames: ["backgroundImage", "backgroundPosition", "backgroundRepeat", "backgroundSize", "backgroundVideo", "backgroundAudio"]
             }
   
             let propertyAdd : PropertyUpdate = {
@@ -1061,6 +1144,48 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(removeProperty(propertyRemove))
             dispatch(addProperty(propertyAdd))
           }
+          else if(value == "backgroundVideo"){
+
+            let propertyRemove : PropertyRemove = {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyNames: ["backgroundColor", "backgroundImage", "backgroundAudio", "backgroundPosition", "backgroundSize", "backgroundRepeat"]
+            }
+  
+            let propertiesToAdd : PropertyUpdate[] = [
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundVideo",
+                value: ""
+              },
+            ]
+            dispatch(removeProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addProperty(propertyAdd))
+            }
+          }
+          else if(value == "backgroundAudio"){
+
+            let propertyRemove : PropertyRemove = {
+              questionId: questionId,
+              propertySection: propertySection,
+              propertyNames: ["backgroundColor", "backgroundVideo", "backgroundImage", "backgroundPosition", "backgroundSize", "backgroundRepeat"]
+            }
+  
+            let propertiesToAdd : PropertyUpdate[] = [
+              {
+                questionId: questionId,
+                propertySection: propertySection,
+                propertyName: "backgroundAudio",
+                value: ""
+              },
+            ]
+            dispatch(removeProperty(propertyRemove))
+            for(let propertyAdd of propertiesToAdd) {
+              dispatch(addProperty(propertyAdd))
+            }
+          }
           else {
             let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
             
@@ -1071,7 +1196,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
               propertySection: propertySection,
-              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize"]
+              propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize", "backgroundVideo", "backgroundAudio"]
             }
   
             let propertyAdd : PropertyUpdate = {
@@ -1095,6 +1220,18 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       render: FileUpload,
       requiresName: true,
       accept: ".png,.jpeg,.jpg,.gif",
+      requiresPropertySection: true
+    },
+    "backgroundVideo": {
+      render: FileUpload,
+      requiresName: true,
+      accept: ".mp4,.mov",
+      requiresPropertySection: true
+    },
+    "backgroundAudio": {
+      render: FileUpload,
+      requiresName: true,
+      accept: ".mp3,.wav",
       requiresPropertySection: true
     },
     "backgroundPosition": {

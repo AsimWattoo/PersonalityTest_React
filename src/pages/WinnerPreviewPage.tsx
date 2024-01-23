@@ -7,6 +7,7 @@ import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
 import getIcon from '../helpers/icon';
+import BackgroundDisplay from '../components/BackgroundDisplay';
 
 let WinnerPreviewPage = () => {
 
@@ -20,7 +21,6 @@ let WinnerPreviewPage = () => {
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
     let [personality, setPersonality] = useState({});
-    let [windowWidth, setWindowWidth] = useState(600);
     let [restartBtnHoverState, setRestartBtnHoverState] = useState({});
     let [linkBtnHoverState, setLinkBtnHoverState] = useState({});
     let [nextBtnHoverState, setNextBtnHoverState] = useState({});
@@ -54,10 +54,6 @@ let WinnerPreviewPage = () => {
       }
     }, [winnerPageProperties])
   
-    useEffect(() => {
-      setWindowWidth(window.innerWidth)
-    })
-
     let onStartMouseEnter = () => {
       if(winnerPageProperties) {
         if(winnerPageProperties.restartBtn.backgroundColor) {
@@ -122,10 +118,6 @@ let WinnerPreviewPage = () => {
           })
         }
       }
-    }
-
-    window.onresize = () => {
-      setWindowWidth(window.innerWidth)
     }
 
     useEffect(() => {
@@ -229,7 +221,7 @@ let WinnerPreviewPage = () => {
                                 <></>
                               }
                               </div>
-                              <div className='background' style={windowWidth < 450 ? winnerPageProperties.mobileBackground : winnerPageProperties.background}></div>
+                              <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={false} PropertySection='background' hasMobileBackground={true} mobileBackgroundSection='mobileBackground' className='background'/>
                           </div>
                         </div>
                     </div>

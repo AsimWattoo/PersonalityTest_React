@@ -11,6 +11,7 @@ import type {SocialIcon, SocialIconAdd, SocialIconUpdate} from "../redux/social-
 import {addIcon, deleteIcon, updateIcon} from "../redux/social-icons";
 import { MdAdd, MdClose } from 'react-icons/md';
 import getIcon from '../helpers/icon';
+import BackgroundDisplay from '../components/BackgroundDisplay';
 
 
 let LosersPage = () => {
@@ -111,7 +112,7 @@ let LosersPage = () => {
                 <div className='page-container'>
                   <div className='left-column'>
                     <div className='page-content'>
-                      <div style={{...loserPageProperties.loserImage, "transition": "all 0.2s ease-in-out"}}></div>
+                      <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={true} mobileBackgroundSection=''/>
                       <div style={loserPageProperties.heading}>
                         Looser
                       </div>
@@ -169,7 +170,7 @@ let LosersPage = () => {
                         <></>
                       }
                       </div>
-                      <div className='background' style={loserPageProperties.background}></div>
+                      <BackgroundDisplay PageProperties={loserPageProperties} isEdit={true} PropertySection='background' hasMobileBackground={false} mobileBackgroundSection=''  className='background'/>
                     </div>
                   </div>
                 </div>

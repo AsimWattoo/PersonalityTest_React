@@ -9,6 +9,7 @@ type File = {
     state: string,
     questionIndex: number,
     url: string,
+    type: string
 }
 
 interface FilesState {

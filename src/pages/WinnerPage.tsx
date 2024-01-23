@@ -11,6 +11,7 @@ import Loader from '../components/Loader';
 import { MdAdd, MdClose, MdFacebook, MdSettingsInputComponent } from 'react-icons/md';
 import SocialIconModal from '../components/Modals/SocialIconModal';
 import getIcon from '../helpers/icon';
+import BackgroundDisplay from '../components/BackgroundDisplay';
 
 let WinnerPage = () => {
 
@@ -110,7 +111,7 @@ let WinnerPage = () => {
                 <div className='page-container'>
                   <div className='left-column'>
                     <div className='page-content'>
-                      <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
+                      <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={true} PropertySection='winnerImage' hasMobileBackground={false} mobileBackgroundSection='' className=''/>
                       <div style={winnerPageProperties.heading}>
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit.
                       </div>
@@ -168,7 +169,7 @@ let WinnerPage = () => {
                           <></>
                         }
                       </div>
-                      <div className='background' style={winnerPageProperties.background}></div>
+                      <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={true} PropertySection='background' hasMobileBackground={false} mobileBackgroundSection='' className='background'/>
                     </div>
                   </div>
                 </div>

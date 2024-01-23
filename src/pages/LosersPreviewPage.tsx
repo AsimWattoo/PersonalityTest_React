@@ -7,6 +7,7 @@ import loadData from '../helpers/dataLoader';
 import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
 import getIcon from '../helpers/icon';
+import BackgroundDisplay from '../components/BackgroundDisplay';
 
 let LoserPreviewPage = () => {
 
@@ -141,7 +142,7 @@ let LoserPreviewPage = () => {
                     <div className='page-container'>
                         <div className='left-column'>
                           <div className='page-content'>
-                              <div style={{...loserPageProperties.loserImage, "transition": "all 0.2s ease-in-out"}}></div>
+                              <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={false} mobileBackgroundSection='' className=''/>
                               <div style={loserPageProperties.heading}>
                                 Looser
                               </div>
@@ -190,7 +191,7 @@ let LoserPreviewPage = () => {
                                 <></>
                               }
                               </div>
-                              <div className='background' style={windowWidth < 450 ? loserPageProperties.mobileBackground : loserPageProperties.background}></div>
+                              <BackgroundDisplay PageProperties={loserPageProperties} isEdit={false} PropertySection='background' hasMobileBackground={true} mobileBackgroundSection='mobileBackground' className='background'/>
                           </div>
                         </div>
                     </div>

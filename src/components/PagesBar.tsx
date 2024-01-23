@@ -85,15 +85,45 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
         if(!response.error) {
           //If the image file belongs to the shared properties
           if(file.mainSection == "presentationProperties" && presentationProperties) {
-            presentationProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            if(presentationProperties.properties[file.propertySection]["backgroundImage"]) {
+              presentationProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            } else if(presentationProperties.properties[file.propertySection]["backgroundVideo"]) {
+              presentationProperties.properties[file.propertySection]["backgroundVideo"] = `url(${response.file.url})`
+            } else if(presentationProperties.properties[file.propertySection]["backgroundAudio"]) {
+              presentationProperties.properties[file.propertySection]["backgroundAudio"] = `url(${response.file.url})`
+            }
           } else if(file.mainSection == "sharedProperties" && sharedProperties) {
-            sharedProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            if(sharedProperties.properties[file.propertySection]["backgroundImage"]) {
+              sharedProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            } else if(sharedProperties.properties[file.propertySection]["backgroundAudio"]) {
+              sharedProperties.properties[file.propertySection]["backgroundAudio"] = `url(${response.file.url})`
+            } else if(sharedProperties.properties[file.propertySection]["backgroundVideo"]) {
+              sharedProperties.properties[file.propertySection]["backgroundVideo"] = `url(${response.file.url})`
+            }
           } else if(file.mainSection == "question" && file.questionIndex !== undefined && questions) {
-            questions[file.questionIndex].properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`;
+            if(questions[file.questionIndex].properties[file.propertySection]["backgroundImage"]) {
+              questions[file.questionIndex].properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`;
+            } else if(questions[file.questionIndex].properties[file.propertySection]["backgroundAudio"]) {
+              questions[file.questionIndex].properties[file.propertySection]["backgroundAudio"] = `url(${response.file.url})`;
+            } else if(questions[file.questionIndex].properties[file.propertySection]["backgroundVideo"]) {
+              questions[file.questionIndex].properties[file.propertySection]["backgroundVideo"] = `url(${response.file.url})`;
+            }
           } else if(file.mainSection == "winnerPageProperties" && winnerPageProperties) {
-            winnerPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            if(winnerPageProperties.properties[file.propertySection]["backgroundImage"]) {
+              winnerPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            } else if(winnerPageProperties.properties[file.propertySection]["backgroundAudio"]) {
+              winnerPageProperties.properties[file.propertySection]["backgroundAudio"] = `url(${response.file.url})`
+            } else if(winnerPageProperties.properties[file.propertySection]["backgroundVideo"]) {
+              winnerPageProperties.properties[file.propertySection]["backgroundVideo"] = `url(${response.file.url})`
+            }
           } else if(file.mainSection == "loserPageProperties" && loserPageProperties) {
-            loserPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            if(loserPageProperties.properties[file.propertySection]["backgroundImage"]) {
+              loserPageProperties.properties[file.propertySection]["backgroundImage"] = `url(${response.file.url})`
+            } else if(loserPageProperties.properties[file.propertySection]["backgroundAudio"]) {
+              loserPageProperties.properties[file.propertySection]["backgroundAudio"] = `url(${response.file.url})`
+            } else if(loserPageProperties.properties[file.propertySection]["backgroundVideo"]) {
+              loserPageProperties.properties[file.propertySection]["backgroundVideo"] = `url(${response.file.url})`
+            }
           }
         }
       } else if (file.state == "removed") {
