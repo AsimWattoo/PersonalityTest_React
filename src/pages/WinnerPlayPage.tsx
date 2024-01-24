@@ -4,6 +4,7 @@ import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import loadData from '../helpers/dataLoader';
 import Loader from '../components/Loader';
 import getIcon from '../helpers/icon';
+import BackgroundDisplay from '../components/BackgroundDisplay';
 
 let WinnerPlayPage = () => {
 
@@ -166,7 +167,7 @@ let WinnerPlayPage = () => {
             <div className='content-container'>
                 <div className='left-column'>
                     <div className='page-content'>
-                        <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
+                        <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={false} PropertySection='winnerImage' hasMobileBackground={false} mobileBackgroundSection='' className=''/>
                         <div style={winnerPageProperties.heading}>
                         {
                             personality ? 
@@ -221,7 +222,7 @@ let WinnerPlayPage = () => {
                           <></>
                         }
                         </div>
-                        <div className='background' style={windowWidth < 450 ? winnerPageProperties.mobileBackground : winnerPageProperties.background}></div>
+                        <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={false} PropertySection='background' hasMobileBackground={true} mobileBackgroundSection='mobileBackground' className='background'/>
                     </div>
                 </div>
             </div>
