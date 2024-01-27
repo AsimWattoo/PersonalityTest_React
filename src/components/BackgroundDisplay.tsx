@@ -20,6 +20,14 @@ function BackgroundDisplay(props: BackgroundProps) {
         setWindowWidth(window.innerWidth)
     }
 
+    useEffect(() => {
+      console.log('Window Width: ', windowWidth);
+      if(windowWidth < 450) {
+        console.log('Is Edit: ', props.isEdit);
+        console.log('Has Mobile Backgroound: ', props.hasMobileBackground);
+      }
+    }, [windowWidth]);
+
     return (
         <>
         {
@@ -60,12 +68,12 @@ function BackgroundDisplay(props: BackgroundProps) {
                     (
                       props.PageProperties[props.mobileBackgroundSection].backgroundVideo ? 
                       <div className={props.className} style={props.PageProperties[props.mobileBackgroundSection]}>
-                        <video autoPlay loop style={{height: "100%", width: "100%"}}>
+                        <video autoPlay loop style={{height: "100%", width: "100%"}} key={props.mobileBackgroundSection} >
                           <source src={props.PageProperties[props.mobileBackgroundSection].backgroundVideo.replace("url(", "").replace(")", "")}/>
                         </video>
                       </div> : (
                         props.PageProperties[props.mobileBackgroundSection].backgroundAudio ? 
-                        <audio autoPlay loop style={{height: "100%", width: "100%"}}>
+                        <audio autoPlay loop style={{height: "100%", width: "100%"}} key={props.mobileBackgroundSection}>
                           <source src={props.PageProperties[props.mobileBackgroundSection].backgroundAudio.replace("url(", "").replace(")", "")}/>
                         </audio> : 
                         <div className={props.className} style={props.PageProperties[props.mobileBackgroundSection]}></div>

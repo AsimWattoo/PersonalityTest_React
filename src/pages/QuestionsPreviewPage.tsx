@@ -38,11 +38,7 @@ export default function QuestionsPreviewPage() {
   let changeSlide = (slide) => {
     //If the next button is pressed
     if(slide > currentSlide) {
-      let selectedOptions = questions[currentSlide].options.filter(option => option.selected);
-      //If an option is selected only then move to the next question
-      if(selectedOptions.length > 0) {
         setCurrentSlide(slide);
-      }
     } else if(slide > -1){
       let currentQuestion = slide;
       while(true) {

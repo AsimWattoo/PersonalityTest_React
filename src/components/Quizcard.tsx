@@ -35,7 +35,7 @@ function QuizCard(props: QuizInfo) {
       <div className='content'>
         <div className='info'>
           <div className='content-header'>
-            <h3  className='title'>
+            <h3 className='title'>
               {props.name}
             </h3>
             <div className={`status-circle ${props.isDraft ? 'status-red' : 'status-green'}`}>

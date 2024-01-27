@@ -53,33 +53,76 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
     }
   }
 
-  let nextQuestion = () => {
-    if(questionId < questions.length - 1)
-    {
-      let currentQuestion = questionId + 1;
+  let getNextQuestion = () => {
+    let currentQuestion = questionId + 1;
       while(true) {
         if(questions[currentQuestion].properties.dependency.hasDependency) {
           let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
           let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
           if(dependencyOption.selected) {
-            changeQuestion(currentQuestion)
-            break;
+            return currentQuestion;
           } 
 
           if(currentQuestion == questions.length - 1) {
-            if(isPreview) {
-              navigate(`/quiz/preview/winner/${params.id}`)
-            } else {
-              navigate(`/quiz/play/winner/${params.id}`)
-            }
+            return -1;
           }
 
           currentQuestion+=1;
         } else {
-          changeQuestion(currentQuestion);
-          break;
+          return currentQuestion;
         }
       }
+  }
+
+  let canHaveNextQuestion = () => {
+    let currentQuestion = questionId + 1;
+    let questionType = questions[questionId].questionType;
+      while(true) {
+        if(questions[currentQuestion].properties.dependency.hasDependency) {
+          
+          if(questionType == "question") {
+            if(questions[currentQuestion].properties.dependency.dependencyQuestion == questionId) {
+              return currentQuestion;
+            }
+          } else {
+            let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
+            let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
+            if(dependencyOption.selected) {
+              return currentQuestion;
+            } 
+          }
+
+          if(currentQuestion == questions.length - 1) {
+            return -1;
+          }
+
+          currentQuestion+=1;
+        } else {
+          return currentQuestion;
+        }
+      }
+    }
+
+  let nextQuestion = () => {
+
+    let selectedOptions = questions[questionId].options.filter(option => option.selected);
+    let questionType = questions[questionId].questionType;
+
+    if(selectedOptions.length == 0 && questionType == "question") {
+      return;
+    }
+
+    if(questionId < questions.length - 1)
+    {
+      let nextQuestion = getNextQuestion();
+      if(nextQuestion == -1) {
+        if(isPreview) {
+          navigate(`/quiz/preview/winner/${params.id}`)
+        } else {
+          navigate(`/quiz/play/winner/${params.id}`)
+        }
+      }
+      changeQuestion(nextQuestion);
     }
     else {
       if(isPreview) {
@@ -101,6 +144,15 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
     }
   }
 
+  let isLastQuestion = () => {
+    if(questionId == questions.length - 1) {
+      return true;
+    } else {
+      let nextQuestionId = canHaveNextQuestion();
+      return nextQuestionId == -1;
+    }
+  }
+
   return (
     <div className="preview-question-container">
       <div className="question-header">
@@ -108,7 +160,12 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
       </div>
       <div className="options-container d-flex flex-column align-items-center mt-3">
         {
-          questions[questionId].options.map((option, index) => <Option option={option} optionId={index} properties={sharedProperties} questionId={questionId} key={index} onClick={optionClicked}/>)
+          questions[questionId].questionType == "question" ?
+            questions[questionId].options.map((option, index) => <Option option={option} optionId={index} properties={sharedProperties} questionId={questionId} key={index} onClick={optionClicked}/>)
+          : 
+            <div style={sharedProperties.note}>
+              {questions[questionId].note}
+            </div>
         }
       </div>
       <div className='d-flex align-items-center'>
@@ -124,13 +181,13 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
         <div className="btn-container w-100 d-flex" style={{"justifyContent": sharedProperties.submitBtn["justifyContent"]}} onClick={() => nextQuestion()}>
             {
               properties.configuration.NextButton ? 
-              (questionId == questions.length - 1 ?
               <div className="btn" style={{...sharedProperties.submitBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave}>
-                {sharedProperties.ButtonHoverStyle.SubmitButtonText}
-              </div>
-              : <div className="btn" style={{...sharedProperties.submitBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave}>
-                {sharedProperties.ButtonHoverStyle.NextButtonText}
-              </div>) : <></>
+                {
+                  isLastQuestion() ? 
+                  sharedProperties.ButtonHoverStyle.SubmitButtonText :
+                  sharedProperties.ButtonHoverStyle.NextButtonText
+                }
+              </div> : <></>
             }
         </div>
       </div>

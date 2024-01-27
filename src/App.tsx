@@ -42,13 +42,13 @@ function App() {
     {
       isLoading ? 
       <Loader isSmall={false} showMessage={true}/> :
-      <div className='page d-flex flex-column'>
+      <div className='page main-page'>
         {
           notification.message ? 
           <NotificationModal isError={notification.isError} message={notification.message}/> : <></>
         }
         <NavigationBar hasCancelBtn={true} hasEditBtn={true} hasPreview={true} hasSubmitBtn={true} />
-        <div style={{height: "92%"}}>
+        <div style={{height: "100%"}}>
           <Outlet />
         </div>
       </div>

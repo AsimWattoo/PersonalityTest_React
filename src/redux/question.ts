@@ -14,6 +14,8 @@ type Question = {
     quizId: string,
     heading: string,
     options: Option[],
+    questionType: string,
+    note: string,
     properties: {}
 }
 
@@ -38,6 +40,16 @@ type PropertyUpdate = {
     propertySection: string,
     propertyName: string,
     value: number | string
+}
+
+type NoteUpdate = {
+    index: number,
+    note: string
+}
+
+type TypeUpdate = {
+    type: string,
+    index: number
 }
 
 type PropertyRemove = {
@@ -92,6 +104,12 @@ export const questionSlice = createSlice({
         updateHeading: (state, action: PayloadAction<HeadingUpdate>) => {
             state.questions[action.payload.index].heading = action.payload.heading;
         },
+        updateType: (state, action: PayloadAction<TypeUpdate>) => {
+            state.questions[action.payload.index].questionType = action.payload.type;
+        },
+        updateNote: (state, action:PayloadAction<NoteUpdate>) => {
+            state.questions[action.payload.index].note = action.payload.note;
+        },
         addOption: (state, action: PayloadAction<OptionAdd>) => {
             state.questions[action.payload.questionIndex].options.push(action.payload.option);
         },
@@ -118,7 +136,7 @@ export const questionSlice = createSlice({
     }
 });
 
-export type {Question, Option, HeadingUpdate, OptionAdd, OptionUpdate, PropertyUpdate, PropertyRemove, OptionSelection}
+export type {Question, Option, HeadingUpdate, OptionAdd, OptionUpdate, PropertyUpdate, PropertyRemove, OptionSelection, TypeUpdate, NoteUpdate}
 
 export const {
     addQuestion, 
@@ -133,6 +151,8 @@ export const {
     resetQuestions,
     resetSelection,
     selectOption,
-    setQuestions} = questionSlice.actions;
+    setQuestions,
+    updateType,
+    updateNote} = questionSlice.actions;
 
 export default questionSlice.reducer

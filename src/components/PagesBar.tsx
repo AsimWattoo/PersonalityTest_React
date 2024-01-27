@@ -146,6 +146,8 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           quizId: id,
           heading: question.heading,
           options: question.options,
+          questionType: question.questionType,
+          note: question.note,
           properties: JSON.parse(JSON.stringify(question.properties)),
         }
       })
@@ -210,9 +212,12 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
               quizId: id,
               heading: question.heading,
               options: question.options,
-              properties: JSON.stringify(question.properties)
+              questionType: question.questionType,
+              properties: JSON.stringify(question.properties),
+              note: question.note,
             }
           })
+          console.log('Saving Questions: ', questionObjs)
           let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
           console.log(createQuizResponse)
           if(createQuizResponse.error) {

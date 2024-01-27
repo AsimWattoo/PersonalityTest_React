@@ -51,8 +51,11 @@ let loadQuestions = async (id: string, dispatch, isPublished: boolean = false) =
   }
   else {
       questionResponse.questions = questionResponse.questions.map(question => {
-      question.properties = JSON.parse(question.properties);
-      return question;
+        if(!question.questionType) {
+          question.questionType = "question";
+        }
+        question.properties = JSON.parse(question.properties);
+        return question;
       })
       dispatch(setQuestions(questionResponse.questions))
   }

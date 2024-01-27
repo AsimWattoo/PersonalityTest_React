@@ -43,6 +43,35 @@ export default function QuestionsPage() {
 
   let createQuestion = () => {
     let question : Question = {
+      questionType: "question",
+      properties: {
+        background: {
+          "backgroundColor": "#FFFFFF",
+          'opacity': 1
+        },
+        mobileBackground: {
+          "backgroundColor": "#FFFFFF",
+          'opacity': 1
+        },
+        configuration: {
+          NextButton: true,
+          PreviousButton: true,
+        },
+        dependency: {
+          hasDependency: false,
+          dependencyQuestion: -1,
+          dependencyOption: -1,
+        }
+      },
+      options: [],
+      heading: ""
+    }
+    dispatch(addQuestion(question))
+  }
+
+  let createNote = () => {
+    let question : Question = {
+      questionType: "note",
       properties: {
         background: {
           "backgroundColor": "#FFFFFF",
@@ -124,7 +153,7 @@ export default function QuestionsPage() {
                     })
                   }
                   <div className="item" onClick={createQuestion}>
-                    <MdAdd />
+                    <MdAdd/>
                   </div>
                 </div>
               </div>
@@ -137,6 +166,7 @@ export default function QuestionsPage() {
               <TextCustomization title={'Question Mobile Background'} mainSection="question" propertySection={'mobileBackground'} questions={questions} questionId={currentSlide}/>
               <TextCustomization title={'Question Header'} mainSection="sharedProperties" propertySection={'heading'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty} />
               <TextCustomization title={'Option'} mainSection="sharedProperties" propertySection={'options'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
+              <TextCustomization title={'Note'} mainSection="sharedProperties" propertySection={'note'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Next Button'} mainSection="sharedProperties" propertySection={'submitBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Prev Button'} mainSection="sharedProperties" propertySection={'prevBtn'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>
               <TextCustomization title={'Button Hover Styles'} mainSection="sharedProperties" propertySection={'ButtonHoverStyle'} isShared={true} sharedProperties={sharedProperties} questionId={currentSlide} addSharedProperty={addSharedProperty} updateSharedProperty={updateSharedProperty} removeSharedProperty={removeSharedProperty}/>

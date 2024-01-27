@@ -45,6 +45,9 @@
     color: #210f46;
     margin-bottom: 0.5rem;
     width: 100%;
+    max-height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .description {

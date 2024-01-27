@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, ChangeEvent, useEffect } from 'react';
-import type { HeadingUpdate, Option, OptionAdd, OptionUpdate } from '../redux/question';
-import { removeQuestion, updateHeading, removeOption, addOption, updateOption } from '../redux/question';
+import type { HeadingUpdate, Option, OptionAdd, OptionUpdate, TypeUpdate } from '../redux/question';
+import { removeQuestion, updateHeading, removeOption, addOption, updateOption, updateType, updateNote } from '../redux/question';
 import { useAppDispatch } from '../redux/hooks';
 import {MdAdd, MdClose, MdDelete} from 'react-icons/md';
 import Select from './Select';
@@ -120,37 +120,69 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
     dispatch(updateHeading(headingUpdate))
   }
 
+  let questionTypes = [
+    {
+      label: "Question",
+      value: "question"
+    },
+    {
+      label: "Note",
+      value: "note"
+    }
+  ]
+
+  let changeQuestionType = (option) => {
+    dispatch(updateType({
+      index: questionId,
+      type: option.value,
+    }));
+  }
+
+  let updateNoteText = (value) => {
+    dispatch(updateNote({
+      index: questionId,
+      note: value,
+    }))
+  }
+
   return (
     <div className="question-container">
       <div className="question-header">
-        <input type="text" style={sharedProperties.heading} placeholder="Enter Question" value={questions[questionId].heading} onChange={e => headingChanged(e.target.value)}/>
+        <textarea style={sharedProperties.heading} placeholder="Enter Question" value={questions[questionId].heading} onChange={e => headingChanged(e.target.value)}>
+        </textarea>
+        <Select options={questionTypes} value={questions[questionId].questionType} onChange={changeQuestionType}/>
       </div>
       <div className="options-container d-flex flex-column align-items-center mt-3">
         {
-          questions[questionId].options.map((option, index) => {
-            return (
-              <div className="option-container">
-                <input type="text" value={option.text} style={{...sharedProperties.options}} onChange={e => updateOptionText(index, e.target.value)}/>
-                <div className="controls" style={style}>
-                  <div className="input-default">
-                    <label>Value</label>
-                    <input type="number" value={option.value} onChange={e => updateOptionValue(index, e.target.value)}/>
-                  </div>
-                  <Select options={
-                    personalities.length > 0 ? 
-                    personalities.map(p => {
-                      return {
-                        label: p.name,
-                        value: p._id
-                      }}) : []
-                  } value={option.personalityId} onChange={val => updateOptionPersonality(index, val.value)}/>
-                  <div className="danger-text-btn ms-2" onClick={() => deleteOption(index)}>
-                    <MdClose />
+          questions[questionId].questionType == "question" ? 
+            questions[questionId].options.map((option, index) => {
+              return (
+                <div className="option-container">
+                  <textarea value={option.text} style={{...sharedProperties.options}} onChange={e => updateOptionText(index, e.target.value)}></textarea>
+                  <div className="controls" style={style}>
+                    <div className="input-default">
+                      <label>Value</label>
+                      <input type="number" value={option.value} onChange={e => updateOptionValue(index, e.target.value)}/>
+                    </div>
+                    <Select options={
+                      personalities.length > 0 ? 
+                      personalities.map(p => {
+                        return {
+                          label: p.name,
+                          value: p._id
+                        }}) : []
+                    } value={option.personalityId} onChange={val => updateOptionPersonality(index, val.value)}/>
+                    <div className="danger-text-btn ms-2" onClick={() => deleteOption(index)}>
+                      <MdClose />
+                    </div>
                   </div>
                 </div>
-              </div>
-            )
-          })
+              )
+            })
+          : 
+          <div className='note-container'>
+            <input type="text" style={sharedProperties.note} placeholder="Enter note" value={questions[questionId].note} onChange={e => updateNoteText(e.target.value)}/>
+          </div>
         }
       </div>
       <div className='d-flex align-items-center w-100'>

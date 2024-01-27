@@ -1,13 +1,18 @@
+.main-page {
+  display: grid !important;
+  grid-template-rows: 0.1fr 1fr !important;
+  height: 100vh !important;
+}
+
 .page {
-  height: 100vh;
   width: 100%;
+  height: 100%;
   background-color: white;
   position: relative;
-  overflow: hidden;
 }
 
 .page .navbar {
-  height: 8%;
+  height: 100%;
 }
 
 .page .content-container {
@@ -20,10 +25,11 @@
 
 .page .content-container .quiz-view-container {
   width: 78%;
+  overflow: hidden;
 }
 
 .page .content-container .quiz-view-container .page-container {
-  height: 85%;
+  height: 90%;
   padding: 10px;
   border-radius: 5px;
 }
@@ -64,6 +70,23 @@
   border-radius: 5px;
 }
 
+textarea {
+  border: 1px solid #dedede;
+  text-align: center;
+  width: 100%;
+  border-radius: 5px;
+  max-height: 200px;
+}
+
+textarea:focus {
+  outline: none;
+  box-shadow: rgba(169, 127, 255, 0.1) 0px 4px 6px -1px, rgba(169, 127, 255, 0.06) 0px 2px 4px -1px;
+}
+
+.option-container textarea {
+  height: 50px;
+}
+
 .page .page-container .table .header .item{
   display: flex;
   align-items: center;
@@ -84,7 +107,7 @@
 
 .page .content-container .right-column {
   width: 22%;
-  height: 100%;
+  height: 800px !important;
   box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
   z-index: 1;
   position: relative;
@@ -95,7 +118,8 @@
 .left-column .slide-container {
   height: 100%;
   width: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   position: relative;
 }
 
@@ -104,21 +128,16 @@
   position: absolute;
   top: 0;
   width: 100%;
-  height: 100%;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
   padding: 1em;
   transition: all 0.2s ease-in-out;
 }
 
 .slide .question-container {
   width: 80%;
-  max-height: 100%;
   background-color: transparent;
   text-align: center;
-  overflow-x: hidden;
-  overflow-y: auto;
   position: relative;
 }
 
@@ -156,6 +175,18 @@
   color: white;
 }
 
+.slide .question-container .question-header {
+  display: flex;
+}
+
+.slide .question-container .question-header .select {
+  margin-left: 1em;
+  width: 150px;
+}
+
+.slide .question-container .note-container {
+  width: 100%;
+}
 
 .slide .question-container .question-header input{
   width: 100%;
@@ -374,7 +405,7 @@
 
 .content-container-center {
   width: 100%;
-  height: 92%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -388,10 +419,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .content-container .left-column .page-content > div:not(.background),
-.content-container .left-column .page-content > input{
+.content-container .left-column .page-content > input,
+.content-container .left-column .page-content > textarea{
   position: relative;
   z-index: 1;
 }
@@ -642,6 +676,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 10%;
 }
 
 .quiz-view-container .header{
@@ -723,12 +758,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid #a97fff;
+  border: 0.1px solid #a97fff !important;
   padding: 8px 15px;
   font-size: 0.9rem;
   border-radius: 5px;
   transition: all 0.2s ease-in-out;
-  cursor: pointer;;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
 }
 
 .primary-btn.disabled {
@@ -1050,6 +1087,7 @@
 .page-container .left-column .registration-form .btn-container .primary-btn {
   width: 20%;
 }
+
 
 @media screen and (max-width: 450px) {
 

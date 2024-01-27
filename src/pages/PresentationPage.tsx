@@ -63,8 +63,8 @@ let PresentationPage = () => {
                   <div className='left-column'>
                     <div className='page-content'>
                       <div style={{...quizProperties.presentationImage, "transition": "all 0.2s ease-in-out"}}></div>
-                      <input type="text" style={quizProperties.heading} value={quiz.title} onChange={e => headingUpdated(e.target.value)}/>
-                      <input type="description" style={quizProperties.description} value={quiz.description} onChange={e => descriptionUpdated(e.target.value)}/>
+                      <textarea style={{...quizProperties.heading}} className='w-50' value={quiz.title} onChange={e => headingUpdated(e.target.value)} placeholder='Enter Test Title'></textarea>
+                      <textarea style={{...quizProperties.description}} className='w-50' value={quiz.description} onChange={e => descriptionUpdated(e.target.value)} placeholder='Enter Test description'></textarea>
                       <div style={{"justifyContent": quizProperties.startBtn["justifyContent"], "width": "50%", "display": "flex"}}>
                         <a className='btn btn-primary' style={quizProperties.startBtn}>
                           {quizProperties.ButtonHoverStyle.StartButtonText}

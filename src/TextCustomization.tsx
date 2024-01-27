@@ -954,7 +954,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
       },
       customAction: (propertyName, value) => {
 
-        let removeBackgroundImage = (imageUrl) => {
+        let removeBackgroundFile = (imageUrl) => {
           let urlParts = imageUrl.split("/");
           let fileName = urlParts[urlParts.length - 1].replace(")", "");
           let fileToRemove = {
@@ -970,8 +970,38 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
           dispatch(removeFile(fileToRemove));
         }
 
+        let removeSharedFile = () => {
+            let imageUrl = sharedProperties[propertySection]["backgroundImage"];
+            let videoUrl = sharedProperties[propertySection]["backgroundVideo"];
+            let audioUrl = sharedProperties[propertySection]["backgroundAudio"];
+            
+            if(imageUrl) {
+              removeBackgroundFile(imageUrl);
+            } else if(videoUrl) {
+              removeBackgroundFile(videoUrl);
+            } else if(audioUrl) {
+              removeBackgroundFile(audioUrl);
+            }
+        }
+
+        let removeQuestionFile = () => {
+          let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
+          let videoUrl = questions[questionId].properties[propertySection]["backgroundVideo"];
+          let audioUrl = questions[questionId].properties[propertySection]["backgroundAudio"];
+            
+          if(imageUrl) {
+            removeBackgroundFile(imageUrl);
+          } else if(videoUrl) {
+            removeBackgroundFile(videoUrl);
+          } else if(audioUrl) {
+            removeBackgroundFile(audioUrl);
+          }
+        }
+
         if(isShared) {
           if(value == "backgroundImage"){
+            removeSharedFile();
+
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundColor", "backgroundVideo", "backgroundAudio"]
@@ -1005,11 +1035,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundColor") {
-            let imageUrl = sharedProperties[propertySection]["backgroundImage"];
-            
-            if(imageUrl) {
-              removeBackgroundImage(imageUrl);
-            }
+            removeSharedFile();
 
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
@@ -1026,6 +1052,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(addSharedProperty(propertyAdd))
           }
           else if(value == "backgroundAudio"){
+            removeSharedFile();
+            
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundColor", "backgroundVideo", "backgroundImage", "backgroundSize", "backgroundRepeat", "backgroundPosition"]
@@ -1044,6 +1072,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundVideo"){
+            removeSharedFile();
+            
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundColor", "backgroundAudio", "backgroundImage", "backgroundSize", "backgroundRepeat", "backgroundPosition"]
@@ -1062,10 +1092,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else {
-            let imageUrl = sharedProperties[propertySection]["backgroundImage"];
-            if(imageUrl) {
-              removeBackgroundImage(imageUrl);
-            }
+            removeSharedFile();
+
             let propertyRemove : SharedPropertyRemove = {
               propertySection: propertySection,
               propertyNames: ["backgroundImage", "bacgkroundPosition", "backgroundRepeat", "backgroundSize", "backgroundVideo", "backgroundAudio"]
@@ -1083,6 +1111,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
 
         }else {
           if(value == "backgroundImage"){
+            removeQuestionFile();
 
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
@@ -1122,11 +1151,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundColor") {
-            let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
-            
-            if(imageUrl) {
-              removeBackgroundImage(imageUrl);
-            }
+            removeQuestionFile();
 
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
@@ -1145,6 +1170,8 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             dispatch(addProperty(propertyAdd))
           }
           else if(value == "backgroundVideo"){
+
+            removeQuestionFile();
 
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
@@ -1166,6 +1193,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else if(value == "backgroundAudio"){
+            removeQuestionFile();
 
             let propertyRemove : PropertyRemove = {
               questionId: questionId,
@@ -1187,11 +1215,7 @@ const TextCustomization = ({title, mainSection, propertySection, isShared=false,
             }
           }
           else {
-            let imageUrl = questions[questionId].properties[propertySection]["backgroundImage"];
-            
-            if(imageUrl) {
-              removeBackgroundImage(imageUrl);
-            }
+            removeQuestionFile();
 
             let propertyRemove : PropertyRemove = {
               questionId: questionId,

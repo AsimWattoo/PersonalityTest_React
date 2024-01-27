@@ -166,7 +166,7 @@ let WinnerPreviewPage = () => {
                     <div className='page-container'>
                         <div className='left-column'>
                           <div className='page-content'>
-                              <div style={{...winnerPageProperties.winnerImage, "transition": "all 0.2s ease-in-out"}}></div>
+                              <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={false} PropertySection='winnerImage' hasMobileBackground={false} mobileBackgroundSection='' className=''/>
                               <div style={winnerPageProperties.heading}>
                               {
                                   personality ? 
