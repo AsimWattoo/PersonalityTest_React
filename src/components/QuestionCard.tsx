@@ -181,7 +181,7 @@ function QuestionCard({properties, sharedProperties, questions, questionId, chan
             })
           : 
           <div className='note-container'>
-            <input type="text" style={sharedProperties.note} placeholder="Enter note" value={questions[questionId].note} onChange={e => updateNoteText(e.target.value)}/>
+            <textarea style={sharedProperties.note} placeholder="Enter note" value={questions[questionId].note} onChange={e => updateNoteText(e.target.value)}></textarea>
           </div>
         }
       </div>

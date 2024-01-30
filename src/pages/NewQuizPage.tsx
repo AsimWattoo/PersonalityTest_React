@@ -124,7 +124,7 @@ function NewQuizPage() {
         isConfirmationShown ? 
         <ConfirmationModal title={'Delete Quiz Confirmation'} message={'Are you sure you want to delete this quiz?'} onClose={onClose} onConfirm={onDeleteConfirm}/> : <></>
       }
-      <div className="quiz-view-container">
+      <div className="new-quiz-page quiz-view-container">
         <div className="header-container">
           <div className="header">
             <div className="tabs">

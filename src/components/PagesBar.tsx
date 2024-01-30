@@ -10,6 +10,7 @@ import { initializeProperties as initializeWinnerProperties } from '../redux/win
 import { initializeProperties as initializeLoserProperties } from '../redux/loserProperties';
 import { setQuestions } from '../redux/question';
 import { showNotification } from '../redux/notification';
+import DataTooltip from './ToolTip';
 
 type PagesBarProps = {
   currentPage: string,
@@ -284,25 +285,35 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
         <div className='d-flex align-items-center'>
           {
             canPreview ? 
-            <div className='primary-text-btn me-1' onClick={previewQuiz}>
-              <MdOutlineVisibility />
-            </div> : <></>
+            <DataTooltip message="Preview">
+              <div className='primary-text-btn me-1' onClick={previewQuiz}>
+                <MdOutlineVisibility />
+              </div>
+            </DataTooltip> : <></>
           }
           {
             canEdit ? 
-            <div className='primary-text-btn me-1' onClick={editQuiz}>
-              <MdOutlineEdit />
-            </div> : <></>
+            <DataTooltip message="Edit">
+              <div className='primary-text-btn me-1' onClick={editQuiz}>
+                <MdOutlineEdit />
+              </div>
+            </DataTooltip> : <></>
           }
-          <div className='primary-text-btn me-1' onClick={() => onSave(false)}>
-            <MdOutlinePublish />
-          </div>
-          <div className='primary-text-btn me-1' onClick={() => onSave(true)}>
-            <MdOutlineSave />
-          </div>
-          <div className='danger-text-btn' onClick={onCancel}>
-            <MdOutlineCancel />
-          </div>
+          <DataTooltip message="Publish">
+            <div className='primary-text-btn me-1' onClick={() => onSave(false)}>
+              <MdOutlinePublish />
+            </div>
+          </DataTooltip>
+          <DataTooltip message="Save">
+            <div className='primary-text-btn me-1' onClick={() => onSave(true)}>
+              <MdOutlineSave />
+            </div>
+          </DataTooltip>
+          <DataTooltip message="Cancel">
+            <div className='danger-text-btn' onClick={onCancel}>
+              <MdOutlineCancel />
+            </div>
+          </DataTooltip>
         </div>
       </div>
     )

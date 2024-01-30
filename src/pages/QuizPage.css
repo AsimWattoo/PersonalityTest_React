@@ -672,6 +672,10 @@ textarea:focus {
   padding: 1em;
 }
 
+.new-quiz-page.quiz-view-container {
+  overflow: visible;
+}
+
 .quiz-view-container .header-container {
   display: flex;
   align-items: center;

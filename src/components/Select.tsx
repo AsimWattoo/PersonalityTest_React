@@ -4,7 +4,7 @@ import {MdExpandMore} from 'react-icons/md';
 import { FaUserFriends } from 'react-icons/fa';
 
 
-const Select = ({options, value, onChange=(opt) => {}, maxHeight= 500}) => {
+const Select = ({options, value, onChange=(opt) => {}, maxHeight= 250}) => {
 
     let [isExpanded, setIsExpanded] = useState(false);
     let [selectedOption, setSelectedOption] = useState({label: 'Select an Option', value: ""});
