@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
-import TextCustomization from '../TextCustomization';
-import { updateProperty, removeProperty, addProperty, initializeProperties } from '../redux/winnerProperties';
 import loadData from '../helpers/dataLoader';
-import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
-import getIcon from '../helpers/icon';
 import CheckBox from '../components/checkbox';
 import { MdArrowBack } from 'react-icons/md';
 import { sendRequest } from '../helpers/request';
 import links from "../links";
+import { resetStats } from '../redux/stats';
 
 let RegistrationPlayPage = () => {
 
@@ -20,8 +17,9 @@ let RegistrationPlayPage = () => {
     let navigate = useNavigate();
     let quiz = useAppSelector(state => state.quiz.quiz);
     let regQuestions = useAppSelector(state => state.registration.questions);
+    let stats = useAppSelector(state => state.stats);
     let [isLoading, setIsLoading] = useState(false);
-    let [canSubmit, setCanSubmit] = useState(false);
+    let [hasAcceptedTerms, setHasAcceptedTerms] = useState(false);
     let [valueObj, setValueObj] = useState({});
     let [error, setError] = useState("");
 
@@ -50,7 +48,7 @@ let RegistrationPlayPage = () => {
     }, []);
 
     let onTermsAndServicesChange = (val: boolean) => {
-      setCanSubmit(val);
+      setHasAcceptedTerms(val);
     }
 
     let changeValue = (text: string, value: string) => {
@@ -59,9 +57,33 @@ let RegistrationPlayPage = () => {
       setValueObj(newValue);
     }
 
+    let getDevice = () => {
+      if (navigator.userAgent.match(/Android/i)
+      || navigator.userAgent.match(/webOS/i)
+      || navigator.userAgent.match(/iPhone/i)
+      || navigator.userAgent.match(/iPad/i)
+      || navigator.userAgent.match(/iPod/i)
+      || navigator.userAgent.match(/BlackBerry/i)
+      || navigator.userAgent.match(/Windows Phone/i)) {
+        return "Mobile";
+      } else {
+        return "Desktop";
+      }
+    }
+
     let submit = async () => {
       setError("");
       let values = []
+      let endTime = new Date();
+      let startTime = new Date(stats.startTime);
+      let totalTimeInMiliseconds = endTime.getTime() - startTime.getTime();
+      let totalTimeInSeconds = (totalTimeInMiliseconds / 1000).toFixed(2);
+
+      valueObj["Agreement"] = hasAcceptedTerms ? "Agreed" : "Not Agreed";
+      valueObj["Time Played"] = `${totalTimeInSeconds}s`;
+      valueObj["Personality"] = stats.personality;
+      valueObj["Device"] = getDevice();
+      valueObj["External Link Clicked"] = stats.isExternalLinkClicked ? "Yes" : "No";
       for(let questionText of Object.keys(valueObj)) {
         values.push({
           questionText: questionText,
@@ -76,6 +98,7 @@ let RegistrationPlayPage = () => {
       if(response.error) {
         setError(response.error);
       } else {
+        dispatch(resetStats({}));
         navigate(`/quiz/thankyou/${id}`)
       }
     }
@@ -131,7 +154,7 @@ let RegistrationPlayPage = () => {
                                         <div className="danger-outline-btn" onClick={() => navigate(`/quiz/play/presentation/${id}`)}>
                                             <MdArrowBack /> Back
                                         </div>
-                                        <div className={`primary-btn ${canSubmit ? "" : "disabled"}`} onClick={submit}>
+                                        <div className={`primary-btn`} onClick={submit}>
                                             Submit
                                         </div>
                                     </div>

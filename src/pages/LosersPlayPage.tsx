@@ -8,6 +8,7 @@ import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
 import getIcon from '../helpers/icon';
 import BackgroundDisplay from '../components/BackgroundDisplay';
+import { setExternalLinkClicked } from '../redux/stats';
 
 let LosersPlayPage = () => {
 
@@ -16,6 +17,7 @@ let LosersPlayPage = () => {
     let dispatch = useAppDispatch();
     let navigate = useNavigate();
     let loserPageProperties = useAppSelector(state => state.loser.properties);
+    let stats = useAppSelector(state => state.stats);
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
     let [windowWidth, setWindowWidth] = useState(600);
@@ -32,7 +34,6 @@ let LosersPlayPage = () => {
           setIsLoading(false);
         }, true);
       }
-
     }, []);
 
     let onStartMouseEnter = () => {
@@ -123,6 +124,11 @@ let LosersPlayPage = () => {
       }
     }
 
+    let externalLinkClicked = () => {
+      dispatch(setExternalLinkClicked({}));
+      location.href = loserPageProperties?.Config?.ExternalLink;
+    }
+
     return (
       <div className='page preview-page'>
         {
@@ -159,7 +165,7 @@ let LosersPlayPage = () => {
                               <div className='d-flex align-items-center w-50'>
                               {
                                 loserPageProperties.Config.ShowRestartButton ? 
-                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
+                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
                                     <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                                     {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
                                     </a>
@@ -169,7 +175,7 @@ let LosersPlayPage = () => {
                               {
                                 loserPageProperties.Config.ShowLinkButton ? 
                                 <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
-                                    <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={loserPageProperties?.Config?.ExternalLink}>
+                                    <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} onClick={externalLinkClicked}>
                                     {loserPageProperties.ButtonHoverStyle.LinkButtonText}
                                     </a>
                                 </div> : 

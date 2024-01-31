@@ -5,6 +5,7 @@ import loadData from '../helpers/dataLoader';
 import Loader from '../components/Loader';
 import getIcon from '../helpers/icon';
 import BackgroundDisplay from '../components/BackgroundDisplay';
+import { setExternalLinkClicked, setPersonality as setStatsPersonality } from '../redux/stats';
 
 let WinnerPlayPage = () => {
 
@@ -15,6 +16,7 @@ let WinnerPlayPage = () => {
     let winnerPageProperties = useAppSelector(state => state.winner.properties);
     let questions = useAppSelector(state => state.question.questions);
     let personalities = useAppSelector(state => state.personality.personalities);
+    let stats = useAppSelector(state => state.stats);
     let quiz = useAppSelector(state => state.quiz.quiz);
     let [isLoading, setIsLoading] = useState(false);
     let [personality, setPersonality] = useState({});
@@ -126,12 +128,26 @@ let WinnerPlayPage = () => {
 
     useEffect(() => {
       if(questions.length > 0) {
-        console.log(personalities)
+
+        if(stats.isExternalLinkClicked) {
+          if(stats.personality == "Loser") {
+            navigate(`/quiz/play/loser/${id}`);
+            return;
+          } else {
+            let foundPersonalities = personalities.filter(p => p.name == stats.personality);
+            if(foundPersonalities.length > 0) {
+              setPersonality(foundPersonalities[0]);  
+            } else {
+              dispatch(setStatsPersonality("Loser"));
+              navigate(`/quiz/play/loser/${id}`);
+              return;
+            }
+          }
+        } else {
           let selectedOptions = questions.map(question => question.options.filter(option => option.selected)[0]);
           let personalityDict = {}
           for(let i = 0; i < selectedOptions.length; i += 1) {
               let option = selectedOptions[i];
-              console.log(option)
               if(option) {
                   if(personalityDict[option.personalityId] === undefined)
                       personalityDict[option.personalityId] = parseFloat(option.value);
@@ -144,7 +160,9 @@ let WinnerPlayPage = () => {
 
           //If the user has only selected options which were not weighted
           if(maxScore == 0) {
+            dispatch(setStatsPersonality("Loser"));
             navigate(`/quiz/play/loser/${id}`);
+            return;
           }
 
           let maxScoreIndex = scores.indexOf(maxScore);
@@ -152,9 +170,16 @@ let WinnerPlayPage = () => {
           let userPersonality = personalities.filter(p => p._id == maxScoredPersonality);
           if(userPersonality.length > 0) {
               setPersonality(userPersonality[0]);
+              dispatch(setStatsPersonality(userPersonality[0].name));
           }
+        }
       }
   }, [questions, personalities])
+
+  let externalLinkClicked = () => {
+    dispatch(setExternalLinkClicked({}));
+    location.href = winnerPageProperties?.Config?.ExternalLink;
+  }
 
     return (
       <div className='page preview-page'>
@@ -170,7 +195,7 @@ let WinnerPlayPage = () => {
                         <BackgroundDisplay PageProperties={winnerPageProperties} isEdit={false} PropertySection='winnerImage' hasMobileBackground={false} mobileBackgroundSection='' className=''/>
                         <div style={winnerPageProperties.heading}>
                         {
-                            personality ? 
+                            personality && personality.name? 
                             personality.name : "Personality Name"
                         }
                         </div>
@@ -196,7 +221,7 @@ let WinnerPlayPage = () => {
                         <div className='d-flex align-items-center w-50'>
                         {
                           winnerPageProperties.Config.ShowRestartButton ? 
-                          <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
+                          <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
                               <a className='btn btn-primary' style={{...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                               {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
                               </a>
@@ -206,7 +231,7 @@ let WinnerPlayPage = () => {
                         {
                           winnerPageProperties.Config.ShowLinkButton ? 
                           <div style={{"justifyContent": winnerPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
-                              <a className='btn btn-primary' style={{...winnerPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} href={winnerPageProperties?.Config?.ExternalLink}>
+                              <a className='btn btn-primary' style={{...winnerPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} onClick={externalLinkClicked}>
                               {winnerPageProperties.ButtonHoverStyle.LinkButtonText}
                               </a>
                           </div> : 

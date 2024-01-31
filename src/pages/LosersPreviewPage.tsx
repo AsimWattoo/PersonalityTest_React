@@ -165,7 +165,7 @@ let LoserPreviewPage = () => {
                               <div className='d-flex align-items-center w-50'>
                               {
                                 loserPageProperties.Config.ShowRestartButton ? 
-                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
+                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
                                     <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                                     {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
                                     </a>

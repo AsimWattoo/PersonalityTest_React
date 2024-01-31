@@ -7,6 +7,7 @@ import { useNavigate, useParams } from "react-router";
 import loadData from "../helpers/dataLoader.js";
 import Loader from "../components/Loader.js";
 import { resetSelection } from "../redux/question.js";
+import { resetStats } from "../redux/stats.js";
 
 export default function PresentationPlayPage() {
   
@@ -31,6 +32,8 @@ export default function PresentationPlayPage() {
       } else {
         dispatch(resetSelection({}));
       }
+
+      dispatch(resetStats({}));
 
     }, []);
 

@@ -195,7 +195,7 @@ let WinnerPreviewPage = () => {
                               <div className='d-flex align-items-center w-50'>
                               {
                                 winnerPageProperties.Config.ShowRestartButton ? 
-                                <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "50%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
+                                <div style={{"justifyContent": winnerPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/preview/presentation/${params.id}`)}>
                                     <a className='btn btn-primary' style={{ ...winnerPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
                                     {winnerPageProperties.ButtonHoverStyle.ReStartButtonText}
                                     </a>
