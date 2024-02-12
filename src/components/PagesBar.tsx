@@ -11,6 +11,8 @@ import { initializeProperties as initializeLoserProperties } from '../redux/lose
 import { setQuestions } from '../redux/question';
 import { showNotification } from '../redux/notification';
 import DataTooltip from './ToolTip';
+import Loader from './Loader';
+import { useState } from 'react';
 
 type PagesBarProps = {
   currentPage: string,
@@ -71,6 +73,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   let icons = useAppSelector(state => state.socialIcons.icons);
   let registrationQuestions = useAppSelector(state => state.registration.questions);
   let dispatch = useAppDispatch();
+  let [isLoading, setIsLoading] = useState(false);
   
   let uploadFiles = async (presentationProperties: {}, sharedProperties: {}, questions: [], winnerPageProperties: {}, loserPageProperties: {}) => {
     for(let file of files) {
@@ -136,6 +139,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
 
   let onSave = async (draft: boolean) => {
     if(params.id) {
+      setIsLoading(true);
       let id = params.id;
       let preProperties = JSON.parse(JSON.stringify(presentationProperties));
       let shProperties = JSON.parse(JSON.stringify(sharedProperties));
@@ -195,43 +199,35 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           }
         }
 
-        let deleteQuizQuestions = await sendRequest(Urls.deleteQuizQuestions.url(id), Urls.deleteQuizQuestions.type);
-        if(deleteQuizQuestions.error) {
+        
+        dispatch(initializeSharedProperties(shProperties.properties));
+        dispatch(initializePresentationProperties(preProperties.properties));
+        dispatch(initializeWinnerProperties(wpProperties.properties));
+        dispatch(initializeLoserProperties(lsProperties.properties));
+        dispatch(setQuestions(questionObjs));
+        questionObjs = questionObjs.map(question => {
+          return {
+            quizId: id,
+            heading: question.heading,
+            options: question.options,
+            questionType: question.questionType,
+            properties: JSON.stringify(question.properties),
+            note: question.note,
+          }
+        })
+        console.log('Saving Questions: ', questionObjs)
+        let createQuizResponse = await sendRequest(Urls.recreateQuestions.url(id), Urls.createQuestions.type, questionObjs);
+        console.log(createQuizResponse)
+        if(createQuizResponse.error) {
           dispatch(showNotification({
-            message: deleteQuizQuestions.error,
+            message: createQuizResponse.error,
             isError: true,
           }));
-        }
-        else {
-          dispatch(initializeSharedProperties(shProperties.properties));
-          dispatch(initializePresentationProperties(preProperties.properties));
-          dispatch(initializeWinnerProperties(wpProperties.properties));
-          dispatch(initializeLoserProperties(lsProperties.properties));
-          dispatch(setQuestions(questionObjs));
-          questionObjs = questionObjs.map(question => {
-            return {
-              quizId: id,
-              heading: question.heading,
-              options: question.options,
-              questionType: question.questionType,
-              properties: JSON.stringify(question.properties),
-              note: question.note,
-            }
-          })
-          console.log('Saving Questions: ', questionObjs)
-          let createQuizResponse = await sendRequest(Urls.createQuestions.url(id), Urls.createQuestions.type, questionObjs);
-          console.log(createQuizResponse)
-          if(createQuizResponse.error) {
-            dispatch(showNotification({
-              message: createQuizResponse.error,
-              isError: true,
-            }));
-          } else {
-            dispatch(showNotification({
-              message: "Test Saved Successfully",
-              isError: false,
-            }));
-          }
+        } else {
+          dispatch(showNotification({
+            message: "Test Saved Successfully",
+            isError: false,
+          }));
         }
 
         if(!draft) {
@@ -244,7 +240,7 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
           isError: true,
         }));
       }
-
+      setIsLoading(false);
     }
   }
 
@@ -261,61 +257,69 @@ let PagesBar = ({currentPage, quizId, canPreview = false, canEdit = false, canNa
   }
 
     return (
-      <div className='header'>
-        <div className='tabs'>
-          <div className={`tab ${currentPage == "presentation" ? 'active' : ''}`} onClick={onPresentationPageClick}>
-            Presentation Page
+      <>
+        {
+          isLoading ? 
+          <div className='relative-bg'>
+            <Loader message={'Saving'} isSmall={false} showMessage={true}/>
+          </div> : <></>
+        }
+        <div className='header'>
+          <div className='tabs'>
+            <div className={`tab ${currentPage == "presentation" ? 'active' : ''}`} onClick={onPresentationPageClick}>
+              Presentation Page
+            </div>
+            <div className={`tab ${currentPage == "questions" ? 'active' : ''}`} onClick={onQuestionsPageClick}>
+              Questions Page
+            </div>
+            <div className={`tab ${currentPage == "winner" ? 'active' : ''}`} onClick={onWinnerPageClick}>
+              Winners Page
+            </div>
+            <div className={`tab ${currentPage == "losers" ? 'active' : ''}`} onClick={onLosersPageClick}>
+              Losers Page
+            </div>
+            <div className={`tab ${currentPage == "registration" ? 'active' : ''}`} onClick={onRegistrationPageClick}>
+              Registration Page
+            </div>
+            <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>
+              Personalities Page
+            </div>
           </div>
-          <div className={`tab ${currentPage == "questions" ? 'active' : ''}`} onClick={onQuestionsPageClick}>
-            Questions Page
-          </div>
-          <div className={`tab ${currentPage == "winner" ? 'active' : ''}`} onClick={onWinnerPageClick}>
-            Winners Page
-          </div>
-          <div className={`tab ${currentPage == "losers" ? 'active' : ''}`} onClick={onLosersPageClick}>
-            Losers Page
-          </div>
-          <div className={`tab ${currentPage == "registration" ? 'active' : ''}`} onClick={onRegistrationPageClick}>
-            Registration Page
-          </div>
-          <div className={`tab ${currentPage == "personality" ? 'active' : ''}`} onClick={onPersonalityClick}>
-            Personalities Page
+          <div className='d-flex align-items-center'>
+            {
+              canPreview ? 
+              <DataTooltip message="Preview">
+                <div className='primary-text-btn me-1' onClick={previewQuiz}>
+                  <MdOutlineVisibility />
+                </div>
+              </DataTooltip> : <></>
+            }
+            {
+              canEdit ? 
+              <DataTooltip message="Edit">
+                <div className='primary-text-btn me-1' onClick={editQuiz}>
+                  <MdOutlineEdit />
+                </div>
+              </DataTooltip> : <></>
+            }
+            <DataTooltip message="Publish">
+              <div className='primary-text-btn me-1' onClick={() => onSave(false)}>
+                <MdOutlinePublish />
+              </div>
+            </DataTooltip>
+            <DataTooltip message="Save">
+              <div className='primary-text-btn me-1' onClick={() => onSave(true)}>
+                <MdOutlineSave />
+              </div>
+            </DataTooltip>
+            <DataTooltip message="Cancel">
+              <div className='danger-text-btn' onClick={onCancel}>
+                <MdOutlineCancel />
+              </div>
+            </DataTooltip>
           </div>
         </div>
-        <div className='d-flex align-items-center'>
-          {
-            canPreview ? 
-            <DataTooltip message="Preview">
-              <div className='primary-text-btn me-1' onClick={previewQuiz}>
-                <MdOutlineVisibility />
-              </div>
-            </DataTooltip> : <></>
-          }
-          {
-            canEdit ? 
-            <DataTooltip message="Edit">
-              <div className='primary-text-btn me-1' onClick={editQuiz}>
-                <MdOutlineEdit />
-              </div>
-            </DataTooltip> : <></>
-          }
-          <DataTooltip message="Publish">
-            <div className='primary-text-btn me-1' onClick={() => onSave(false)}>
-              <MdOutlinePublish />
-            </div>
-          </DataTooltip>
-          <DataTooltip message="Save">
-            <div className='primary-text-btn me-1' onClick={() => onSave(true)}>
-              <MdOutlineSave />
-            </div>
-          </DataTooltip>
-          <DataTooltip message="Cancel">
-            <div className='danger-text-btn' onClick={onCancel}>
-              <MdOutlineCancel />
-            </div>
-          </DataTooltip>
-        </div>
-      </div>
+      </>
     )
 }
 

@@ -144,6 +144,10 @@ let Urls = {
     getSubmissions: {
         url: (id: string) => `${baseUrl}/registration/submission/${id}`,
         type: 'GET'
+    },
+    recreateQuestions: {
+        url: (id: string) => `${baseUrl}/questions/recreate/${id}`,
+        type: 'POST',
     }
 }
 
