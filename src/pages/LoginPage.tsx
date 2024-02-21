@@ -27,7 +27,7 @@ function LoginPage() {
             password: password
         }, 'application/json', true, false);
         if(response.error) {
-            setError(response.error);
+            setError(`${response.error}`);
         } else {
             storeToken(response.token);
             navigate("/");
