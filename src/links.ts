@@ -5,7 +5,7 @@ let baseUrl = '';
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
     baseUrl = localUrl;
   } else {
-    baseUrl = remoteUrl;
+    baseUrl = localUrl;
   }
 
 let Urls = {

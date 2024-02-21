@@ -17,8 +17,6 @@ function App() {
 
   useEffect(() => {
 
-    console.log('Checking Quiz');
-
     if(location.pathname.includes("/quiz/play")) {
       return;
     }
@@ -29,7 +27,6 @@ function App() {
       let validateToken = async () => {
         setIsLoading(true);
         let response = await sendRequest(links.validate_token.url(), links.validate_token.type, {}, 'application/json', true, true);
-        console.log(response);
         if(response.error) {
           navigate("/login");
         } 
