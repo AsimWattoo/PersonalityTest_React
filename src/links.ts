@@ -1,6 +1,6 @@
 let localUrl = "http://localhost:3001"
 let remoteUrl = "https://personality-test-backend.vercel.app";
-let vpsUrl = "https://peleille.net:3001"
+let vpsUrl = "https://213.165.230.190:3001"
 let baseUrl = '';
 
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
