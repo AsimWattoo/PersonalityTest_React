@@ -8,6 +8,7 @@ import PagesBar from '../components/PagesBar';
 import Loader from '../components/Loader';
 import SocialIconModal from '../components/Modals/SocialIconModal';
 import type {SocialIcon, SocialIconAdd, SocialIconUpdate} from "../redux/social-icons";
+import { updateHeading, updateDescription } from '../redux/loserProperties';
 import {addIcon, deleteIcon, updateIcon} from "../redux/social-icons";
 import { MdAdd, MdClose } from 'react-icons/md';
 import getIcon from '../helpers/icon';
@@ -87,6 +88,14 @@ let LosersPage = () => {
       }
     }, []);
 
+    let onChangeHeading = (val: string) => {
+      dispatch(updateHeading(val));
+    }
+
+    let onChangeDescription = (val: string) => {
+      dispatch(updateDescription(val));
+    }
+
     return (
       <div className='content-container'>
         {
@@ -112,12 +121,12 @@ let LosersPage = () => {
                   <div className='left-column'>
                     <div className='page-content'>
                       <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={true} mobileBackgroundSection=''/>
-                      <div style={loserPageProperties.heading}>
-                        Looser
-                      </div>
-                      <div style={loserPageProperties.description}>
-                        You have failed the test and have not fallen in any category. try changing your answers.
-                      </div>
+                      <textarea style={loserPageProperties.heading} name='headingText' placeholder='Loser Page Heading' onChange={e => onChangeHeading(e.currentTarget.value)}>
+                        {loserPageProperties.headingText}
+                      </textarea>
+                      <textarea style={loserPageProperties.description} placeholder='Loser Page Description' onChange={e => onChangeDescription(e.currentTarget.value)}>
+                        {loserPageProperties.descriptionText}
+                      </textarea>
                       <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
                         {
                           socialIcons ? 

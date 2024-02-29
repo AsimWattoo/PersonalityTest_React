@@ -26,6 +26,10 @@ let Urls = {
         url: (id: string) => `${baseUrl}/quiz/published/${id}`,
         type: 'GET'
     },
+    unPublishQuiz: {
+        url: (id: string) => `${baseUrl}/quiz/unpublish/${id}`,
+        type: 'PUT'
+    },
     createQuiz: {
         url: () => `${baseUrl}/quiz`,
         type: "POST"

@@ -118,6 +118,20 @@ function NewQuizPage() {
     setShowDrafts(tab);
   }
 
+  let quizUnpublished = async (id: string) => {
+    setIsLoading(true);
+    let response = await sendRequest(Urls.unPublishQuiz.url(id), Urls.unPublishQuiz.type);
+    if(response.error) {
+      dispatch(showNotification({
+        isError: true,
+        message: response.error,
+      }));
+    } else {
+      await loadQuizes();
+    }
+    setIsLoading(false);
+  }
+
   return (
     <>
       {
@@ -147,7 +161,7 @@ function NewQuizPage() {
         <div className="container">
           {
             isLoading ? 
-            <Loader /> : 
+            <Loader showMessage={true} isSmall={false} message=""/> : 
             <div className={`${quizes.length > 0 ? "gridContainer" : ""}`}>
             {
               quizes.length > 0 ? 
@@ -159,7 +173,8 @@ function NewQuizPage() {
                       imageProperties={quiz.presentationProperties.properties.presentationImage} 
                       onQuizEdit={quizEdit} 
                       onQuizDelete={quizDelete}
-                      onQuizPlay={quizPlay}/>
+                      onQuizPlay={quizPlay}
+                      onQuizUnPublish={quizUnpublished}/>
                   )
                 }) : 
                 <div className="empty-message">

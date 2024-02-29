@@ -1,9 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import type { SharedPropertyUpdate, SharedPropertyRemove } from "./shared";
+import { Placeholder } from "reactstrap";
 
 interface PropertiesState {
     properties: {} | null
 }
+
 
 const initialState = {
     properties: null
@@ -15,6 +17,12 @@ export const loserPropertiesSlice = createSlice({
     reducers: {
         initializeProperties: (state, action) => {
             state.properties = action.payload;
+        },
+        updateHeading: (state, action:PayloadAction<string>) => {
+            state.properties.headingText = action.payload;
+        },
+        updateDescription: (state, action: PayloadAction<string>) => {
+            state.properties.descriptionText = action.payload;
         },
         updateProperty: (state, action: PayloadAction<SharedPropertyUpdate>) => {
             if(state.properties != null) {
@@ -44,6 +52,6 @@ export const loserPropertiesSlice = createSlice({
     }
 });
 
-export const {updateProperty, addProperty, removeProperty, resetProperties, initializeProperties} = loserPropertiesSlice.actions;
+export const {updateProperty, addProperty, removeProperty, resetProperties, initializeProperties, updateHeading, updateDescription} = loserPropertiesSlice.actions;
 
 export default loserPropertiesSlice.reducer;

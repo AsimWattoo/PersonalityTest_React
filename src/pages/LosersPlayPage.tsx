@@ -144,10 +144,10 @@ let LosersPlayPage = () => {
                           <div className='page-content'>
                               <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={false} mobileBackgroundSection='' className=''/>
                               <div style={loserPageProperties.heading}>
-                                Looser
+                                {loserPageProperties.headingText}
                               </div>
                               <div style={loserPageProperties.description}>
-                                You have failed the test and have not fallen in any category. try changing your answers.
+                                {loserPageProperties.descriptionText}
                               </div>
                               <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
                               {
