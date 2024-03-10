@@ -143,11 +143,13 @@ textarea:focus {
 
 .navigation-bar {
   position: absolute;
-  top: 80%;
+  bottom: 0%;
   left: 50%;
   transform: translateX(-50%);
   background-color: white;
   display: flex;
+  flex-wrap: wrap;
+  max-width: 80%;
   border-radius: 5px;
   overflow: hidden;
   padding: 4px;
@@ -163,7 +165,7 @@ textarea:focus {
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease-in-out;
-  margin: 0 0.1em;
+  margin: 0.1em 0.1em;
 }
 
 .navigation-bar .item:hover {

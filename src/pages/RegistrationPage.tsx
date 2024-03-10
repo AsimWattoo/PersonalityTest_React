@@ -65,15 +65,15 @@ export default function RegistrationPage() {
                 <div className="registration-form-container">
                     <div className="registration-form">
                         <div className="input-group">
-                            <label>Name</label>
+                            <label>Nimi</label>
                             <input type="text" className="form-control"/>
                         </div>
                         <div className="input-group">
-                            <label>Phone No.</label>
+                            <label>Puhelinnumero</label>
                             <input type="text" className="form-control"/>
                         </div>
                         <div className="input-group">
-                            <label>Email</label>
+                            <label>Sähköposti</label>
                             <input type="email" className="form-control"/>
                         </div>
                         {

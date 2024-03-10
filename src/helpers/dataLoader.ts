@@ -55,6 +55,15 @@ let loadQuestions = async (id: string, dispatch, isPublished: boolean = false) =
           question.questionType = "question";
         }
         question.properties = JSON.parse(question.properties);
+        question.options = question.options.map(option => {
+          return {
+            _id: option._id,
+            text: option.text,
+            value: option.value,
+            personalityId: option.personalityId,
+            selected: false,
+          }
+        })
         return question;
       })
       dispatch(setQuestions(questionResponse.questions))

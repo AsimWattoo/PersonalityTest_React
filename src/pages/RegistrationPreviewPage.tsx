@@ -50,15 +50,15 @@ let RegistrationPreviewPage = () => {
                             <div className="registration-form-container">
                                 <div className="registration-form">
                                     <div className="input-group">
-                                        <label>Name</label>
+                                        <label>Nimi</label>
                                         <input type="text" className="form-control"/>
                                     </div>
                                     <div className="input-group">
-                                        <label>Phone No.</label>
+                                        <label>Puhelinnumero</label>
                                         <input type="text" className="form-control"/>
                                     </div>
                                     <div className="input-group">
-                                        <label>Email</label>
+                                        <label>Sähköposti</label>
                                         <input type="email" className="form-control"/>
                                     </div>
                                     {
@@ -73,7 +73,7 @@ let RegistrationPreviewPage = () => {
                                     }
                                     <div className="input-group horizontal">
                                         <CheckBox />
-                                        <label>I have read the terms and conditions & I accept them</label>
+                                        <label>Olen lukenut säännöt ja hyväksyn ne.</label>
                                     </div>
                                     <div className="btn-container">
                                         <div className="danger-outline-btn" onClick={() => navigate(`/quiz/preview/presentation/${id}`)}>
