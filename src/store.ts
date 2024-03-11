@@ -13,6 +13,7 @@ import loserPropertiesReducer from "./redux/loserProperties";
 import socialIconsReducer from "./redux/social-icons";
 import registrationReducer from "./redux/registration";
 import statsReducer from "./redux/stats";
+import thankyouPropertiesReducer from "./redux/thankyouProperties";
 
 const persistConfig = {
     key: "root",
@@ -34,7 +35,8 @@ const store = configureStore({
         loser: loserPropertiesReducer,
         socialIcons: socialIconsReducer,
         registration: registrationReducer,
-        stats: persistedStatsReducer
+        stats: persistedStatsReducer,
+        thankYou: thankyouPropertiesReducer
     }
 })
 

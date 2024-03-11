@@ -712,7 +712,7 @@ textarea:focus {
   position: relative;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
 }
 
 .quiz-view-container .header .tabs .tab::after {

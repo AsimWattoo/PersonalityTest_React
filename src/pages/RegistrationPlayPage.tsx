@@ -99,7 +99,7 @@ let RegistrationPlayPage = () => {
         setError(response.error);
       } else {
         dispatch(resetStats({}));
-        navigate(`/quiz/thankyou/${id}`)
+        navigate(`/quiz/play/thankyou/${id}`)
       }
     }
 

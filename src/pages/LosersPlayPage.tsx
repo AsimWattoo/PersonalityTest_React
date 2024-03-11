@@ -138,64 +138,60 @@ let LosersPlayPage = () => {
             quiz && loserPageProperties ? 
             <>
             <div className='content-container'>
-                <div className='quiz-view-container'>
-                    <div className='page-container'>
-                        <div className='left-column'>
-                          <div className='page-content'>
-                              <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={false} mobileBackgroundSection='' className=''/>
-                              <div style={loserPageProperties.heading}>
-                                {loserPageProperties.headingText}
-                              </div>
-                              <div style={loserPageProperties.description}>
-                                {loserPageProperties.descriptionText}
-                              </div>
-                              <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
-                              {
-                                socialIcons ? 
-                                socialIcons.map((icon, index) => {
-                                  return (
-                                    <a className='social-icon' key={index} href={icon.url}>
-                                      {getIcon(icon.icon)()}
-                                    </a>
-                                  )
-                                })
-                                : <></>
-                              }
-                            </div>
-                              <div className='d-flex align-items-center w-50'>
-                              {
-                                loserPageProperties.Config.ShowRestartButton ? 
-                                <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
-                                    <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
-                                    {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
-                                    </a>
-                                </div> : 
-                                <></>
-                              }
-                              {
-                                loserPageProperties.Config.ShowLinkButton ? 
-                                <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
-                                    <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} onClick={externalLinkClicked}>
-                                    {loserPageProperties.ButtonHoverStyle.LinkButtonText}
-                                    </a>
-                                </div> : 
-                                <></>
-                              }
-                              {
-                                loserPageProperties.Config.NextButton ? 
-                                <div style={{"justifyContent": loserPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
-                                    <a className='btn btn-primary' style={{...loserPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/play/registration/${id}`)}>
-                                    {loserPageProperties.ButtonHoverStyle.NextButtonText}
-                                    </a>
-                                </div> : 
-                                <></>
-                              }
-                              </div>
-                              <BackgroundDisplay PageProperties={loserPageProperties} isEdit={false} PropertySection='background' hasMobileBackground={true} mobileBackgroundSection='mobileBackground' className='background'/>
-                          </div>
-                        </div>
+              <div className='left-column'>
+                <div className='page-content'>
+                    <BackgroundDisplay PageProperties={loserPageProperties} PropertySection='loserImage' hasMobileBackground={false} isEdit={false} mobileBackgroundSection='' className=''/>
+                    <div style={loserPageProperties.heading}>
+                      {loserPageProperties.headingText}
                     </div>
+                    <div style={loserPageProperties.description}>
+                      {loserPageProperties.descriptionText}
+                    </div>
+                    <div className='d-flex align-items-center justify-content-center mt-2 p-2'>
+                    {
+                      socialIcons ? 
+                      socialIcons.map((icon, index) => {
+                        return (
+                          <a className='social-icon' key={index} href={icon.url}>
+                            {getIcon(icon.icon)()}
+                          </a>
+                        )
+                      })
+                      : <></>
+                    }
+                  </div>
+                    <div className='d-flex align-items-center w-50'>
+                    {
+                      loserPageProperties.Config.ShowRestartButton ? 
+                      <div style={{"justifyContent": loserPageProperties.restartBtn["justifyContent"], "width": "100%", "display": "flex"}} onClick={() => navigate(`/quiz/play/presentation/${params.id}`)}>
+                          <a className='btn btn-primary' style={{ ...loserPageProperties.restartBtn, ...restartBtnHoverState}} onMouseEnter={onStartMouseEnter} onMouseLeave={onStartMouseLeave}>
+                          {loserPageProperties.ButtonHoverStyle.ReStartButtonText}
+                          </a>
+                      </div> : 
+                      <></>
+                    }
+                    {
+                      loserPageProperties.Config.ShowLinkButton ? 
+                      <div style={{"justifyContent": loserPageProperties.linkBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                          <a className='btn btn-primary' style={{...loserPageProperties.linkBtn, ...linkBtnHoverState}} onMouseEnter={onLinkMouseEnter} onMouseLeave={onLinkMouseLeave} onClick={externalLinkClicked}>
+                          {loserPageProperties.ButtonHoverStyle.LinkButtonText}
+                          </a>
+                      </div> : 
+                      <></>
+                    }
+                    {
+                      loserPageProperties.Config.NextButton ? 
+                      <div style={{"justifyContent": loserPageProperties.nextBtn["justifyContent"], "width": "100%", "display": "flex"}}>
+                          <a className='btn btn-primary' style={{...loserPageProperties.nextBtn, ...nextBtnHoverState}} onMouseEnter={onNextMouseEnter} onMouseLeave={onNextMouseLeave} onClick={() => navigate(`/quiz/play/registration/${id}`)}>
+                          {loserPageProperties.ButtonHoverStyle.NextButtonText}
+                          </a>
+                      </div> : 
+                      <></>
+                    }
+                    </div>
+                    <BackgroundDisplay PageProperties={loserPageProperties} isEdit={false} PropertySection='background' hasMobileBackground={true} mobileBackgroundSection='mobileBackground' className='background'/>
                 </div>
+              </div>
             </div>
             </> : <></>
           )

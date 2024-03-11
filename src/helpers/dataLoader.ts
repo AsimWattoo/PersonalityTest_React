@@ -11,6 +11,7 @@ import { setQuestions } from "../redux/question";
 import { setPersonalities } from "../redux/personality";
 import { setIcons } from "../redux/social-icons";
 import { setQuestions as setRegistrationQuestions } from "../redux/registration";
+import { initializeProperties as initializeThankYouProperties } from "../redux/thankyouProperties";
 
 let loadQuizData = async (id: string, dispatch, isPublished: boolean = false) => {
     let response = 
@@ -26,6 +27,9 @@ let loadQuizData = async (id: string, dispatch, isPublished: boolean = false) =>
         response.quiz.sharedProperties = JSON.parse(response.quiz.sharedProperties);
         response.quiz.winnerPageProperties = JSON.parse(response.quiz.winnerPageProperties);
         response.quiz.loserPageProperties = JSON.parse(response.quiz.loserPageProperties);
+        if(response.quiz.thankyouProperties) {
+          response.quiz.thankyouProperties = JSON.parse(response.quiz.thankyouProperties);
+        }
         let routeQuiz = response.quiz;
           dispatch(setQuiz({
               id: routeQuiz._id,
@@ -39,6 +43,7 @@ let loadQuizData = async (id: string, dispatch, isPublished: boolean = false) =>
           dispatch(initializeSharedProperties(routeQuiz.sharedProperties.properties))
           dispatch(initializeWinnerPageProperties(routeQuiz.winnerPageProperties.properties));
           dispatch(initializeLoserPageProperties(routeQuiz.loserPageProperties.properties));
+          dispatch(initializeThankYouProperties(routeQuiz.thankyouProperties.properties))
       }
     }
   }

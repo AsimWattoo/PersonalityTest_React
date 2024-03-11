@@ -31,6 +31,8 @@ import ThankYouPage from './pages/ThankYouPage';
 import ResultsPage from './pages/ResultsPage';
 import QuizResultPage from './pages/QuizResultPage';
 import { PersistGate } from 'redux-persist/integration/react';
+import ThankYouPreviewPage from './pages/ThankYouPreviewPage';
+import ThankYouPlayPage from './pages/ThankYouPlayPage';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -59,6 +61,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <Route path='/quiz/preview/registration/:id' element={<RegistrationPreviewPage />} />
                 <Route path='/quiz/play/registration/:id' element={<RegistrationPlayPage />} />
                 <Route path='/quiz/thankyou/:id' element={<ThankYouPage />} />
+                <Route path='/quiz/preview/thankyou/:id' element={<ThankYouPreviewPage />} />
+                <Route path='/quiz/play/thankyou/:id' element={<ThankYouPlayPage />} />
                 <Route path='/settings' element={<SettingsPage />}>
                   <Route path='fonts' element={<FontsPage />}/>
                   <Route path='fonts/add' element={<FontAddPage />}/>
