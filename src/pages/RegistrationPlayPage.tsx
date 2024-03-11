@@ -151,11 +151,8 @@ let RegistrationPlayPage = () => {
                                       </div> : <></>
                                     }
                                     <div className="btn-container">
-                                        <div className="danger-outline-btn" onClick={() => navigate(`/quiz/play/presentation/${id}`)}>
-                                            <MdArrowBack /> Back
-                                        </div>
                                         <div className={`primary-btn`} onClick={submit}>
-                                            Submit
+                                          Osallistu
                                         </div>
                                     </div>
                                 </div>

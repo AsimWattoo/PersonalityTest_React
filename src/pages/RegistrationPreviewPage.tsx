@@ -76,11 +76,8 @@ let RegistrationPreviewPage = () => {
                                         <label>Olen lukenut säännöt ja hyväksyn ne.</label>
                                     </div>
                                     <div className="btn-container">
-                                        <div className="danger-outline-btn" onClick={() => navigate(`/quiz/preview/presentation/${id}`)}>
-                                            <MdArrowBack /> Back
-                                        </div>
                                         <div className="primary-btn">
-                                            Submit
+                                          Osallistu
                                         </div>
                                     </div>
                                 </div>

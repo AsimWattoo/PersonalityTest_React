@@ -96,14 +96,11 @@ export default function RegistrationPage() {
                         </div>
                         <div className="input-group horizontal">
                             <CheckBox />
-                            <label>I have read the terms</label>
+                            <label>Olen lukenut säännöt ja hyväksyn ne.</label>
                         </div>
                         <div className="btn-container">
-                            <div className="danger-outline-btn">
-                                <MdArrowBack /> Back
-                            </div>
                             <div className="primary-btn">
-                                Submit
+                              Osallistu
                             </div>
                         </div>
                     </div>
