@@ -59,6 +59,11 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
         if(questions[currentQuestion].properties.dependency.hasDependency) {
           let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
           let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
+
+          if(!dependencyOption) {
+            return currentQuestion;
+          }
+
           if(dependencyOption.selected) {
             return currentQuestion;
           } 
@@ -87,9 +92,14 @@ function QuestionPreview({properties, sharedProperties, questions, questionId, c
           } else {
             let dependencyQuestion = questions[questions[currentQuestion].properties.dependency.dependencyQuestion];
             let dependencyOption = dependencyQuestion.options[questions[currentQuestion].properties.dependency.dependencyOption];
+
+            if(!dependencyOption) {
+              return currentQuestion;
+            }
+
             if(dependencyOption.selected) {
               return currentQuestion;
-            } 
+            }
           }
 
           if(currentQuestion == questions.length - 1) {
